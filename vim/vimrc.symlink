@@ -1,0 +1,184 @@
+"---Package manager (vim-plug)---"
+" Install it if not installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+"<----------------------------->"
+call plug#begin()
+
+Plug 'tpope/vim-fugitive'                              " Git wrapper
+Plug 'tpope/vim-sensible'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'rhysd/vim-crystal'
+Plug 'valloric/youcompleteme'                          " code completion
+Plug 'artur-shaik/vim-javacomplete2'                   " Java completion
+Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
+Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files
+Plug 'ngmy/vim-rubocop'
+Plug 'HerringtonDarkholme/yats.vim'                    "TypeScript Syntax highlighting
+Plug 'mattn/emmet-vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "On-demand loading
+Plug 'thoughtbot/vim-rspec'                            "Run RSpec from vim
+Plug 'vim-airline/vim-airline'                         "custom status/tabline bar
+Plug 'vim-airline/vim-airline-themes'
+Plug 'wikitopian/hardmode'                             "Disables keys navigation keys to learn better
+Plug 'tpope/vim-surround'                              "Changes surrounding ("{ etc."
+Plug 'scrooloose/nerdcommenter'                        "Comments/out stuff
+Plug 'ervandew/supertab'                               "use tab for completion
+Plug 'tpope/vim-rails'                                 "Rails
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'flazz/vim-colorschemes'                          "Color themes
+" Plug 'daylerees/colour-schemes', { 'rtp': 'vim/' }   "Colour Schemes
+Plug 'colepeters/spacemacs-theme.vim'                  "Theme
+Plug 'reewr/vim-monokai-phoenix'                       "Theme
+Plug 'bcicen/vim-vice'                                 "Theme
+Plug 'ntpeters/vim-better-whitespace'                  "Strip Trailing Whitespace
+Plug 'slim-template/vim-slim'                          " Syntax highlighting for Slim Template Engine
+Plug 'pangloss/vim-javascript'
+Plug 'tpope/vim-bundler'                               "Wrapper for Ruby bundler
+Plug 'mileszs/ack.vim'                                 " Wrapper for searching with Ack
+Plug 'mhinz/vim-startify'                              "Fancy startup screen for vim
+Plug 'derekwyatt/vim-scala'
+Plug 'klen/python-mode'                                "Python syntax highlighting, completion, refactor, linting etc.
+Plug 'tommcdo/vim-lion'                                "Align text
+
+"snipmate snippets
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+Plug 'honza/vim-snippets'
+
+call plug#end()
+
+
+"---Settings/Plugins Settings---"
+"<----------------------------->"
+"Vim settings"
+set backspace=indent,eol,start
+syntax on
+set relativenumber "relative line numbers
+set number "also display normal line numbers
+filetype plugin on
+set grepprg=ack "Use ack instead of grep"
+
+"Better Whitespace: remove trailing whitespace on save
+autocmd BufEnter * EnableStripWhitespaceOnSave
+
+"Hard Mode"
+" autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode() "enable by default
+
+"The Nerd Commenter
+let g:NERDSpaceDelims = 1 "Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1 "Use compact syntax for prettified multi-line comments
+let g:NERDCommentEmptyLines = 1 "Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDTrimTrailingWhitespace = 1 "Enable trimming of trailing whitespace when uncommenting
+
+"CtrlP use silver searcher for search
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+
+" vim-javasript
+let g:javascript_plugin_jsdoc = 1 " Enable syntax highlighting for JSDocs
+
+"---------Theme Stuff---------"
+"<--------------------------->"
+set t_Co=256 "enable 256 colours
+
+"Powerline Settings"
+set guifont=Inconsolata\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
+set term=xterm-256color
+set termencoding=utf-8
+let g:airline_powerline_fonts = 1 "Powerline fonts for vim-airline
+" let g:airline_theme='bubblegum'
+let g:airline_theme='papercolor'
+
+"Intialize spacemacs theme
+" if (has("termguicolors"))
+  " set termguicolors
+" endif
+" set background=dark
+" colorscheme spacemacs-theme
+
+" Set color theme
+" colorscheme monokai-phoenix
+" colorscheme vice
+" colorscheme monokai
+" colorscheme nova
+colorscheme frozen
+
+"---Key Mappings Stuff---"
+"<----------------------------->"
+" Redifine the key for activating emmet
+let g:user_emmet_leader_key='`'
+
+" Key mappings for RSpec
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" Key mappings for python-mode
+let g:pymode_run = 1
+let g:pymode_run_bind = "<leader>'"
+"let g:pymode_python = 'python3' "Enable syntax highlighting for python 3
+
+" Moving in splits mappings
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Map uppercase w and q to their lowercase
+:command W w
+:command Q q
+:command WQ wq
+:command Wq wq
+
+" Map keys for moving up-down
+map E <C-e>
+map Y <C-y>
+
+
+"-------Indentation Stuff-------"
+"<----------------------------->"
+" Set Global Indentation
+set tabstop=2
+set shiftwidth=2
+set expandtab
+
+" Sets indentation to 2 for ruby
+autocmd Filetype ruby setlocal tabstop=2
+autocmd Filetype ruby setlocal shiftwidth=2
+autocmd Filetype ruby setlocal expandtab
+
+" Sets indentation to 4 for html
+autocmd Filetype html setlocal tabstop=4
+autocmd Filetype html setlocal shiftwidth=4
+autocmd Filetype html setlocal expandtab
+
+" Sets indentation to 4 for java
+autocmd Filetype java setlocal tabstop=4
+autocmd Filetype java setlocal shiftwidth=4
+autocmd Filetype java setlocal expandtab
+
+" Sets indentation to 2 for javascript
+autocmd Filetype javascript setlocal tabstop=2
+autocmd Filetype javascript setlocal shiftwidth=2
+autocmd Filetype javascript setlocal expandtab
+
+autocmd Filetype coffeescript setlocal ts=4 sw=4 sts=0 expandtab
+autocmd Filetype jade setlocal ts=4 sw=4 sts=0 expandtab
+autocmd Filetype slim setlocal ts=4 sw=4 sts=0 expandtab
+
+" Sets indentation to 2 for json
+autocmd Filetype json setlocal tabstop=2
+autocmd Filetype json setlocal shiftwidth=2
+autocmd Filetype json setlocal expandtab
+
+autocmd FileType vue syntax sync fromstart "fixes vue-js syntax highlighting stop working suddenly
+autocmd BufRead,BufNewFile *.vue setlocal filetype=javascript

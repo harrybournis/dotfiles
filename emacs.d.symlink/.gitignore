@@ -1,0 +1,9 @@
+init.el
+custom.el
+elpa/
+etc/
+auto-save-list/
+emojis/
+projectile-bookmarks.eld
+network-security.data
+url/
