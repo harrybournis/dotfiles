@@ -5,6 +5,7 @@
         co = checkout
         s = status
         logline = log --oneline
+        forget  = rm -r --cached .
 [color]
         diff = auto
         status = auto
