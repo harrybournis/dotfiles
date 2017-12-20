@@ -916,3 +916,7 @@ emacsclient
 #+BEGIN_SRC emacs-lisp
   (server-start)
 #+END_SRC
+* Start fullscreen
+#+BEGIN_SRC emacs-lisp
+  (toggle-frame-fullscreen)
+#+END_SRC
