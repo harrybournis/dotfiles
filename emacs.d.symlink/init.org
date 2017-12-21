@@ -398,6 +398,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "po"      'projectile-find-other-file
                         "g"       'magit-status
                         "s"       'ag-project
+                        "v"       'org-cliplink
                         "\\" (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
                         "m"  (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
 
@@ -784,6 +785,15 @@ Get environment variables from the shell
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
+#+END_SRC
+*** org-cliplink
+Pretty-copy links from the browser to org with title instead of just url
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-cliplink
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c p b") 'org-cliplink))
 #+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
