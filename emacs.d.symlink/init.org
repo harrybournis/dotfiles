@@ -431,6 +431,10 @@ the best thing in emacs/computer science.
     (setq org-src-fontify-natively t
           org-src-tab-acts-natively t
           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE"))
+          org-todo-keyword-faces '(("TODO" . "red")
+                                   ("IN-PROGRESS" . "yellow")
+                                   ("WAITING" . "#70a2f9")
+                                   ("DONE" . (:foreground "green" :weight bold)))
           org-startup-indented t ;; indent on startup
           org-indent-indentation-per-level 2 ;; indent each level by 2
           org-list-indent-offset 2    ;; indent lists by 2
