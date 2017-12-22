@@ -409,8 +409,9 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "g"       'magit-status
                         "s"       'ag-project
                         "v"       'org-cliplink
-                        "\\" (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
-                        "m"  (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
+                        "SPC"     (lambda() (interactive)(find-file "~/Documents/org/stuff.org"))
+                        "\\"      (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
+                        "m"       (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
 
     (general-define-key :prefix text-editing-leader
                         :keymaps '(normal visual)
@@ -420,8 +421,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "'c"      'evilnc-copy-and-comment-lines
                         "'p"      'evilnc-comment-or-uncomment-paragraphs
                         "'r"      'comment-or-uncomment-region
-                        "'v"      'evilnc-toggle-invert-comment-line-by-line)
-    )
+                        "'v"      'evilnc-toggle-invert-comment-line-by-line))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
