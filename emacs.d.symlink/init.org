@@ -316,6 +316,7 @@ vim emulation
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
+    :pin melpa-stable
     :init
     ;; evil surround
     (use-package evil-surround
@@ -346,6 +347,9 @@ vim emulation
     (use-package evil-nerd-commenter
       :ensure t)
 
+    (use-package org-evil
+      :ensure t)
+
     :config
     (setq evil-emacs-state-cursor    '("red" box))
     (setq evil-normal-state-cursor   '("white" box))
@@ -356,6 +360,11 @@ vim emulation
 
     ;; Disable evil mode in shell
     (evil-set-initial-state 'shell-mode 'emacs)
+
+    (evil-ex-define-cmd "Q" 'evil-quit)
+    (evil-ex-define-cmd "W" 'evil-write)
+    (evil-ex-define-cmd "Wq" 'evil-save-and-close)
+    (evil-ex-define-cmd "wQ" 'evil-save-and-close)
 
     ;; load evil mode last since evil leader
     ;; has to be loaded before it
