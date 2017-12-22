@@ -611,6 +611,11 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 # Disable the annoying line marks
 defaults write com.apple.Terminal ShowLineMarks -int 0
 
+# Tell iTerm2 to use the custom preferences in the directory
+defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+# Specify the preferences directory for iTerm2
+defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.iterm2"
+
 ###############################################################################
 # Time Machine                                                                #
 ###############################################################################
