@@ -409,6 +409,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "g"       'magit-status
                         "s"       'ag-project
                         "v"       'org-cliplink
+                        "*"       (lambda() (interactive)(insert "⭐ "))
                         "SPC"     (lambda() (interactive)(find-file "~/Documents/org/stuff.org"))
                         "\\"      (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
