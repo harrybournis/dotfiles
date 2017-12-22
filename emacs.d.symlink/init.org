@@ -582,13 +582,12 @@ Completion
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t
-    :defer t
     :pin melpa-stable
-    :config
+    :init
     (use-package helm-projectile
       :ensure t
-      :defer t
-      :disabled t)
+      :defer t)
+    :config
     (projectile-global-mode))
 #+END_SRC
 *** company
