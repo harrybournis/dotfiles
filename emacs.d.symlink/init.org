@@ -187,7 +187,8 @@ the elpa repositories from where the packages are fetched.
   (add-hook 'before-save-hook 'whitespace-cleanup)
 
   ;; set line numbers on for every buffer
-  (global-linum-mode t)
+  ;; Disabled in favor of nlinum. See below in packages.
+  ;; (global-linum-mode t)
 
   ;; set line spacing
   (setq-default line-spacing 0.2)
@@ -494,6 +495,28 @@ the best thing in emacs/computer science.
     )
 #+END_SRC
 
+*** nlinum
+Better performance in line numbers?
+
+#+BEGIN_SRC emacs-lisp
+  (use-package nlinum
+    :ensure t
+    :config
+    (global-nlinum-mode))
+#+END_SRC
+*** DISABLED nlinum-relative
+Relative line numbers
+
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package nlinum-relative
+  ;;   :ensure t
+  ;;   :config
+  ;;   (nlinum-relative-setup-evil)
+  ;;   (add-hook 'prog-mode-hook 'nlinum-relative-mode)
+  ;;   (setq nlinum-relative-redisplay-delay 0)
+  ;;   (global-nlinum-relative-mode))
+
+#+END_SRC
 *** helm
 Completion
 
