@@ -586,8 +586,7 @@ Completion
     :pin melpa-stable
     :init
     (use-package helm-projectile
-      :ensure t
-      :defer t)
+      :ensure t)
     :config
     (projectile-global-mode))
 #+END_SRC
