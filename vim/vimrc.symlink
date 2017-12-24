@@ -55,27 +55,28 @@ call plug#end()
 
 "---Settings/Plugins Settings---"
 "<----------------------------->"
-"Vim settings"
+
+" Vim settings
 set backspace=indent,eol,start
 syntax on
 set relativenumber "relative line numbers
-set number "also display normal line numbers
+set number         "also display normal line numbers
 filetype plugin on
-set grepprg=ack "Use ack instead of grep"
+set grepprg=ack    "Use ack instead of grep"
 
-"Better Whitespace: remove trailing whitespace on save
+" Better Whitespace: remove trailing whitespace on save
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
-"Hard Mode"
+" Hard Mode"
 " autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode() "enable by default
 
-"The Nerd Commenter
-let g:NERDSpaceDelims = 1 "Add spaces after comment delimiters by default
-let g:NERDCompactSexyComs = 1 "Use compact syntax for prettified multi-line comments
-let g:NERDCommentEmptyLines = 1 "Allow commenting and inverting empty lines (useful when commenting a region)
+" The Nerd Commenter
+let g:NERDSpaceDelims = 1            "Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1        "Use compact syntax for prettified multi-line comments
+let g:NERDCommentEmptyLines = 1      "Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDTrimTrailingWhitespace = 1 "Enable trimming of trailing whitespace when uncommenting
 
-"CtrlP use silver searcher for search
+" CtrlP use silver searcher for search
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
 " vim-javasript
@@ -97,7 +98,7 @@ let g:airline_powerline_fonts = 1 "Powerline fonts for vim-airline
 " let g:airline_theme='bubblegum'
 let g:airline_theme='papercolor'
 
-"Intialize spacemacs theme
+" Intialize spacemacs theme
 " if (has("termguicolors"))
   " set termguicolors
 " endif
