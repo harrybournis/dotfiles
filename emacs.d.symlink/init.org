@@ -372,13 +372,13 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
     (general-evil-setup t)
     (setq general-default-keymaps 'evil-normal-state-map
           basic-nav-leader "SPC"
+          extra-tools-leader ";"
           text-editing-leader "'")
     (general-define-key :prefix basic-nav-leader
                         :keymaps '(normal visual)
                         "b"       'list-buffers
                         "'"       'helm-M-x
                         "o"       'occur
-                        "`"       'shell
                         "f"       'ace-window
                         "<up>"    'windmove-up
                         "<down>"  'windmove-down
@@ -396,13 +396,17 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "pf"      'helm-projectile-find-file
                         "pt"      'projectile-find-test-file
                         "po"      'projectile-find-other-file
-                        "g"       'magit-status
                         "s"       'ag-project
+                        "SPC"     (lambda() (interactive) (find-file org-main-file-location))
+                        "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
+                        "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
+
+    (general-define-key :prefix extra-tools-leader
+                        :keymaps '(normal visual)
+                        "`"       'shell
                         "v"       'org-cliplink
-                        "*"       (lambda() (interactive)(insert "⭐ "))
-                        "SPC"     (lambda() (interactive)(find-file org-main-file-location))
-                        "\\"      (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
-                        "m"       (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
+                        "g"       'magit-status
+                        "*"       (lambda() (interactive) (insert "⭐ ")))
 
     (general-define-key :prefix text-editing-leader
                         :keymaps '(normal visual)
