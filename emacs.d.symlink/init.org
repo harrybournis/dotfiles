@@ -92,8 +92,16 @@ the elpa repositories from where the packages are fetched.
     (require 'bind-key)                ;; if you use any :bind variant
 #+END_SRC
 
+* Variables
+Variables are set here that are used in the configuration below
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-main-file-location "~/Dropbox/org/stuff.org"
+        org-agenda-files-var  (quote ("~/Dropbox/org/stuff.org"
+                                      "~/Dropbox/org/album.org")))
+#+END_SRC
 * Built-in Settings
-** TODO General
+** General
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-screen t
         initial-scratch-message nil
@@ -116,9 +124,6 @@ the elpa repositories from where the packages are fetched.
   ;; have your emacs window always show your system-name and the full
   ;; path of the buffer you're currently editing
   (setq frame-title-format (list (format "%s %%s: %%j " (system-name)) '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-
-  ;; uniquify buffer names. (not working. uniquify void.)
-  ;; (setq uniquify-buffer-name-style nil nil (uniquify))
 
   ;; disable toolbar, scrollbar, menubar (only when not in osx)
   (and (fboundp 'menu-bar-mode)
@@ -145,15 +150,6 @@ the elpa repositories from where the packages are fetched.
   (prefer-coding-system        'utf-8)
   (set-input-method nil)
 
-  ;; disable auto-save files & backups
-  ;; i prefer to use a undo-tree with branches instead of store auto-save
-  ;; files. because i'm using gpg to authetication and encrypt/sign files,
-  ;; is more secure don't have a plaint text backup of those files. use a
-  ;; dvcs and backup your files regularly, for god's sake!
-  ;; (setq auto-save-default nil
-  ;;       auto-save-list-file-prefix nil
-  ;;       make-backup-files nil)
-
   ;; always indent with spaces and 2 spaces
   (setq-default indent-tabs-mode  nil
                 default-tab-width 2
@@ -172,12 +168,6 @@ the elpa repositories from where the packages are fetched.
 
   ;; Open .symlink files in sh-mode
   (add-to-list 'auto-mode-alist '("\\.symlink\\'" . sh-mode))
-
-    ;;; (setq size-indication-mode t)
-    ;;; (which-function-mode 1)
-
-  ;; use the x primary selection as default
-    ;;;(setq select-enable-primary t)
 
   ;; text wrapping at 80 columns by default (only text)
   (add-hook 'text-mode-hook 'auto-fill-mode)
@@ -214,19 +204,19 @@ the elpa repositories from where the packages are fetched.
   (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
 
   ;; save history
-  (setq savehist-file "~/.emacs.d/etc/savehist")
-  (savehist-mode 1)
-  (setq history-length t)
-  (setq history-delete-duplicates t)
-  (setq savehist-save-minibuffer-history 1)
-  (setq savehist-additional-variables
+  (setq savehist-file "~/.emacs.d/etc/savehist"
+        savehist-mode 1
+        history-delete-duplicates t
+        savehist-save-minibuffer-history 1
+        history-length t
+        savehist-additional-variables
         '(kill-ring
           search-ring
           regexp-search-ring))
 
-  ;; check if file exists, otherwise create it
+  ;; check if history file exists, otherwise create it
   (unless (file-exists-p "~/.emacs.d/etc/savehist")
-      (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
+    (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
 
 #+END_SRC
 
@@ -410,7 +400,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "s"       'ag-project
                         "v"       'org-cliplink
                         "*"       (lambda() (interactive)(insert "⭐ "))
-                        "SPC"     (lambda() (interactive)(find-file "~/Documents/org/stuff.org"))
+                        "SPC"     (lambda() (interactive)(find-file org-main-file-location))
                         "\\"      (lambda() (interactive)(load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive)(find-file "~/.emacs.d/init.org")))
 
@@ -457,7 +447,8 @@ the best thing in emacs/computer science.
           org-clock-into-drawer "clocking" ;; name the clock drawer clocking
           org-log-reschedule (quote note) ;; take a note in the log when rescheduling
           org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
-          org-agenda-files (quote ("~/documents/org/album.org" "~/documents/org/stuff.org"))
+          org-directory (expand-file-name "~/Dropbox/org/")
+          org-agenda-files org-agenda-files-var
           org-babel-do-load-languages
           (quote (org-babel-load-languages (quote ((emacs-lisp . t)
                                                    (ruby . t)
@@ -695,18 +686,17 @@ move between windows by pressing a key
     (ace-window-display-mode t))
 #+END_SRC
 
-*** WAITING desktop
-Save session.
-I need to read up more on it before i enable it.
+*** DISABLED desktop
+Save Session. Don't need it yet.
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package desktop
-  ;; :ensure t
-  ;; :config
-  ;; (setq desktop-path '("~/.emacs.d/etc/")
-  ;;       desktop-dirname "~/.emacs.d/etc/"
-  ;;       desktop-base-file-name "emacs-desktop"
-  ;;       desktop-globals-to-save
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq desktop-path '("~/.emacs.d/etc/")
+  ;;         desktop-dirname "~/.emacs.d/etc/"
+  ;;         desktop-base-file-name "emacs-desktop"
+  ;;         desktop-globals-to-save
   ;;         (append '((extended-command-history . 50)
   ;;                   (file-name-history . 200)
   ;;                   (grep-history . 50)
@@ -949,10 +939,10 @@ global shortcuts
 
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
-* Autostart stuff.org
+* Autostart main org file
 
 #+BEGIN_SRC emacs-lisp
-  (find-file "~/Documents/org/stuff.org")
+  (find-file org-main-file-location)
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
