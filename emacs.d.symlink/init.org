@@ -834,6 +834,20 @@ Pretty-copy links from the browser to org with title instead of just url
     :config
     (global-set-key (kbd "C-c p b") 'org-cliplink))
 #+END_SRC
+*** calfw
+Calendar framework
+
+#+BEGIN_SRC emacs-lisp
+  (use-package calfw
+    :ensure t
+    :pin melpa-stable
+    :init
+    (use-package calfw-org
+      :ensure t
+      :pin melpa-stable)
+    :config
+    (require 'calfw-org))
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
