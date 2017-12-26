@@ -19,7 +19,6 @@
 
 
 * Emacs configuration using org-babel
-
 ** Code to recreate init.el on save
 
 #+BEGIN_SRC emacs-lisp
@@ -330,7 +329,7 @@ vim emulation
 
     ;; increment / decrement binary, octal, decimal and hex literals
     (use-package evil-numbers
-     :ensure t
+      :ensure t
       :config
       (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
       (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
@@ -349,13 +348,19 @@ vim emulation
     (setq evil-replace-state-cursor  '("red" box))
     (setq evil-operator-state-cursor '("red" box))
 
-    ;; Disable evil mode in shell
+    ;; Scroll faster with C-e and C-y
+    (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
+    (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
+
+    ;; Disable evil mode in shell mode
     (evil-set-initial-state 'shell-mode 'emacs)
 
+    ;; Save and quit ingoring mistakes from keeping shift pressed down
     (evil-ex-define-cmd "Q" 'evil-quit)
     (evil-ex-define-cmd "W" 'evil-write)
     (evil-ex-define-cmd "Wq" 'evil-save-and-close)
     (evil-ex-define-cmd "wQ" 'evil-save-and-close)
+    (evil-ex-define-cmd "WQ" 'evil-save-and-close)
 
     ;; load evil mode last since evil leader
     ;; has to be loaded before it
