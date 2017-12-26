@@ -966,6 +966,7 @@ global shortcuts
   (global-set-key   (kbd "C-c w")  'browser-url-at-point)
   (global-unset-key (kbd "C-k"))
   (global-set-key   (kbd "C-k")  'kill-this-buffer)
+  (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-S-t") 'helm-buffers-list)
 #+END_SRC
 * ENV variables
