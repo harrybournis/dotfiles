@@ -377,7 +377,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
     (general-evil-setup t)
     (setq general-default-keymaps 'evil-normal-state-map
           basic-nav-leader "SPC"
-          extra-tools-leader ";"
+          extra-tools-leader "'"
           text-editing-leader "'")
     (general-define-key :prefix basic-nav-leader
                         :keymaps '(normal visual)
@@ -740,7 +740,11 @@ Save Session. Don't need it yet.
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
-    :pin melpa-stable)
+    :pin melpa-stable
+    :init
+    (use-package evil-magit
+      :ensure t
+      :pin melpa-stable))
 #+END_SRC
 *** ag
 
