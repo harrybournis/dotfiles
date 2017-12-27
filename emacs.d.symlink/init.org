@@ -334,10 +334,27 @@ vim emulation
       (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
       (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
 
+    ;; Nerd commenter emulation
     (use-package evil-nerd-commenter
       :ensure t)
 
+    ;; Org mode extensions for evil users
     (use-package org-evil
+      :ensure t)
+
+    ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
+    (use-package evil-string-inflection
+      :ensure t
+      :pin melpa-stable)
+
+    ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
+    ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
+    (use-package evil-collection
+      :ensure t
+      :init (evil-collection-init))
+
+    ;; Make ediff evil
+    (use-package evil-ediff
       :ensure t)
 
     :config
@@ -616,7 +633,6 @@ Autocompletion
     :hook
     (after-init . global-company-mode)
     :config
-
     ;; Disable autocompletion in org files
     (setq company-global-modes '(not org-mode))
     ;; Change keybindings for navigating results
