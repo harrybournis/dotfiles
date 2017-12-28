@@ -351,7 +351,39 @@ vim emulation
     ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
     (use-package evil-collection
       :ensure t
-      :init (evil-collection-init))
+      ;; :init (evil-collection-init))
+      :init
+      (defcustom evil-collection-mode-list
+        `(eshell
+          calendar
+          custom
+          cus-theme
+          debbugs
+          debug
+          diff-mode
+          dired
+          doc-view
+          edebug
+          emms
+          eval-sexp-fu
+          ggtags
+          help
+          ibuffer
+          image
+          image+
+          info
+          man
+          (package-menu package)
+          )
+        "The list of modes which will be evilified by `evil-collection-init'.
+  Elements are either target mode symbols or lists which `car' is the
+  mode symbol and `cdr' the packages to register.
+  By default, `minibuffer' is not included because many users find
+  this confusing. It will be included if
+  `evil-collection-setup-minibuffer' is set to t."
+        :type '(repeat (choice symbol sexp))
+        :group 'evil-collection)
+      (evil-collection-init))
 
     ;; Make ediff evil
     (use-package evil-ediff
@@ -371,8 +403,8 @@ vim emulation
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
 
     ;; Remap tab to org-cycle in normal mode
-    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-    (evil-define-key 'normal org-mode-map (kbd "S-<tab>") #'org-global-cycle)
+    ;; (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+    ;; (evil-define-key 'normal org-mode-map (kbd "S-<tab>") #'org-global-cycle)
 
     ;; Disable evil mode in shell mode
     (evil-set-initial-state 'shell-mode 'emacs)
