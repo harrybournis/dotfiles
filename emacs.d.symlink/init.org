@@ -371,6 +371,10 @@ vim emulation
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
 
+    ;; Remap tab to org-cycle in normal mode
+    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+    (evil-define-key 'normal org-mode-map (kbd "S-<tab>") #'org-global-cycle)
+
     ;; Disable evil mode in shell mode
     (evil-set-initial-state 'shell-mode 'emacs)
 
@@ -397,11 +401,11 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
     (setq general-default-keymaps 'evil-normal-state-map
           basic-nav-leader "SPC"
           extra-tools-leader "'"
-          text-editing-leader "'")
+          text-editing-leader ",")
     (general-define-key :prefix basic-nav-leader
                         :keymaps '(normal visual)
                         "b"       'list-buffers
-                        "'"       'helm-M-x
+                        "x"       'helm-M-x
                         "o"       'occur
                         "f"       'ace-window
                         "<up>"    'windmove-up
@@ -435,12 +439,10 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
     (general-define-key :prefix text-editing-leader
                         :keymaps '(normal visual)
                         "/"       'evilnc-comment-or-uncomment-lines
-                        "'i"      'evilnc-comment-or-uncomment-lines
-                        "'l"      'evilnc-quick-comment-or-uncomment-to-the-line
-                        "'c"      'evilnc-copy-and-comment-lines
-                        "'p"      'evilnc-comment-or-uncomment-paragraphs
-                        "'r"      'comment-or-uncomment-region
-                        "'v"      'evilnc-toggle-invert-comment-line-by-line))
+                        ",l"      'evilnc-quick-comment-or-uncomment-to-the-line
+                        ",c"      'evilnc-copy-and-comment-lines
+                        ",p"      'evilnc-comment-or-uncomment-paragraphs
+                        ",v"      'evilnc-toggle-invert-comment-line-by-line))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
