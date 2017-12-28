@@ -351,11 +351,13 @@ vim emulation
     ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
     (use-package evil-collection
       :ensure t
+      :defer t
       :init (evil-collection-init))
 
     ;; Make ediff evil
     (use-package evil-ediff
-      :ensure t)
+      :ensure t
+      :defer t)
 
     :config
     (setq evil-emacs-state-cursor    '("red" box))
@@ -756,10 +758,12 @@ Save Session. Don't need it yet.
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
+    :defer t
     :pin melpa-stable
     :init
     (use-package evil-magit
       :ensure t
+      :defer t
       :pin melpa-stable))
 #+END_SRC
 *** ag

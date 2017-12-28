@@ -6,5 +6,6 @@ etc/
 auto-save-list/
 emojis/
 projectile-bookmarks.eld
+projectile.cache
 network-security.data
 url/
