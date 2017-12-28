@@ -351,7 +351,6 @@ vim emulation
     ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
     (use-package evil-collection
       :ensure t
-      :defer t
       :init (evil-collection-init))
 
     ;; Make ediff evil
@@ -389,7 +388,6 @@ vim emulation
     ;; has to be loaded before it
     (evil-mode t))
 #+END_SRC
-
 *** general.el
 Improvement on evil-leader. Specify mutliple leaders. ddk
 
@@ -634,7 +632,6 @@ Autocompletion
   (use-package company
     :ensure t
     :diminish
-    :defer t
     :pin melpa-stable
     :hook
     (after-init . global-company-mode)
@@ -764,10 +761,9 @@ Save Session. Don't need it yet.
     :ensure t
     :defer t
     :pin melpa-stable
-    :init
+    :config
     (use-package evil-magit
       :ensure t
-      :defer t
       :pin melpa-stable))
 #+END_SRC
 *** ag
@@ -992,8 +988,6 @@ global shortcuts
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key   (kbd "C-c w")  'browser-url-at-point)
-  (global-unset-key (kbd "C-k"))
-  (global-set-key   (kbd "C-k")  'kill-this-buffer)
   (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-S-t") 'helm-buffers-list)
 #+END_SRC
