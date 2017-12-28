@@ -402,8 +402,14 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
           basic-nav-leader "SPC"
           extra-tools-leader "'"
           text-editing-leader ",")
+
+    ;; Space to work everywhere. "" nil is used to unbind it first.
+    ;; It in not currently working in some modes (i.e. help) and I
+    ;; can not seem to find the answer. I try again in the future.
     (general-define-key :prefix basic-nav-leader
-                        :keymaps '(normal visual)
+                        :non-normal-prefix "C-SPC"
+                        :keymaps '(normal visual motion)
+                        "" nil
                         "b"       'list-buffers
                         "x"       'helm-M-x
                         "o"       'occur
