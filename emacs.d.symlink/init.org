@@ -400,8 +400,7 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
     (general-evil-setup t)
     (setq general-default-keymaps 'evil-normal-state-map
           basic-nav-leader "SPC"
-          extra-tools-leader "'"
-          text-editing-leader ",")
+          extra-tools-leader "'")
 
     ;; Space to work everywhere. "" nil is used to unbind it first.
     ;; It in not currently working in some modes (i.e. help) and I
@@ -440,15 +439,12 @@ Improvement on evil-leader. Specify mutliple leaders. ddk
                         "`"       'shell
                         "v"       'org-cliplink
                         "g"       'magit-status
-                        "*"       (lambda() (interactive) (insert "⭐ ")))
-
-    (general-define-key :prefix text-editing-leader
-                        :keymaps '(normal visual)
                         "/"       'evilnc-comment-or-uncomment-lines
-                        ",l"      'evilnc-quick-comment-or-uncomment-to-the-line
-                        ",c"      'evilnc-copy-and-comment-lines
-                        ",p"      'evilnc-comment-or-uncomment-paragraphs
-                        ",v"      'evilnc-toggle-invert-comment-line-by-line))
+                        "cl"      'evilnc-quick-comment-or-uncomment-to-the-line
+                        "cc"      'evilnc-copy-and-comment-lines
+                        "cp"      'evilnc-comment-or-uncomment-paragraphs
+                        "cv"      'evilnc-toggle-invert-comment-line-by-line
+                        "*"       (lambda() (interactive) (insert "⭐ "))))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
@@ -470,7 +466,7 @@ the best thing in emacs/computer science.
           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE"))
           org-todo-keyword-faces '(("TODO" . "red")
                                    ("IN-PROGRESS" . "yellow")
-                                   ("WAITING" . "#70a2f9")
+                                   ("WAITING" . "#7453ef")
                                    ("DONE" . (:foreground "green" :weight bold)))
           org-startup-indented t ;; indent on startup
           org-indent-indentation-per-level 2 ;; indent each level by 2
