@@ -202,21 +202,18 @@ Variables are set here that are used in the configuration below
   ;; save all backups to a single folder to avoid clutter
   (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
 
-  ;; save history
-  (setq savehist-file "~/.emacs.d/etc/savehist"
-        savehist-mode 1
-        history-delete-duplicates t
-        savehist-save-minibuffer-history 1
-        history-length t
-        savehist-additional-variables
-        '(kill-ring
-          search-ring
-          regexp-search-ring))
-
   ;; check if history file exists, otherwise create it
-  (unless (file-exists-p "~/.emacs.d/etc/savehist")
-    (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
+  ;; (unless (file-exists-p "~/.emacs.d/etc/savehist")
+    ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
 
+  ;; (setq savehist-file "~/.emacs.d/etc/savehist")
+  ;; (savehist-mode 1)
+  ;; (setq history-length t)
+  ;; (setq history-delete-duplicates t)
+  ;; (setq savehist-save-minibuffer-history 1)
+  ;; (setq savehist-additional-variables
+  ;;       '(kill-ring
+  ;;         regexp-search-ring))
 #+END_SRC
 
 ** Encryption
@@ -760,31 +757,31 @@ move between windows by pressing a key
     (ace-window-display-mode t))
 #+END_SRC
 
-*** DISABLED desktop
-Save Session. Don't need it yet.
+*** desktop
+Save emacs session
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package desktop
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq desktop-path '("~/.emacs.d/etc/")
-  ;;         desktop-dirname "~/.emacs.d/etc/"
-  ;;         desktop-base-file-name "emacs-desktop"
-  ;;         desktop-globals-to-save
-  ;;         (append '((extended-command-history . 50)
-  ;;                   (file-name-history . 200)
-  ;;                   (grep-history . 50)
-  ;;                   (compile-history . 50)
-  ;;                   (minibuffer-history . 100)
-  ;;                   (query-replace-history . 100)
-  ;;                   (read-expression-history . 100)
-  ;;                   (regexp-history . 100)
-  ;;                   (regexp-search-ring . 100)
-  ;;                   (search-ring . 50)
-  ;;                   (shell-command-history . 50)
-  ;;                   tags-file-name
-  ;;                   register-alist)))
-  ;;   (desktop-save-mode t))
+  (use-package desktop
+    :ensure t
+    :config
+    (setq desktop-path '("~/.emacs.d/etc/")
+          desktop-dirname "~/.emacs.d/etc/"
+          desktop-base-file-name "emacs-desktop"
+          desktop-globals-to-save
+          (append '((extended-command-history . 50)
+                    (file-name-history . 200)
+                    (grep-history . 50)
+                    (compile-history . 50)
+                    (minibuffer-history . 100)
+                    (query-replace-history . 100)
+                    (read-expression-history . 100)
+                    (regexp-history . 100)
+                    (regexp-search-ring . 100)
+                    (search-ring . 50)
+                    (shell-command-history . 50)
+                    tags-file-name
+                    register-alist)))
+    (desktop-save-mode t))
 #+END_SRC
 *** magit
 
@@ -1020,6 +1017,7 @@ global shortcuts
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key   (kbd "C-c w")  'browser-url-at-point)
+  (global-unset-key (kbd "C-k"))
   (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-S-t") 'helm-buffers-list)
 #+END_SRC
