@@ -296,7 +296,7 @@ SourceCodePro
   ;;   (telephone-line-evil-config))
 #+END_SRC
 * Packages
-** General
+** Common
 *** evil-mode
 vim emulation
 
@@ -418,7 +418,7 @@ vim emulation
     (evil-mode t))
 #+END_SRC
 *** general.el
-Improvement on evil-leader. Specify mutliple leaders. ddk
+Improvement on evil-leader. Specify mutliple leaders.
 
 #+BEGIN_SRC emacs-lisp
   (use-package general
@@ -567,7 +567,8 @@ Better performance in line numbers?
   (use-package nlinum
     :ensure t
     :config
-    (global-nlinum-mode))
+    ;; (global-nlinum-mode)
+    )
 #+END_SRC
 *** DISABLED nlinum-relative
 Relative line numbers
@@ -705,7 +706,6 @@ visualize undo
 
     (use-package evil-smartparens
       :ensure t
-      :defer t
       :config
       (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)))
 #+END_SRC
