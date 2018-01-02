@@ -241,29 +241,26 @@ SourceCodePro
 #+END_SRC
 ** Themes
 *** Theme
+First I set two built-in themes, in case downloading the custom themes fails.
+Other interesting themes: atom-one-dark-theme, grandshell-theme, badwolf-theme.
+
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package atom-one-dark-theme
-  ;;   :ensure t
-  ;;   :config)
-  ;;   ;; (load-theme 'atom-one-dark t))
-
-  ;; (use-package grandshell-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (load-theme 'grandshell t))
-
-  ;; (use-package badwolf-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (load-theme 'badwolf t))
+  (setq light-theme-var 'tango)
+  (setq dark-theme-var  'tsdh-dark)
 
   (use-package sublime-themes
     :ensure t
     :config
-    (load-theme 'junio t))
+    (setq dark-theme-var 'junio))
 
-  ;; (custom-theme-set-faces 'user
-                          ;; '(org-level-3 ((t (:inherit outline-1)))))
+  (use-package flatui-theme
+    :ensure t
+    :config
+    (setq light-theme-var 'flatui))
+
+  ;; Load the dark theme by default
+  (load-theme dark-theme-var t)
+  (setq dark-theme-loaded t)
 #+END_SRC
 
 *** Modeline
@@ -278,7 +275,10 @@ SourceCodePro
     (use-package airline-themes
       :ensure t
       :config
-      (load-theme 'airline-doom-one)))
+      ;; (load-theme 'airline-doom-one)
+      (setq light-theme-modeline-var 'airline-silver)
+      (setq dark-theme-modeline-var 'airline-simple)
+      (load-theme dark-theme-modeline-var)))
 #+END_SRC
 **** DISABLED telephone-line
 [[https://github.com/dbordak/telephone-line][Github]]
@@ -457,6 +457,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "pt"      'projectile-find-test-file
                         "po"      'projectile-find-other-file
                         "s"       'ag-project
+                        "="       (lambda() (interactive) (toggle-light-dark-theme))
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
@@ -874,6 +875,7 @@ hide specific modes from the modeline
     :ensure t
     :config
     (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+
     (diminish 'auto-fill-function)
     (diminish 'auto-revert-mode))
 #+END_SRC
@@ -1011,6 +1013,22 @@ Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/
     (if this-win-2nd (other-window 1))))))
 
 (define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
+** Toggle Light/Dark Theme
+#+BEGIN_SRC emacs-lisp
+  (defun toggle-light-dark-theme ()
+    (if dark-theme-loaded
+        (load-light-theme)
+      (load-dark-theme))
+    (setq dark-theme-loaded (not dark-theme-loaded)))
+
+  (defun load-dark-theme ()
+    (load-theme dark-theme-var t)
+    (load-theme dark-theme-modeline-var))
+
+  (defun load-light-theme ()
+    (load-theme light-theme-var t)
+    (load-theme light-theme-modeline-var))
 #+END_SRC
 * Shortcuts
 global shortcuts
