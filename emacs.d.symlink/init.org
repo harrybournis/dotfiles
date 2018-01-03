@@ -458,6 +458,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "po"      'projectile-find-other-file
                         "s"       'ag-project
                         "="       (lambda() (interactive) (toggle-light-dark-theme))
+                        "]"       (lambda() (interactive) (org-align-all-tags-right))
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
@@ -501,7 +502,7 @@ the best thing in emacs/computer science.
           org-list-indent-offset 2    ;; indent lists by 2
           org-display-inline-images t ;; display images in org by default
           org-hide-emphasis-markers t ;; hide bold, italics etc markers
-          org-tags-column (- (window-width)) ;; make tags align at right window width
+          org-tags-column (- (window-total-width)) ;; make tags align at right window width
           org-latex-compiler "xelatex" ;; the only one working for greek (i think?)
           org-log-into-drawer t ;; save logs in the drawer of current item
           org-clock-into-drawer "clocking" ;; name the clock drawer clocking
@@ -1029,6 +1030,22 @@ Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/
   (defun load-light-theme ()
     (load-theme light-theme-var t)
     (load-theme light-theme-modeline-var))
+#+END_SRC
+** Align org mode tags on the right
+I want to align the org mode tags on the right of the screen, which is a
+relative value. However, org-align-all-tags depends on the org-tags-column variable.
+For some reason setting org-tags-column in the init file does not work. Although the code
+is valid, when I check the value of the variable it is -80. However, if evaluate
+the block and check again, the value is set correctly. At the moment I see no
+workaround except to set org-tags-column immediatelly before calling
+org-align-all-tags. This also means that it will be relative to the window
+width at the moment I want to align them, and not at startup.
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-align-all-tags-right ()
+    ;; Align org tags to the right of the screen
+    (setq org-tags-column (+ 4 (- (window-total-width))))
+    (org-align-all-tags))
 #+END_SRC
 * Shortcuts
 global shortcuts
