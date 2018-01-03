@@ -242,16 +242,17 @@ SourceCodePro
 ** Themes
 *** Theme
 First I set two built-in themes, in case downloading the custom themes fails.
-Other interesting themes: atom-one-dark-theme, grandshell-theme, badwolf-theme.
+Currently using [[https://github.com/ideasman42/emacs-inkpot-theme][inkpot-theme]] for dark theme, and [[https://github.com/john2x/flatui-theme.el][flatui]] for light theme.
+Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][atom-one-dark-theme]], [[https://github.com/owainlewis/emacs-color-themes][sublime themes]], [[https://github.com/steckerhalter/grandshell-theme][grandshell-theme]], [[https://github.com/steckerhalter/grandshell-theme][badwolf-theme]].
 
 #+BEGIN_SRC emacs-lisp
   (setq light-theme-var 'tango)
   (setq dark-theme-var  'tsdh-dark)
 
-  (use-package sublime-themes
+  (use-package inkpot-theme
     :ensure t
     :config
-    (setq dark-theme-var 'junio))
+    (setq dark-theme-var 'inkpot))
 
   (use-package flatui-theme
     :ensure t
