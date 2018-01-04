@@ -459,7 +459,6 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "po"      'projectile-find-other-file
                         "s"       'ag-project
                         "="       (lambda() (interactive) (toggle-light-dark-theme))
-                        "]"       (lambda() (interactive) (org-align-all-tags-right))
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
@@ -474,6 +473,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "cc"      'evilnc-copy-and-comment-lines
                         "cp"      'evilnc-comment-or-uncomment-paragraphs
                         "cv"      'evilnc-toggle-invert-comment-line-by-line
+                        "]"       (lambda() (interactive) (org-align-all-tags-right))
                         "*"       (lambda() (interactive) (insert "⭐ "))))
 #+END_SRC
 *** org-mode
