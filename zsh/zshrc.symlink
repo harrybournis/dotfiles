@@ -49,12 +49,22 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
+# Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
+export KEYTIMEOUT=1
+
 # Enable oh-my-zsh if it exists
 if [[ -d $HOME/.oh-my-zsh/ ]]
 then
   export ZSH=$HOME/.oh-my-zsh
+
+  # Enable spaceship theme
   ZSH_THEME="spaceship"
-  plugins=(zsh-autosuggestions)
+  # hide vi mode indicator until pull request that allows empty string gets merged
+  SPACESHIP_VI_MODE_SHOW=false
+  # SPACESHIP_VI_MODE_INSERT=""
+
+  # Enable plugins
+  plugins=(zsh-autosuggestions vi-mode)
 
   source $ZSH/oh-my-zsh.sh
 fi
