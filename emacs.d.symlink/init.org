@@ -96,7 +96,9 @@ Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
   (setq org-main-file-location "~/Dropbox/org/stuff.org"
+        org-mobile-file-location "~/Dropbox/org/org_mobile/mobile_notes.org"
         org-agenda-files-var  (quote ("~/Dropbox/org/stuff.org"
+                                      "~/Dropbox/org/org_mobile/mobile_notes.org"
                                       "~/Dropbox/org/album.org")))
 #+END_SRC
 * Built-in Settings
@@ -460,6 +462,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "s"       'ag-project
                         "="       (lambda() (interactive) (toggle-light-dark-theme))
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
+                        "a"     (lambda() (interactive) (find-file org-mobile-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
 
