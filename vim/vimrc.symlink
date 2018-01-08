@@ -13,19 +13,21 @@ Plug 'tpope/vim-fugitive'                              " Git wrapper
 Plug 'tpope/vim-sensible'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rhysd/vim-crystal'
+Plug 'scrooloose/syntastic'                            " Syntax checking
 Plug 'valloric/youcompleteme'                          " code completion
 Plug 'artur-shaik/vim-javacomplete2'                   " Java completion
 Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
 Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files
 Plug 'ngmy/vim-rubocop'
 Plug 'HerringtonDarkholme/yats.vim'                    "TypeScript Syntax highlighting
+Plug 'darfink/vim-plist'                               " Add plist editing support to Vim
 Plug 'mattn/emmet-vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "On-demand loading
 Plug 'thoughtbot/vim-rspec'                            "Run RSpec from vim
 Plug 'vim-airline/vim-airline'                         "custom status/tabline bar
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wikitopian/hardmode'                             "Disables keys navigation keys to learn better
-Plug 'tpope/vim-surround'                              "Changes surrounding ("{ etc."
+Plug 'tpope/vim-surround'                              "Changes surrounding ('{ etc.
 Plug 'scrooloose/nerdcommenter'                        "Comments/out stuff
 Plug 'ervandew/supertab'                               "use tab for completion
 Plug 'tpope/vim-rails'                                 "Rails
@@ -64,6 +66,17 @@ set number         "also display normal line numbers
 filetype plugin on
 set grepprg=ack    "Use ack instead of grep"
 
+" Syntastic
+" Default recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " Better Whitespace: remove trailing whitespace on save
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
@@ -81,6 +94,9 @@ let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
 " vim-javasript
 let g:javascript_plugin_jsdoc = 1 " Enable syntax highlighting for JSDocs
+
+" vim-plist
+let g:plist_display_format = 'xml' " show plist files in json format. Saving will preserve original.
 
 "---------Theme Stuff---------"
 "<--------------------------->"
