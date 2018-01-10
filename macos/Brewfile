@@ -18,7 +18,6 @@ brew "diff-so-fancy"
 brew "ffmpeg", args: ["with-fdk-aac", "with-freetype", "with-frei0r", "with-libass", "with-libvorbis", "with-libvpx", "with-opencore-amr", "with-openjpeg", "with-opus", "with-rtmpdump", "with-speex", "with-theora", "with-tools"]
 brew "ruby", link: false
 brew "git-recent"
-brew "pyenv"
 brew "rbenv"
 brew "rbenv-default-gems"
 brew "fish"
