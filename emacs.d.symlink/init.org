@@ -522,6 +522,7 @@ the best thing in emacs/computer science.
           (quote (org-babel-load-languages (quote ((emacs-lisp . t)
                                                    (ruby . t)
                                                    (python . t)
+                                                   (haskell . t)
                                                    (r . t)))))
           org-export-backends (quote (ascii
                                       html
@@ -1008,6 +1009,17 @@ Improved JavaScript editing mode
     :pin melpa-stable
     :config
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+#+END_SRC
+*** Haskell
+**** intero
+Complete development mode for Haskell
+
+#+BEGIN_SRC emacs-lisp
+  (use-package intero
+    :ensure t
+    :pin melpa-stable
+    :config
+    (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
 * Custom Functions
 ** Toggle Window Split
