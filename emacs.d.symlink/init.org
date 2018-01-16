@@ -97,8 +97,10 @@ Variables are set here that are used in the configuration below
 #+BEGIN_SRC emacs-lisp
   (setq org-main-file-location "~/Dropbox/org/mobile/stuff.org"
         org-mobile-file-location "~/Dropbox/org/mobile/mobile_notes.org"
+        org-gcal-file-location   "~/Dropbox/org/gcal.org"
         org-agenda-files-var  (quote ("~/Dropbox/org/mobile/stuff.org"
                                       "~/Dropbox/org/mobile/mobile_notes.org"
+                                      "~/Dropbox/org/gcal.org"
                                       "~/Dropbox/org/mobile/album.org")))
 #+END_SRC
 * Built-in Settings
@@ -565,6 +567,8 @@ the best thing in emacs/computer science.
       )
 
     (setq org-capture-templates `(
+                                  ("a" "Google Calendar Event" entry (file  org-gcal-file-location)
+                                   "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
                                   ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                    "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
                                   ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
@@ -910,6 +914,30 @@ Pretty-copy links from the browser to org with title instead of just url
     :config
     (global-set-key (kbd "C-c p b") 'org-cliplink))
 #+END_SRC
+*** org-gcal
+Google calendar integration with org mode. Sync both ways. There is currently a
+bug where events created in Emacs get duplicated in Google Calendar.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Load api keys for google calendar API
+
+  ;; Only load org-gcal if the .api-keys file is present. Prompt user to rename the
+  ;; .api-keys-sample file to .api-keys and fill in their info.
+  (if (file-exists-p (concat user-emacs-directory ".api-keys"))
+      (progn
+        (load (concat user-emacs-directory ".api-keys"))
+
+        (use-package org-gcal
+          :ensure t
+          :config
+          (setq org-gcal-client-id     api-keys-org-gcal-client-id
+                org-gcal-client-secret api-keys-org-gcal-client-secret
+                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location)))
+          (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+          (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
+    (error "%s" "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload.")
+    )
+#+END_SRC
 *** calfw
 Calendar framework
 
@@ -921,6 +949,12 @@ Calendar framework
     (use-package calfw-org
       :ensure t
       :pin melpa-stable)
+
+    (use-package calfw-gcal
+      :ensure t
+      :config
+      (require 'calfw-gcal))
+
     :config
     (require 'calfw-org))
 #+END_SRC
