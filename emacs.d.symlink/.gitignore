@@ -9,3 +9,6 @@ projectile-bookmarks.eld
 projectile.cache
 network-security.data
 url/
+.api-keys
+org-gcal/
+bookmarks
