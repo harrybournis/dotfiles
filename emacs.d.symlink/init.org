@@ -186,6 +186,10 @@ Variables are set here that are used in the configuration below
   ;; set line spacing
   (setq-default line-spacing 0.2)
 
+  ;; Highlight current line
+  (when window-system
+    (global-hl-line-mode))
+
   ;; open fish for shell
   ;; (setq explicit-shell-file-name "usr/local/bin/fish")
 
@@ -208,7 +212,7 @@ Variables are set here that are used in the configuration below
 
   ;; check if history file exists, otherwise create it
   ;; (unless (file-exists-p "~/.emacs.d/etc/savehist")
-    ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
+  ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
 
   ;; (setq savehist-file "~/.emacs.d/etc/savehist")
   ;; (savehist-mode 1)
@@ -218,6 +222,7 @@ Variables are set here that are used in the configuration below
   ;; (setq savehist-additional-variables
   ;;       '(kill-ring
   ;;         regexp-search-ring))
+
 #+END_SRC
 
 ** Encryption
@@ -499,8 +504,9 @@ the best thing in emacs/computer science.
       (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
       (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
 
-    (setq org-src-fontify-natively t
+    (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
           org-src-tab-acts-natively t
+          org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "SOMEDAY" "DONE"))
           org-todo-keyword-faces '(("TODO"        . "red")
                                    ("IN-PROGRESS" . "yellow")
@@ -565,6 +571,10 @@ the best thing in emacs/computer science.
       (concat
        (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
       )
+
+    ;; Type <el to add an emacs-lisp code block
+    (add-to-list 'org-structure-template-alist
+                 '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 
     (setq org-capture-templates `(
                                   ("a" "Google Calendar Event" entry (file  org-gcal-file-location)
@@ -844,14 +854,14 @@ guesses the correct indentation
     :config
     (dtrt-indent-mode t))
 #+END_SRC
-*** beacon-mode
+*** DISABLED beacon-mode
 highlights cursor
 
 #+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :config
-    (beacon-mode t))
+  ;; (use-package beacon
+  ;;   :ensure t
+  ;;   :config
+  ;;   (beacon-mode t))
 #+END_SRC
 *** lorem-ipsum
 #+BEGIN_SRC emacs-lisp
