@@ -232,79 +232,6 @@ Variables are set here that are used in the configuration below
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (setf epa-pinentry-mode 'loopback)
 #+END_SRC
-** Font
-SourceCodePro
-
-#+BEGIN_SRC emacs-lisp
-  ;; Something to do with resolution
-  (cond (IS-MAC
-         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-15"))
-        (IS-LINUX
-         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-11")))
-
-  ;; Set a font with great support for Unicode Symbols to fallback in
-  ;; those case where certain Unicode glyphs are missing in the current
-  ;; font.
-  (set-fontset-font "fontset-default" nil
-                    (font-spec :size 20 :name "Symbola" :height 110))
-#+END_SRC
-** Themes
-*** Theme
-First I set two built-in themes, in case downloading the custom themes fails.
-Currently using [[https://github.com/ideasman42/emacs-inkpot-theme][inkpot-theme]] for dark theme, and [[https://github.com/john2x/flatui-theme.el][flatui]] for light theme.
-Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][atom-one-dark-theme]], [[https://github.com/owainlewis/emacs-color-themes][sublime themes]], [[https://github.com/steckerhalter/grandshell-theme][grandshell-theme]], [[https://github.com/steckerhalter/grandshell-theme][badwolf-theme]].
-
-#+BEGIN_SRC emacs-lisp
-  (setq light-theme-var 'tango)
-  (setq dark-theme-var  'tsdh-dark)
-
-  (use-package inkpot-theme
-    :ensure t
-    :config
-    (setq dark-theme-var 'inkpot))
-
-  (use-package flatui-theme
-    :ensure t
-    :config
-    (setq light-theme-var 'flatui))
-
-  ;; Load the dark theme by default
-  (load-theme dark-theme-var t)
-  (setq dark-theme-loaded t)
-#+END_SRC
-
-*** Modeline
-**** powerline
-[[https://github.com/milkypostman/powerline][Github]]
-[[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package powerline
-    :ensure t
-    :config
-    (use-package airline-themes
-      :ensure t
-      :config
-      ;; (load-theme 'airline-doom-one)
-      (setq light-theme-modeline-var 'airline-silver)
-      (setq dark-theme-modeline-var 'airline-simple)
-      (load-theme dark-theme-modeline-var)))
-#+END_SRC
-**** DISABLED telephone-line
-[[https://github.com/dbordak/telephone-line][Github]]
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package telephone-line
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-  ;;         telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-  ;;         telephone-line-primary-right-separator 'telephone-line-cubed-right
-  ;;         telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-  ;;   (setq telephone-line-height 24
-  ;;         telephone-line-evil-use-short-tag t)
-  ;;   (telephone-line-evil-config))
-#+END_SRC
 * Packages
 ** Common
 *** evil-mode
@@ -401,13 +328,6 @@ vim emulation
       :defer t)
 
     :config
-    (setq evil-emacs-state-cursor    '("red" box))
-    (setq evil-normal-state-cursor   '("white" box))
-    (setq evil-visual-state-cursor   '("orange" box))
-    (setq evil-insert-state-cursor   '("cyan" box))
-    (setq evil-replace-state-cursor  '("red" box))
-    (setq evil-operator-state-cursor '("red" box))
-
     ;; Scroll faster with C-e and C-y
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
@@ -1065,6 +985,139 @@ Complete development mode for Haskell
     :config
     (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
+* Font and Theme
+** Font
+SourceCodePro
+
+#+BEGIN_SRC emacs-lisp
+  ;; Something to do with resolution
+  (cond (IS-MAC
+         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-15"))
+        (IS-LINUX
+         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-11")))
+
+  ;; Set a font with great support for Unicode Symbols to fallback in
+  ;; those case where certain Unicode glyphs are missing in the current
+  ;; font.
+  (set-fontset-font "fontset-default" nil
+                    (font-spec :size 20 :name "Symbola" :height 110))
+#+END_SRC
+** Themes
+*** Color Scheme
+First I set two built-in themes, in case downloading the custom themes fails.
+Currently using [[https://github.com/ideasman42/emacs-inkpot-theme][inkpot-theme]] for dark theme, and [[https://github.com/john2x/flatui-theme.el][flatui]] for light theme.
+Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][atom-one-dark-theme]], [[https://github.com/owainlewis/emacs-color-themes][sublime themes]], [[https://github.com/steckerhalter/grandshell-theme][grandshell-theme]], [[https://github.com/steckerhalter/grandshell-theme][badwolf-theme]].
+
+#+BEGIN_SRC emacs-lisp
+  (setq light-theme-var 'tango)
+  (setq dark-theme-var  'tsdh-dark)
+
+  (use-package inkpot-theme
+    :ensure t
+    :config
+    (setq dark-theme-var 'inkpot))
+
+  (use-package flatui-theme
+    :ensure t
+    :config
+    (setq light-theme-var 'flatui))
+
+  ;; Load the dark theme by default
+  ;; (load-theme dark-theme-var t)
+  ;; (setq dark-theme-loaded t)
+#+END_SRC
+
+*** Modeline
+**** powerline
+[[https://github.com/milkypostman/powerline][Github]]
+[[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package powerline
+    :ensure t
+    :config
+    (use-package airline-themes
+      :ensure t
+      :config
+      ;; (load-theme 'airline-doom-one)
+      (setq light-theme-modeline-var 'airline-silver)
+      (setq dark-theme-modeline-var 'airline-simple)
+      ;; (load-theme dark-theme-modeline-var)
+      ))
+#+END_SRC
+**** DISABLED telephone-line
+[[https://github.com/dbordak/telephone-line][Github]]
+
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package telephone-line
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+  ;;         telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+  ;;         telephone-line-primary-right-separator 'telephone-line-cubed-right
+  ;;         telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+  ;;   (setq telephone-line-height 24
+  ;;         telephone-line-evil-use-short-tag t)
+  ;;   (telephone-line-evil-config))
+#+END_SRC
+*** Toggle Light/Dark Theme Functions
+#+BEGIN_SRC emacs-lisp
+  (defun toggle-light-dark-theme ()
+    (if dark-theme-loaded
+        (load-light-theme)
+      (load-dark-theme)))
+
+  (defun load-dark-theme ()
+    (load-theme dark-theme-var t)
+    (load-theme dark-theme-modeline-var)
+    (set-face-attribute 'org-checkbox nil
+                        :bold 'normal
+                        :box '(:line-width 1 :color "dim gray" :style nil)
+                        :foreground "gray"
+                        :background nil)
+    (set-face-attribute 'font-lock-string-face nil
+                        :background "#404040"
+                        :foreground "#ffcd8b")
+    (setq org-todo-keyword-faces '(("TODO"        . "red")
+                                   ("IN-PROGRESS" . "yellow")
+                                   ("WAITING"     . "#7453ef")
+                                   ("DONE"        . (:foreground "green" :weight bold))))
+    (setq evil-emacs-state-cursor    '("red" box))
+    (setq evil-normal-state-cursor   '("white" box))
+    (setq evil-visual-state-cursor   '("orange" box))
+    (setq evil-insert-state-cursor   '("cyan" box))
+    (setq evil-replace-state-cursor  '("red" box))
+    (setq evil-operator-state-cursor '("red" box))
+    (setq dark-theme-loaded t))
+
+  (defun load-light-theme ()
+    (load-theme light-theme-var t)
+    (load-theme light-theme-modeline-var)
+    (set-face-attribute 'org-checkbox nil
+                        :box nil
+                        :bold 'normal
+                        :background nil)
+    (set-face-attribute 'font-lock-string-face nil
+                        :background nil
+                        :foreground "#0a74b9")
+    (setq org-todo-keyword-faces '(("TODO"        . "#e74c3c")
+                                   ("IN-PROGRESS" . "#2980b9")
+                                   ;; ("IN-PROGRESS" . "#0da4e5")
+                                   ("WAITING"     . "#8e44ad")
+                                   ;; ("WAITING"     . "#7453ef")
+                                   ("DONE"        . (:foreground "green" :weight bold))))
+    (setq evil-emacs-state-cursor    '("red" box))
+    (setq evil-normal-state-cursor   '("#1abc9c" box))
+    (setq evil-visual-state-cursor   '("orange" box))
+    (setq evil-insert-state-cursor   '("#9b59b6" box))
+    (setq evil-replace-state-cursor  '("red" box))
+    (setq evil-operator-state-cursor '("red" box))
+    (setq dark-theme-loaded nil))
+#+END_SRC
+*** Load Theme
+#+BEGIN_SRC emacs-lisp
+  (load-dark-theme)
+#+END_SRC
 * Custom Functions
 ** Toggle Window Split
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
@@ -1096,22 +1149,6 @@ Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/
     (if this-win-2nd (other-window 1))))))
 
 (define-key ctl-x-4-map "t" 'toggle-window-split)
-#+END_SRC
-** Toggle Light/Dark Theme
-#+BEGIN_SRC emacs-lisp
-  (defun toggle-light-dark-theme ()
-    (if dark-theme-loaded
-        (load-light-theme)
-      (load-dark-theme))
-    (setq dark-theme-loaded (not dark-theme-loaded)))
-
-  (defun load-dark-theme ()
-    (load-theme dark-theme-var t)
-    (load-theme dark-theme-modeline-var))
-
-  (defun load-light-theme ()
-    (load-theme light-theme-var t)
-    (load-theme light-theme-modeline-var))
 #+END_SRC
 ** Align org mode tags on the right
 I want to align the org mode tags on the right of the screen, which is a
