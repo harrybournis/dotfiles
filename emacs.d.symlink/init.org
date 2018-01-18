@@ -313,11 +313,11 @@ vim emulation
           (package-menu package)
           )
         "The list of modes which will be evilified by `evil-collection-init'.
-  Elements are either target mode symbols or lists which `car' is the
-  mode symbol and `cdr' the packages to register.
-  By default, `minibuffer' is not included because many users find
-  this confusing. It will be included if
-  `evil-collection-setup-minibuffer' is set to t."
+    Elements are either target mode symbols or lists which `car' is the
+    mode symbol and `cdr' the packages to register.
+    By default, `minibuffer' is not included because many users find
+    this confusing. It will be included if
+    `evil-collection-setup-minibuffer' is set to t."
         :type '(repeat (choice symbol sexp))
         :group 'evil-collection)
       (evil-collection-init))
@@ -400,12 +400,14 @@ Improvement on evil-leader. Specify mutliple leaders.
                         :keymaps '(normal visual)
                         "`"       'shell
                         "v"       'org-cliplink
+                        "p"       'insert-url-as-org-link
                         "g"       'magit-status
                         "/"       'evilnc-comment-or-uncomment-lines
                         "cl"      'evilnc-quick-comment-or-uncomment-to-the-line
                         "cc"      'evilnc-copy-and-comment-lines
                         "cp"      'evilnc-comment-or-uncomment-paragraphs
                         "cv"      'evilnc-toggle-invert-comment-line-by-line
+                        "wd"      'sp-unwrap-sexp
                         "]"       (lambda() (interactive) (org-align-all-tags-right))
                         "*"       (lambda() (interactive) (insert "⭐ "))))
 #+END_SRC
@@ -775,7 +777,7 @@ guesses the correct indentation
     (dtrt-indent-mode t))
 #+END_SRC
 *** DISABLED beacon-mode
-highlights cursor
+highlights cursor after a jump. Disabled in favor of ~global-hl-line-mode~.
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package beacon
@@ -1166,12 +1168,37 @@ width at the moment I want to align them, and not at startup.
     (setq org-tags-column (+ 4 (- (window-total-width))))
     (org-align-all-tags))
 #+END_SRC
+** Paste URL from clipboard in org mode format
+Insert a URL from clipboard in org mode format and place the cursor in insert
+mode to complete the link text. Originally seen [[https://emacs.stackexchange.com/a/3287][here]]. The original snippet
+matched URLs that were already formatted as org mode links, leading to really
+broken links being inserted. This is a common case since when you delete a link
+it is stored in the register. I added a second regular expression that checks
+whether the URL in the clipboard starts with ~[~.
+
+#+BEGIN_SRC emacs-lisp
+  (defun insert-url-as-org-link ()
+    "If there's a URL on the clipboard, insert it as an org-mode
+  link in the form of [[url][*]], leave point at * and enter insert mode."
+    (interactive)
+    (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD)))
+          (url-org "\\([[]+\\)")
+          (url  "\\(http[s]?://\\|www\\.\\)"))
+      (save-match-data
+        (if (and (not (string-match url-org link)) (string-match url link))
+            (progn
+              (insert (concat "[[" link "][]]"))
+              (backward-char 2)
+              (evil-insert 1))
+          (error "No URL on the clipboard")))))
+#+END_SRC
 * Shortcuts
 global shortcuts
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key   (kbd "C-c w")  'browser-url-at-point)
   (global-unset-key (kbd "C-k"))
+  (global-unset-key (kbd "C-S-k"))
   (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-S-t") 'helm-buffers-list)
 #+END_SRC
