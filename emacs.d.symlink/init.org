@@ -235,7 +235,34 @@ Variables are set here that are used in the configuration below
 * Packages
 ** Common
 *** evil-mode
-vim emulation
+Vim emulation. It is extended with various packages that provide existing Vim
+functionalities. Bellow is a list of the Emacs package with the functionality
+it provides in parentheses:
+
+- [[https://github.com/emacs-evil/evil-surround][Evil Surround]]          (surround.vim)
+- [[https://github.com/emacs-evil/evil-surround][Evil Lion]]              (vim-lion)
+- [[https://github.com/redguardtoo/evil-matchit][Evil Matchit]]           (matchit.vim)
+- [[https://github.com/cofi/evil-numbers][Evil Numbers]]           (increment/decrement binary, octal, decimal and hex numbers)
+- [[https://github.com/redguardtoo/evil-nerd-commenter][Evil NERD Commenter]]    (The NERD Commenter)
+- [[https://github.com/ninrod/evil-string-inflection][Evil String inflection]] (Convert between camelCase, kebab-case, snake_case and UPPER_CASE)
+
+Although Evil mode does a wonderful job of emulating Vim keybinginds when
+editing files, in the rest of the Emacs modes (and there are a lot) I find
+myself stuck with Emacs' keybindings. Fortunately, there are a number of
+packages that aim to bring Vim-sensible keybindings to the rest of them.
+
+I use [[https://github.com/Somelauw/evil-org-mode][evil-org-mode]] mainly for the Org Agenda keybindings and the great
+context-aware functionality it adds to the <return> key. For example, if you are
+on a list item, pressing it will add a new list item bellow, including a
+checkbox, if it is a checklist.. I found the rest of the keybindings distracting.
+
+[[https://github.com/jojojames/evil-collection][Evil Collection]] aims to bring evil mode to every Emacs mode eventually. It has
+keybindings for many modes, but I felt that I should enable it for a particular
+mode only when it is needed. Also enabling it all at once messed up some org
+mode functionality for me, although this might be fixed by now. To enable
+specific modes I overrode ~evil-collection-mode-list~ and added only the modes
+that I was interested in. I am not sure how maintanable this solution is, as the
+package is fairly new.
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -275,9 +302,17 @@ vim emulation
     (use-package evil-nerd-commenter
       :ensure t)
 
-    ;; Org mode extensions for evil users
-    (use-package org-evil
-      :ensure t)
+    ;; Org mode key bindings for evil mode
+    (use-package evil-org
+      :ensure t
+      :after org
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode)
+      (add-hook 'evil-org-mode-hook
+                (lambda ()
+                  (evil-org-set-key-theme '(return))
+                  (require 'evil-org-agenda)
+                  (evil-org-agenda-set-keys))))
 
     ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
     (use-package evil-string-inflection
@@ -313,11 +348,11 @@ vim emulation
           (package-menu package)
           )
         "The list of modes which will be evilified by `evil-collection-init'.
-    Elements are either target mode symbols or lists which `car' is the
-    mode symbol and `cdr' the packages to register.
-    By default, `minibuffer' is not included because many users find
-    this confusing. It will be included if
-    `evil-collection-setup-minibuffer' is set to t."
+        Elements are either target mode symbols or lists which `car' is the
+        mode symbol and `cdr' the packages to register.
+        By default, `minibuffer' is not included because many users find
+        this confusing. It will be included if
+        `evil-collection-setup-minibuffer' is set to t."
         :type '(repeat (choice symbol sexp))
         :group 'evil-collection)
       (evil-collection-init))
@@ -332,6 +367,12 @@ vim emulation
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
 
+    ;; g h takes you to the previous heading and
+    ;; g H takes you to one heading up
+    (evil-define-key 'motion org-mode-map
+      (kbd "g h") 'org-previous-visible-heading
+      (kbd "g H") 'outline-up-heading)
+
     ;; Remap tab to org-cycle in normal mode
     ;; (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
     ;; (evil-define-key 'normal org-mode-map (kbd "S-<tab>") #'org-global-cycle)
@@ -340,14 +381,12 @@ vim emulation
     (evil-set-initial-state 'shell-mode 'emacs)
 
     ;; Save and quit ingoring mistakes from keeping shift pressed down
-    (evil-ex-define-cmd "Q" 'evil-quit)
-    (evil-ex-define-cmd "W" 'evil-write)
+    (evil-ex-define-cmd "Q"  'evil-quit)
+    (evil-ex-define-cmd "W"  'evil-write)
     (evil-ex-define-cmd "Wq" 'evil-save-and-close)
     (evil-ex-define-cmd "wQ" 'evil-save-and-close)
     (evil-ex-define-cmd "WQ" 'evil-save-and-close)
 
-    ;; load evil mode last since evil leader
-    ;; has to be loaded before it
     (evil-mode t))
 #+END_SRC
 *** general.el
