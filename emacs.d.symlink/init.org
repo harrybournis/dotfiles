@@ -439,7 +439,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         :keymaps '(normal visual)
                         "`"       'shell
                         "v"       'org-cliplink
-                        "p"       'insert-url-as-org-link
+                        "p"       'hbournis-insert-url-as-org-link
+                        "l"       'hbournis-org-make-word-link-from-clipboard
                         "g"       'magit-status
                         "/"       'evilnc-comment-or-uncomment-lines
                         "cl"      'evilnc-quick-comment-or-uncomment-to-the-line
@@ -449,6 +450,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[d"      'sp-unwrap-sexp
                         "[["      'wrap-with-brackets
                         "[("      'wrap-with-parens
+                        "\\"      'wrap-with-parens
                         "[{"      'wrap-with-braces
                         "['"      'wrap-with-single-quotes
                         "[\""     'wrap-with-double-quotes
@@ -1227,6 +1229,20 @@ width at the moment I want to align them, and not at startup.
     (setq org-tags-column (+ 5 (- (window-total-width))))
     (org-align-all-tags))
 #+END_SRC
+** Check if cliboard data is a URL
+Helper function for ~hbournis-insert-url-as-org-link~ and
+~hbournis-org-make-word-link-from-clipboard.~ Returns true if url is a valid
+URL. Returns false if it is not a URL, or if it is an org-mode formatted link.
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis-cliboard-contains-url-p (url)
+    ;; Returns true if url is a valid URL. Returns false
+    ;; if it is not a URL, or if it is an org-mode formatted
+    ;; link.
+    (let ((url-pattern  "\\(http[s]?://\\|www\\.\\)")
+          (url-org-pattern "\\([[]+\\)"))
+      (and (not (string-match url-org-pattern url)) (string-match url-pattern url))))
+#+END_SRC
 ** Paste URL from clipboard in org mode format
 Insert a URL from clipboard in org mode format and place the cursor in insert
 mode to complete the link text. Originally seen [[https://emacs.stackexchange.com/a/3287][here]]. The original snippet
@@ -1236,20 +1252,52 @@ it is stored in the register. I added a second regular expression that checks
 whether the URL in the clipboard starts with ~[~.
 
 #+BEGIN_SRC emacs-lisp
-  (defun insert-url-as-org-link ()
+  (defun hbournis-insert-url-as-org-link ()
     "If there's a URL on the clipboard, insert it as an org-mode
   link in the form of [[url][*]], leave point at * and enter insert mode."
     (interactive)
-    (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD)))
-          (url-org "\\([[]+\\)")
-          (url  "\\(http[s]?://\\|www\\.\\)"))
+    (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD))))
       (save-match-data
-        (if (and (not (string-match url-org link)) (string-match url link))
+        (if (hbournis-cliboard-contains-url-p link)
             (progn
               (insert (concat "[[" link "][]]"))
               (backward-char 2)
               (evil-insert 1))
           (error "No URL on the clipboard")))))
+#+END_SRC
+** Paste URL from clipboard using the word at point as link text
+Takes the word that the cursor in on, and replaces it with an org-mode link to
+the URL in the clipboard. If there is no word at the cursor point, it inserts
+the link with the URL as text. Returns an error if there is no URL at the
+clipboard. I wanted to make it work with visual selection, but I maybe in the
+future.
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis-org-make-word-link-from-clipboard ()
+    ;; Takes the word that the cursor in on, and replaces it with an org-mode
+    ;; link to the URL in the clipboard. If there is no word at the cursor point,
+    ;; it inserts the link with the URL as text. Returns an error if there is
+    ;; no URL at the clipboard.
+    (interactive)
+    (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD)))
+          ;; Specify the bounds of the region in order to delete it
+          (bounds (if (use-region-p)
+                      (cons (region-beginning) (region-end))
+                    (bounds-of-thing-at-point 'symbol)))
+          ;; If there is no word at point, then use the link as URL
+          (text (or (thing-at-point 'symbol) link)))
+
+      ;; Check if link is a URL and that it is not already in org mode format,
+      ;; else throw an error
+      (if (hbournis-cliboard-contains-url-p link)
+          (progn
+            ;; If bounds exist, delete the word to replace it with the link
+            (if bounds
+                (delete-region (car bounds) (cdr bounds)))
+
+            ;; Insert the link with the text in org mode link format
+            (insert (concat "[[" link "][" text "]]")))
+        (error "There is no URL at the clipboard."))))
 #+END_SRC
 ** Smartparens wrap-with- functions
 For each pair character, generate a function called ~wrap-with-<pair name>~. [[https://ebzzry.io/en/emacs-pairs/][Source]]
