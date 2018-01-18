@@ -403,7 +403,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     ;; Space to work everywhere. "" nil is used to unbind it first.
     ;; It in not currently working in some modes (i.e. help) and I
-    ;; can not seem to find the answer. I try again in the future.
+    ;; can not seem to find the answer. I will try again in the future.
     (general-define-key :prefix basic-nav-leader
                         :non-normal-prefix "C-SPC"
                         :keymaps '(normal visual motion)
@@ -446,7 +446,13 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "cc"      'evilnc-copy-and-comment-lines
                         "cp"      'evilnc-comment-or-uncomment-paragraphs
                         "cv"      'evilnc-toggle-invert-comment-line-by-line
-                        "wd"      'sp-unwrap-sexp
+                        "[d"      'sp-unwrap-sexp
+                        "[["      'wrap-with-brackets
+                        "[("      'wrap-with-parens
+                        "[{"      'wrap-with-braces
+                        "['"      'wrap-with-single-quotes
+                        "[\""     'wrap-with-double-quotes
+                        "[`"      'wrap-with-back-quotes
                         "]"       'org-align-all-tags-right
                         "*"       (lambda() (interactive) (insert "⭐ "))))
 #+END_SRC
@@ -1244,6 +1250,29 @@ whether the URL in the clipboard starts with ~[~.
               (backward-char 2)
               (evil-insert 1))
           (error "No URL on the clipboard")))))
+#+END_SRC
+** Smartparens wrap-with- functions
+For each pair character, generate a function called ~wrap-with-<pair name>~. [[https://ebzzry.io/en/emacs-pairs/][Source]]
+#+BEGIN_SRC emacs-lisp
+  ;; Source: https://ebzzry.io/en/emacs-pairs/
+  (defmacro def-pairs (pairs)
+    `(progn
+       ,@(cl-loop for (key . val) in pairs
+                  collect
+                  `(defun ,(read (concat
+                                  "wrap-with-"
+                                  (prin1-to-string key)
+                                  "s"))
+                       (&optional arg)
+                     (interactive "p")
+                     (sp-wrap-with-pair ,val)))))
+
+  (def-pairs ((paren . "(")
+              (bracket . "[")
+              (brace . "{")
+              (single-quote . "'")
+              (double-quote . "\"")
+              (back-quote . "`")))
 #+END_SRC
 * Shortcuts
 global shortcuts
