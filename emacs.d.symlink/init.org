@@ -1183,10 +1183,12 @@ global shortcuts
 
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
-* Autostart main org file
+* Autostart Org Agenda
 
 #+BEGIN_SRC emacs-lisp
-  (find-file org-main-file-location)
+  (setq initial-buffer-choice (lambda ()
+                                (org-agenda-list 7)
+                                (get-buffer "*Org Agenda*")))
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
