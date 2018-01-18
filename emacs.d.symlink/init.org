@@ -1197,5 +1197,5 @@ emacsclient
 #+END_SRC
 * Start fullscreen
 #+BEGIN_SRC emacs-lisp
-  (toggle-frame-fullscreen)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
