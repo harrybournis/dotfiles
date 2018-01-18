@@ -429,9 +429,9 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "pt"      'projectile-find-test-file
                         "po"      'projectile-find-other-file
                         "s"       'ag-project
-                        "="       (lambda() (interactive) (toggle-light-dark-theme))
+                        "="       'toggle-light-dark-theme
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
-                        "a"     (lambda() (interactive) (find-file org-mobile-file-location))
+                        "a"       (lambda() (interactive) (find-file org-mobile-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
 
@@ -447,7 +447,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "cp"      'evilnc-comment-or-uncomment-paragraphs
                         "cv"      'evilnc-toggle-invert-comment-line-by-line
                         "wd"      'sp-unwrap-sexp
-                        "]"       (lambda() (interactive) (org-align-all-tags-right))
+                        "]"       'org-align-all-tags-right
                         "*"       (lambda() (interactive) (insert "⭐ "))))
 #+END_SRC
 *** org-mode
@@ -1104,11 +1104,18 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 *** Toggle Light/Dark Theme Functions
 #+BEGIN_SRC emacs-lisp
   (defun toggle-light-dark-theme ()
+    ;; Toggles between the selected dark and light
+    ;; themes.
+    (interactive)
     (if dark-theme-loaded
         (load-light-theme)
       (load-dark-theme)))
 
   (defun load-dark-theme ()
+    ;; Load the specified dark theme. It uses the variables
+    ;; dark-theme-var, dark-theme-modeline-var. Also sets some
+    ;; faces for org-checkbox, strings, org TODO items and evil
+    ;; mode cursors.
     (load-theme dark-theme-var t)
     (load-theme dark-theme-modeline-var)
     (set-face-attribute 'org-checkbox nil
@@ -1132,6 +1139,10 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq dark-theme-loaded t))
 
   (defun load-light-theme ()
+    ;; Load the specified light theme. It uses the variables
+    ;; light-theme-var, light-theme-modeline-var. Also sets some
+    ;; faces for org-checkbox, strings, org TODO items and evil
+    ;; mode cursors.
     (load-theme light-theme-var t)
     (load-theme light-theme-modeline-var)
     (set-face-attribute 'org-checkbox nil
@@ -1164,32 +1175,33 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
 
 #+BEGIN_SRC emacs-lisp
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-       (next-win-buffer (window-buffer (next-window)))
-       (this-win-edges (window-edges (selected-window)))
-       (next-win-edges (window-edges (next-window)))
-       (this-win-2nd (not (and (<= (car this-win-edges)
-           (car next-win-edges))
-             (<= (cadr this-win-edges)
-           (cadr next-win-edges)))))
-       (splitter
-        (if (= (car this-win-edges)
-         (car (window-edges (next-window))))
-      'split-window-horizontally
-    'split-window-vertically)))
-  (delete-other-windows)
-  (let ((first-win (selected-window)))
-    (funcall splitter)
-    (if this-win-2nd (other-window 1))
-    (set-window-buffer (selected-window) this-win-buffer)
-    (set-window-buffer (next-window) next-win-buffer)
-    (select-window first-win)
-    (if this-win-2nd (other-window 1))))))
+  (defun toggle-window-split ()
+    ;; Toggle the placement of windows between horizontal and vertical split
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+         (next-win-buffer (window-buffer (next-window)))
+         (this-win-edges (window-edges (selected-window)))
+         (next-win-edges (window-edges (next-window)))
+         (this-win-2nd (not (and (<= (car this-win-edges)
+             (car next-win-edges))
+               (<= (cadr this-win-edges)
+             (cadr next-win-edges)))))
+         (splitter
+          (if (= (car this-win-edges)
+           (car (window-edges (next-window))))
+        'split-window-horizontally
+      'split-window-vertically)))
+    (delete-other-windows)
+    (let ((first-win (selected-window)))
+      (funcall splitter)
+      (if this-win-2nd (other-window 1))
+      (set-window-buffer (selected-window) this-win-buffer)
+      (set-window-buffer (next-window) next-win-buffer)
+      (select-window first-win)
+      (if this-win-2nd (other-window 1))))))
 
-(define-key ctl-x-4-map "t" 'toggle-window-split)
+  (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 ** Align org mode tags on the right
 I want to align the org mode tags on the right of the screen, which is a
@@ -1203,8 +1215,10 @@ width at the moment I want to align them, and not at startup.
 
 #+BEGIN_SRC emacs-lisp
   (defun org-align-all-tags-right ()
-    ;; Align org tags to the right of the screen
-    (setq org-tags-column (+ 4 (- (window-total-width))))
+    ;; Align org tags to the right of the screen. Calculates it according to the
+    ;; window-total-width property.
+    (interactive)
+    (setq org-tags-column (+ 5 (- (window-total-width))))
     (org-align-all-tags))
 #+END_SRC
 ** Paste URL from clipboard in org mode format
