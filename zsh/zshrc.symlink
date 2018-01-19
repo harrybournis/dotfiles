@@ -59,9 +59,6 @@ then
 
   # Enable spaceship theme
   ZSH_THEME="spaceship"
-  # hide vi mode indicator until pull request that allows empty string gets merged
-  SPACESHIP_VI_MODE_SHOW=false
-  # SPACESHIP_VI_MODE_INSERT=""
 
   # Enable plugins
   plugins=(zsh-autosuggestions vi-mode)

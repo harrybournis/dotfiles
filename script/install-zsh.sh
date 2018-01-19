@@ -12,7 +12,10 @@ install_zsh () {
         # Install Spaceship zsh theme
         if [[ -d ~/.oh-my-zsh/ ]]; then
             if [[ ! -f ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme ]] ; then
-                sh -c "$(curl -o - https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/install.zsh | zsh)"
+                sh -c "$(curl -o - https://raw.githubusercontent.com/denysdovhan/spaceship-prompt/master/scripts/install.sh | zsh)"
+            fi
+            if [[ ! -f ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme ]] ; then
+                ln -sf ~/.spaceship-prompt/spaceship.zsh ~/.oh-my-zsh/custom/themes/spaceship.zsh_theme
             fi
         fi
 
