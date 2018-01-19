@@ -442,11 +442,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "p"       'hbournis-insert-url-as-org-link
                         "l"       'hbournis-org-make-word-link-from-clipboard
                         "g"       'magit-status
-                        "/"       'evilnc-comment-or-uncomment-lines
-                        "cl"      'evilnc-quick-comment-or-uncomment-to-the-line
-                        "cc"      'evilnc-copy-and-comment-lines
-                        "cp"      'evilnc-comment-or-uncomment-paragraphs
-                        "cv"      'evilnc-toggle-invert-comment-line-by-line
+                        "//"      'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
+                        "/l"      'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
+                        "/c"      'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
+                        "/p"      'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
+                        "/r"      'comment-or-uncomment-region                   ;; Un/Comment selection
+                        "/v"      'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
                         "[d"      'sp-unwrap-sexp
                         "[["      'wrap-with-brackets
                         "[("      'wrap-with-parens
