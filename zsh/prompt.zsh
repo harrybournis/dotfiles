@@ -12,6 +12,9 @@ SPACESHIP_VI_MODE_SUFFIX=""
 SPACESHIP_VI_MODE_INSERT=""
 SPACESHIP_VI_MODE_NORMAL="[N] "
 
+# Do not truncate directories when in a git repo
+SPACESHIP_DIR_TRUNC_REPO=false
+
 # Spaceship Prompt Order
 SPACESHIP_PROMPT_ORDER=(
     # time          # Time stampts section
