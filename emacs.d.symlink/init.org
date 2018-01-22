@@ -442,6 +442,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "p"       'hbournis-insert-url-as-org-link
                         "l"       'hbournis-org-make-word-link-from-clipboard
                         "g"       'magit-status
+                        "x"       'helm-M-x
                         "//"      'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
                         "/l"      'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
                         "/c"      'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
@@ -477,7 +478,7 @@ the best thing in emacs/computer science.
     (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
           org-src-tab-acts-natively t
           org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
-          org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "SOMEDAY" "DONE"))
+          org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
           org-todo-keyword-faces '(("TODO"        . "red")
                                    ("IN-PROGRESS" . "yellow")
                                    ("WAITING"     . "#7453ef")
@@ -501,6 +502,8 @@ the best thing in emacs/computer science.
                                                    (ruby . t)
                                                    (python . t)
                                                    (haskell . t)
+                                                   (js . t)
+                                                   (shell . t)
                                                    (r . t)))))
           org-export-backends (quote (ascii
                                       html
