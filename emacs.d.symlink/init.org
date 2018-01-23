@@ -430,6 +430,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "po"      'projectile-find-other-file
                         "s"       'ag-project
                         "="       'toggle-light-dark-theme
+                        "t"       'org-todo
                         "SPC"     (lambda() (interactive) (find-file org-main-file-location))
                         "a"       (lambda() (interactive) (find-file org-mobile-file-location))
                         "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
@@ -539,15 +540,12 @@ the best thing in emacs/computer science.
 
     (define-key org-mode-map (kbd "C-k") nil)
 
+    ;; Used for the protocol link see below
     (defun transform-square-brackets-to-round-ones(string-to-transform)
       "Transforms [ into ( and ] into ), other chars left unchanged."
       (concat
        (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
       )
-
-    ;; Type <el to add an emacs-lisp code block
-    (add-to-list 'org-structure-template-alist
-                 '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 
     (setq org-capture-templates `(
                                   ("a" "Google Calendar Event" entry (file  org-gcal-file-location)
@@ -557,6 +555,17 @@ the best thing in emacs/computer science.
                                   ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                    "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
                                   ))
+
+
+    ;; Type <el to add an emacs-lisp code block
+    (add-to-list 'org-structure-template-alist
+                 '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+
+    ;; Show only the time when a note is added, instead of 'Note taken on..'
+    (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
+    (add-to-list 'org-log-note-headings '(note . "%t"))
+
+
     )
 #+END_SRC
 
