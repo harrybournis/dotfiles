@@ -95,10 +95,10 @@ the elpa repositories from where the packages are fetched.
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-main-file-location "~/Dropbox/org/mobile/stuff.org"
+  (setq org-main-file-location "~/Dropbox/org/stuff.org"
         org-mobile-file-location "~/Dropbox/org/mobile/mobile_notes.org"
         org-gcal-file-location   "~/Dropbox/org/gcal.org"
-        org-agenda-files-var  (quote ("~/Dropbox/org/mobile/stuff.org"
+        org-agenda-files-var  (quote ("~/Dropbox/org/stuff.org"
                                       "~/Dropbox/org/mobile/mobile_notes.org"
                                       "~/Dropbox/org/gcal.org"
                                       "~/Dropbox/org/mobile/album.org")))
