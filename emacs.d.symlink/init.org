@@ -387,6 +387,9 @@ package is fairly new.
     (evil-ex-define-cmd "wQ" 'evil-save-and-close)
     (evil-ex-define-cmd "WQ" 'evil-save-and-close)
 
+    ;; Does not replace clipboard copy with the text selected while in visual mode
+    (fset 'evil-visual-update-x-selection 'ignore)
+
     (evil-mode t))
 #+END_SRC
 *** general.el
