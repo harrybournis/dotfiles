@@ -479,6 +479,9 @@ the best thing in emacs/computer science.
       (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
       (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
 
+    (add-to-list 'load-path "~/.emacs.d/elpa/org-collector")
+    (load "org-collector")
+
     (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
           org-src-tab-acts-natively t
           org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
@@ -520,7 +523,8 @@ the best thing in emacs/computer science.
                         org-info
                         org-w3m
                         org-protocol
-                        org-bibtex)
+                        org-bibtex
+                        org-collector)
 
           org-lowest-priority ?D
 
