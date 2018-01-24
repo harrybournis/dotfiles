@@ -10,3 +10,7 @@ atom.symlink/blob-store
 atom.symlink/recovery
 
 git/gitconfig.local.symlink
+
+ranger/config/ranger.symlink/history
+ranger/config/ranger.symlink/bookmarks
+ranger/config/ranger.symlink/tagged
