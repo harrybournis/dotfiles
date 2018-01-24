@@ -125,14 +125,25 @@ link_file () {
   fi
 }
 
+# source
+# https://github.com/holman/dotfiles/issues/101#issuecomment-50263838
 install_dotfiles () {
   info 'installing dotfiles'
 
   local overwrite_all=false backup_all=false skip_all=false
 
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  for src in $(find "$DOTFILES_ROOT" -name '*.symlink')
   do
-    dst="$HOME/.$(basename "${src%.*}")"
+    relative_src=$(echo $src | sed -e "s=$DOTFILES_ROOT==" -e "s=.symlink==")
+    dst="$HOME/.$(echo $relative_src | cut -d "/" -f3-)"
+
+    # create directory if needed
+    dir=$(dirname $dst)
+    if ! [ -d $dir ]
+    then
+      mkdir -p $dir
+    fi
+
     link_file "$src" "$dst"
   done
 }
