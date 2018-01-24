@@ -742,7 +742,7 @@ open recently closed files
           recentf-save-file "~/.emacs.d/etc/recentf"
           recentf-exclude '("commit_msg" "commit_editmsg"))
     ;; periodically save list
-    (run-at-time nil (* 5 60) 'recentf-save-list)
+    ;; (run-at-time nil (* 5 60) 'recentf-save-list)
     :bind
     (("C-x f" . helm-recentf)))
 #+END_SRC
