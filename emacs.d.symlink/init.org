@@ -958,6 +958,23 @@ Calendar framework
     :config
     (require 'calfw-org))
 #+END_SRC
+*** ranger
+Emulates ranger in emacs. Replaces dired when browsing folders.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ranger
+    :ensure t
+    :config
+    (setq ranger-override-dired 'ranger
+          ranger-show-hidden t
+          ranger-modify-header t
+          ranger-preview-file t
+          ranger-max-preview-size 10
+          ranger-dont-show-binary t
+          ranger-cleanup-on-disable t
+          ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi"))
+    (ranger-override-dired-mode t))
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
