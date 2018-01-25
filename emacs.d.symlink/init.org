@@ -1076,6 +1076,16 @@ Complete development mode for Haskell
     :config
     (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
+*** R & Julia
+**** ESS (Emacs Spearks Statistics)
+[[http://ess.r-project.org/][ESS]] provides modes for R and Julia. When I tried to install it from master it
+was broken, so melpa-stable should be preferred.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package ess
+      :ensure t
+      :pin melpa-stable)
+#+END_SRC
 * Font and Theme
 ** Font
 SourceCodePro
