@@ -443,8 +443,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         :keymaps '(normal visual)
                         "`"       'shell
                         "v"       'org-cliplink
-                        "p"       'hbournis-insert-url-as-org-link
-                        "l"       'hbournis-org-make-word-link-from-clipboard
+                        "p"       'hbournis/insert-url-as-org-link
+                        "l"       'hbournis/org-make-word-link-from-clipboard
                         "g"       'magit-status
                         "x"       'helm-M-x
                         "//"      'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
@@ -1282,12 +1282,12 @@ width at the moment I want to align them, and not at startup.
     (org-align-all-tags))
 #+END_SRC
 ** Check if cliboard data is a URL
-Helper function for ~hbournis-insert-url-as-org-link~ and
-~hbournis-org-make-word-link-from-clipboard.~ Returns true if url is a valid
+Helper function for ~hbournis/insert-url-as-org-link~ and
+~hbournis/org-make-word-link-from-clipboard.~ Returns true if url is a valid
 URL. Returns false if it is not a URL, or if it is an org-mode formatted link.
 
 #+BEGIN_SRC emacs-lisp
-  (defun hbournis-cliboard-contains-url-p (url)
+  (defun hbournis/cliboard-contains-url-p (url)
     ;; Returns true if url is a valid URL. Returns false
     ;; if it is not a URL, or if it is an org-mode formatted
     ;; link.
@@ -1304,13 +1304,13 @@ it is stored in the register. I added a second regular expression that checks
 whether the URL in the clipboard starts with ~[~.
 
 #+BEGIN_SRC emacs-lisp
-  (defun hbournis-insert-url-as-org-link ()
+  (defun hbournis/insert-url-as-org-link ()
     "If there's a URL on the clipboard, insert it as an org-mode
   link in the form of [[url][*]], leave point at * and enter insert mode."
     (interactive)
     (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD))))
       (save-match-data
-        (if (hbournis-cliboard-contains-url-p link)
+        (if (hbournis/cliboard-contains-url-p link)
             (progn
               (insert (concat "[[" link "][]]"))
               (backward-char 2)
@@ -1325,7 +1325,7 @@ clipboard. I wanted to make it work with visual selection, but I maybe in the
 future.
 
 #+BEGIN_SRC emacs-lisp
-  (defun hbournis-org-make-word-link-from-clipboard ()
+  (defun hbournis/org-make-word-link-from-clipboard ()
     ;; Takes the word that the cursor in on, and replaces it with an org-mode
     ;; link to the URL in the clipboard. If there is no word at the cursor point,
     ;; it inserts the link with the URL as text. Returns an error if there is
@@ -1341,7 +1341,7 @@ future.
 
       ;; Check if link is a URL and that it is not already in org mode format,
       ;; else throw an error
-      (if (hbournis-cliboard-contains-url-p link)
+      (if (hbournis/cliboard-contains-url-p link)
           (progn
             ;; If bounds exist, delete the word to replace it with the link
             (if bounds
@@ -1373,6 +1373,12 @@ For each pair character, generate a function called ~wrap-with-<pair name>~. [[h
               (single-quote . "'")
               (double-quote . "\"")
               (back-quote . "`")))
+#+END_SRC
+** Transform org date to simple year-month-day string
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/org-date-to-simple-string (date)
+    "Transform an org date to a simple year-month-day format"
+    (substring (format "%S" date) 1 11))
 #+END_SRC
 * Shortcuts
 global shortcuts
