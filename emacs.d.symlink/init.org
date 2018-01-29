@@ -412,6 +412,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         :keymaps '(normal visual motion)
                         "" nil
                         "b"       'list-buffers
+                        "TAB"     'mode-line-other-buffer
                         "x"       'helm-M-x
                         "o"       'occur
                         "f"       'ace-window
@@ -434,10 +435,11 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "s"       'ag-project
                         "="       'toggle-light-dark-theme
                         "t"       'org-todo
-                        "SPC"     (lambda() (interactive) (find-file org-main-file-location))
-                        "a"       (lambda() (interactive) (find-file org-mobile-file-location))
-                        "\\"      (lambda() (interactive) (load-file "~/.emacs.d/init.el"))
-                        "m"       (lambda() (interactive) (find-file "~/.emacs.d/init.org")))
+                        "ns"      'hbournis/create-scratch-buffer
+                        "SPC"     (lambda () (interactive) (find-file org-main-file-location))
+                        "a"       (lambda () (interactive) (find-file org-mobile-file-location))
+                        "\\"      (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
+                        "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
     (general-define-key :prefix extra-tools-leader
                         :keymaps '(normal visual)
@@ -462,7 +464,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[\""     'wrap-with-double-quotes
                         "[`"      'wrap-with-back-quotes
                         "]"       'org-align-all-tags-right
-                        "*"       (lambda() (interactive) (insert "⭐ "))))
+                        "*"       (lambda() (interactive) (forward-char 1) (insert " ⭐"))))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
@@ -1312,7 +1314,7 @@ whether the URL in the clipboard starts with ~[~.
       (save-match-data
         (if (hbournis/cliboard-contains-url-p link)
             (progn
-              (insert (concat "[[" link "][]]"))
+              (insert (concat " [[" link "][]]"))
               (backward-char 2)
               (evil-insert 1))
           (error "No URL on the clipboard")))))
