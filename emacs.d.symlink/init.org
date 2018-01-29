@@ -1385,6 +1385,16 @@ For each pair character, generate a function called ~wrap-with-<pair name>~. [[h
     "Transform an org date to a simple year-month-day format"
     (substring (format "%S" date) 1 11))
 #+END_SRC
+** Recreate scratch buffer
+A simple function from [[https://www.emacswiki.org/emacs/RecreateScratchBuffer][Emacs wiki]] to recreate the scratch buffer
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/create-scratch-buffer nil
+    "create a scratch buffer"
+    (interactive)
+    (switch-to-buffer (get-buffer-create "*scratch*"))
+    (lisp-interaction-mode))
+#+END_SRC
 * Shortcuts
 global shortcuts
 
