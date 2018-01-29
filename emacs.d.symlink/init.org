@@ -506,6 +506,9 @@ the best thing in emacs/computer science.
           org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
           org-directory (expand-file-name "~/Dropbox/org/")
           org-agenda-files org-agenda-files-var
+          org-agenda-span 10                       ;; org agenda shows 10 days
+          org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
+          org-agenda-start-day "-3d"               ;; org agenda starts 3 days before today
           org-babel-do-load-languages
           (quote (org-babel-load-languages (quote ((emacs-lisp . t)
                                                    (ruby . t)
