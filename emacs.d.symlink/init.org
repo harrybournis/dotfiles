@@ -339,7 +339,7 @@ package is fairly new.
           emms
           eval-sexp-fu
           ggtags
-          help
+          ;; help
           ibuffer
           image
           image+
@@ -438,7 +438,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "ns"      'hbournis/create-scratch-buffer
                         "SPC"     (lambda () (interactive) (find-file org-main-file-location))
                         "a"       (lambda () (interactive) (find-file org-mobile-file-location))
-                        "\\"      (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
+                        "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
     (general-define-key :prefix extra-tools-leader
@@ -481,8 +481,8 @@ the best thing in emacs/computer science.
       (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
       (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
 
-    (add-to-list 'load-path "~/.emacs.d/elpa/org-collector")
-    (load "org-collector")
+    ;; Load org-collector
+    (add-to-list 'load-path "~/.emacs.d/lisp/org-collector")
 
     (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
           org-src-tab-acts-natively t
@@ -534,7 +534,7 @@ the best thing in emacs/computer science.
           org-lowest-priority ?D
 
           ;; custom colors for priorities
-          org-priority-faces '((?A . (:foreground "red" :weight 'bold))
+          org-priority-faces '((?A . (:foreground "red" :weight bold))
                                (?B . (:foreground "orange"))
                                (?C . (:foreground "yellow"))
                                (?D . (:foreground "green"))))
@@ -1265,8 +1265,6 @@ Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/
       (set-window-buffer (next-window) next-win-buffer)
       (select-window first-win)
       (if this-win-2nd (other-window 1))))))
-
-  (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 ** Align org mode tags on the right
 I want to align the org mode tags on the right of the screen, which is a
