@@ -487,9 +487,9 @@ the best thing in emacs/computer science.
     (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
           org-src-tab-acts-natively t
           org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
-          org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
+          org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
           org-todo-keyword-faces '(("TODO"        . "red")
-                                   ("IN-PROGRESS" . "yellow")
+                                   ("DOING"       . "yellow")
                                    ("WAITING"     . "#7453ef")
                                    ("DONE"        . (:foreground "green" :weight bold)))
 
@@ -1192,7 +1192,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                         :background "#404040"
                         :foreground "#ffcd8b")
     (setq org-todo-keyword-faces '(("TODO"        . "red")
-                                   ("IN-PROGRESS" . "yellow")
+                                   ("DOING"       . "yellow")
                                    ("WAITING"     . "#7453ef")
                                    ("DONE"        . (:foreground "green" :weight bold))))
     (setq evil-emacs-state-cursor    '("red" box))
@@ -1218,7 +1218,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                         :background nil
                         :foreground "#0a74b9")
     (setq org-todo-keyword-faces '(("TODO"        . "#e74c3c")
-                                   ("IN-PROGRESS" . "#2980b9")
+                                   ("DOING" . "#2980b9")
                                    ;; ("IN-PROGRESS" . "#0da4e5")
                                    ("WAITING"     . "#8e44ad")
                                    ;; ("WAITING"     . "#7453ef")
