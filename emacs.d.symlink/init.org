@@ -66,7 +66,7 @@ the elpa repositories from where the packages are fetched.
 
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("org" . "http://orgmode.org/elpa/")
+                           ("org" . "https://orgmode.org/elpa/")
                            ("melpa" . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/")))
 #+END_SRC
@@ -492,6 +492,7 @@ the best thing in emacs/computer science.
                                    ("DOING"       . "yellow")
                                    ("WAITING"     . "#7453ef")
                                    ("DONE"        . (:foreground "green" :weight bold)))
+          org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
 
           org-startup-indented t                   ;; indent on startup
           org-indent-indentation-per-level 2       ;; indent each level by 2
@@ -1092,21 +1093,27 @@ was broken, so melpa-stable should be preferred.
       :pin melpa-stable)
 #+END_SRC
 * Font and Theme
-** Font
-SourceCodePro
+** Fonts
+SourceCodePro is my default font.
+Execute ~(print (font-family-list))~ to get a list of all available fonts and how
+Emacs expects you to write them.
 
 #+BEGIN_SRC emacs-lisp
   ;; Something to do with resolution
-  (cond (IS-MAC
-         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-15"))
-        (IS-LINUX
-         (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-11")))
+  (if (member "SauceCodePro Nerd Font" (font-family-list))
+      (cond (IS-MAC
+             (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-15"))
+            (IS-LINUX
+             (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-11")))
+    (set-face-attribute 'default nil :font "Courier New-15"))
 
   ;; Set a font with great support for Unicode Symbols to fallback in
   ;; those case where certain Unicode glyphs are missing in the current
   ;; font.
-  (set-fontset-font "fontset-default" nil
-                    (font-spec :size 20 :name "Symbola" :height 110))
+  (when (member "Unifont" (font-family-list))
+    (set-fontset-font t 'unicode "Unifont-15" nil 'prepend))
+
+  ;; (set-face-attribute 'default nil :font "Unifont-15")
 #+END_SRC
 ** Themes
 *** Color Scheme
@@ -1415,7 +1422,7 @@ global shortcuts
 
 #+BEGIN_SRC emacs-lisp
   (setq initial-buffer-choice (lambda ()
-                                (org-agenda-list 7)
+                                (org-agenda-list 10)
                                 (get-buffer "*Org Agenda*")))
 #+END_SRC
 * Start emacs server
