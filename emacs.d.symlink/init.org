@@ -65,12 +65,16 @@ Determine whether the system is mac or linux
 the elpa repositories from where the packages are fetched.
 
 #+BEGIN_SRC emacs-lisp
-  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("melpa" . "https://melpa.org/packages/")
+  (setq package-archives '(("gnu"          . "https://elpa.gnu.org/packages/")
+                           ("org"          . "https://orgmode.org/elpa/")
+                           ("melpa"        . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/")))
 #+END_SRC
 
+** Security
+#+BEGIN_SRC emacs-lisp
+  (setq network-security-level 'high)
+#+END_SRC
 ** use-package & bind-key
 
 #+BEGIN_SRC emacs-lisp
