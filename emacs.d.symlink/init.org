@@ -404,77 +404,72 @@ Improvement on evil-leader. Specify mutliple leaders.
     :ensure t
     :config
     (general-evil-setup t)
-    (setq general-default-keymaps 'evil-normal-state-map
-          basic-nav-leader "SPC"
-          extra-tools-leader "'")
+    ;; (setq general-default-keymaps 'evil-normal-state-map
+    ;;       basic-nav-leader "SPC"
+    ;;       extra-tools-leader "'")
 
-    ;; Space to work everywhere. "" nil is used to unbind it first.
-    ;; It in not currently working in some modes (i.e. help) and I
-    ;; can not seem to find the answer. I will try again in the future.
-    (general-define-key :prefix basic-nav-leader
-                        :non-normal-prefix "C-SPC"
-                        :keymaps '(normal visual motion)
-                        "" nil
-                        "b"       'list-buffers
-                        "TAB"     'mode-line-other-buffer
-                        "x"       'helm-M-x
-                        "o"       'occur
-                        "f"       'ace-window
-                        "<up>"    'windmove-up
-                        "<down>"  'windmove-down
-                        "<right>" 'windmove-right
-                        "<left>"  'windmove-left
-                        "k"       'windmove-up
-                        "j"       'windmove-down
-                        "l"       'windmove-right
-                        "h"       'windmove-left
-                        "0"       'delete-window
-                        "1"       'delete-other-windows
-                        "2"       'split-window-below
-                        "3"       'split-window-right
-                        "d"       'delete-window
-                        "h"       'split-window-below
-                        "v"       'split-window-right
-                        "|"       'toggle-window-split
-                        "p"       'helm-projectile-find-file
-                        "Pt"      'projectile-find-test-file
-                        "Po"      'projectile-find-other-file
-                        "s"       'ag-project
-                        "="       'toggle-light-dark-theme
-                        "t"       'org-todo
-                        "ns"      'hbournis/create-scratch-buffer
-                        "SPC"     (lambda () (interactive) (find-file org-main-file-location))
-                        "a"       (lambda () (interactive) (find-file org-mobile-file-location))
-                        "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
-                        "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
+    ;; In order for Space to work everywhere. "" nil is used to unbind it first.
+    (general-create-definer basic-nav-leader :prefix "SPC" :keymaps '(normal visual motion) :non-normal-prefix "C-SPC")
+    (basic-nav-leader "" nil
+                      "b"       'list-buffers
+                      "TAB"     'mode-line-other-buffer
+                      "x"       'helm-M-x
+                      "o"       'occur
+                      "f"       'ace-window
+                      "<up>"    'windmove-up
+                      "<down>"  'windmove-down
+                      "<right>" 'windmove-right
+                      "<left>"  'windmove-left
+                      "k"       'windmove-up
+                      "j"       'windmove-down
+                      "l"       'windmove-right
+                      "h"       'windmove-left
+                      "0"       'delete-window
+                      "1"       'delete-other-windows
+                      "2"       'split-window-below
+                      "3"       'split-window-right
+                      "d"       'delete-window
+                      "h"       'split-window-below
+                      "v"       'split-window-right
+                      "|"       'toggle-window-split
+                      "p"       'helm-projectile-find-file
+                      "Pt"      'projectile-find-test-file
+                      "Po"      'projectile-find-other-file
+                      "s"       'ag-project
+                      "="       'toggle-light-dark-theme
+                      "t"       'org-todo
+                      "ns"      'hbournis/create-scratch-buffer
+                      "SPC"     (lambda () (interactive) (find-file org-main-file-location))
+                      "a"       (lambda () (interactive) (find-file org-mobile-file-location))
+                      "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
+                      "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
-    (general-define-key :prefix extra-tools-leader
-                        :keymaps '(normal visual)
-                        "`"       'shell
-                        "v"       'org-cliplink
-                        "p"       'hbournis/insert-url-as-org-link
-                        "l"       'hbournis/org-make-word-link-from-clipboard
-                        "g"       'magit-status
-                        "x"       'helm-M-x
-                        "/"      'evilnc-comment-or-uncomment-lines              ;; Un/Comment current line
-                        "?l"      'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
-                        "?c"      'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
-                        "?p"      'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
-                        "?r"      'comment-or-uncomment-region                   ;; Un/Comment selection
-                        "?v"      'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
-                        "[d"      'sp-unwrap-sexp
-                        "[["      'wrap-with-brackets
-                        "[("      'wrap-with-parens
-                        "\\"      'wrap-with-parens
-                        "[{"      'wrap-with-braces
-                        "['"      'wrap-with-single-quotes
-                        "[\""     'wrap-with-double-quotes
-                        "[`"      'wrap-with-back-quotes
-                        "]"       'org-align-all-tags-right
-                        "fn"      'flycheck-next-error
-                        "fp"      'flycheck-previous-error
-                        "fl"      'flycheck-list-errors
-                        "*"       (lambda() (interactive) (forward-char 1) (insert " ⭐"))))
+    (general-create-definer extra-tools-leader :prefix "'" :keymaps '(normal visual))
+    (extra-tools-leader "`"   'shell
+                        "v"   'org-cliplink
+                        "p"   'hbournis/insert-url-as-org-link
+                        "l"   'hbournis/org-make-word-link-from-clipboard
+                        "g"   'magit-status
+                        "x"   'helm-M-x
+                        "/"   'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
+                        "?l"  'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
+                        "?c"  'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
+                        "?p"  'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
+                        "?r"  'comment-or-uncomment-region                   ;; Un/Comment selection
+                        "?v"  'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
+                        "[d"  'sp-unwrap-sexp
+                        "[["  'wrap-with-brackets
+                        "[("  'wrap-with-parens
+                        "\\"  'wrap-with-parens
+                        "[{"  'wrap-with-braces
+                        "['"  'wrap-with-single-quotes
+                        "[\"" 'wrap-with-double-quotes
+                        "[`"  'wrap-with-back-quotes
+                        "]"   'org-align-all-tags-right
+                        "fn"  'flycheck-next-error
+                        "fp"  'flycheck-previous-error
+                        "fl"  'flycheck-list-errors
+                        "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐"))))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
