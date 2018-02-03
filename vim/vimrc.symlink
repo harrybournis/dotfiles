@@ -9,24 +9,24 @@ endif
 "<----------------------------->"
 call plug#begin()
 
-Plug 'tpope/vim-fugitive'                              " Git wrapper
+" Plug 'tpope/vim-fugitive'                              " Git wrapper
 Plug 'tpope/vim-sensible'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'rhysd/vim-crystal'
+" Plug 'rhysd/vim-crystal'
 Plug 'scrooloose/syntastic'                            " Syntax checking
-Plug 'valloric/youcompleteme'                          " code completion
-Plug 'artur-shaik/vim-javacomplete2'                   " Java completion
-Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
-Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files
+" Plug 'valloric/youcompleteme'                          " code completion
+" Plug 'artur-shaik/vim-javacomplete2'                   " Java completion
+" Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
+" Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files
 Plug 'ngmy/vim-rubocop'
 Plug 'HerringtonDarkholme/yats.vim'                    "TypeScript Syntax highlighting
 Plug 'darfink/vim-plist'                               " Add plist editing support to Vim
-Plug 'mattn/emmet-vim'
+" Plug 'mattn/emmet-vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "On-demand loading
 Plug 'thoughtbot/vim-rspec'                            "Run RSpec from vim
 Plug 'vim-airline/vim-airline'                         "custom status/tabline bar
 Plug 'vim-airline/vim-airline-themes'
-Plug 'wikitopian/hardmode'                             "Disables keys navigation keys to learn better
+" Plug 'wikitopian/hardmode'                             "Disables keys navigation keys to learn better
 Plug 'tpope/vim-surround'                              "Changes surrounding ('{ etc.
 Plug 'scrooloose/nerdcommenter'                        "Comments/out stuff
 Plug 'ervandew/supertab'                               "use tab for completion
@@ -34,17 +34,17 @@ Plug 'tpope/vim-rails'                                 "Rails
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'flazz/vim-colorschemes'                          "Color themes
 " Plug 'daylerees/colour-schemes', { 'rtp': 'vim/' }   "Colour Schemes
-Plug 'colepeters/spacemacs-theme.vim'                  "Theme
-Plug 'reewr/vim-monokai-phoenix'                       "Theme
-Plug 'bcicen/vim-vice'                                 "Theme
+" Plug 'colepeters/spacemacs-theme.vim'                  "Theme
+" Plug 'reewr/vim-monokai-phoenix'                       "Theme
+" Plug 'bcicen/vim-vice'                                 "Theme
 Plug 'ntpeters/vim-better-whitespace'                  "Strip Trailing Whitespace
-Plug 'slim-template/vim-slim'                          " Syntax highlighting for Slim Template Engine
-Plug 'pangloss/vim-javascript'
-Plug 'tpope/vim-bundler'                               "Wrapper for Ruby bundler
+" Plug 'slim-template/vim-slim'                          " Syntax highlighting for Slim Template Engine
+" Plug 'pangloss/vim-javascript'
+" Plug 'tpope/vim-bundler'                               "Wrapper for Ruby bundler
 Plug 'mileszs/ack.vim'                                 " Wrapper for searching with Ack
-Plug 'mhinz/vim-startify'                              "Fancy startup screen for vim
-Plug 'derekwyatt/vim-scala'
-Plug 'klen/python-mode'                                "Python syntax highlighting, completion, refactor, linting etc.
+" Plug 'mhinz/vim-startify'                              "Fancy startup screen for vim
+" Plug 'derekwyatt/vim-scala'
+" Plug 'klen/python-mode'                                "Python syntax highlighting, completion, refactor, linting etc.
 Plug 'tommcdo/vim-lion'                                "Align text
 
 "snipmate snippets
@@ -93,7 +93,7 @@ let g:NERDTrimTrailingWhitespace = 1 "Enable trimming of trailing whitespace whe
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
 " vim-javasript
-let g:javascript_plugin_jsdoc = 1 " Enable syntax highlighting for JSDocs
+" let g:javascript_plugin_jsdoc = 1 " Enable syntax highlighting for JSDocs
 
 " vim-plist
 let g:plist_display_format = 'xml' " show plist files in json format. Saving will preserve original.
@@ -140,8 +140,8 @@ map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
 
 " Key mappings for python-mode
-let g:pymode_run = 1
-let g:pymode_run_bind = "<leader>'"
+" let g:pymode_run = 1
+" let g:pymode_run_bind = "<leader>'"
 "let g:pymode_python = 'python3' "Enable syntax highlighting for python 3
 
 " Moving in splits mappings
