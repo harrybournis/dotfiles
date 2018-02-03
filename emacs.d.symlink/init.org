@@ -1400,6 +1400,15 @@ A simple function from [[https://www.emacswiki.org/emacs/RecreateScratchBuffer][
     (switch-to-buffer (get-buffer-create "*scratch*"))
     (lisp-interaction-mode))
 #+END_SRC
+** org-fancy-priorities
+#+BEGIN_SRC emacs-lisp
+  (if (file-exists-p (concat user-emacs-directory "lisp/org-fancy-priorities/org-fancy-priorities.el"))
+      (progn
+        (add-to-list 'load-path "~/.emacs.d/lisp/org-fancy-priorities/")
+        (require 'org-fancy-priorities)
+        (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+        (diminish 'org-fancy-priorities-mode)))
+#+END_SRC
 * Shortcuts
 global shortcuts
 
