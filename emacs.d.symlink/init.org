@@ -432,10 +432,13 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "1"       'delete-other-windows
                         "2"       'split-window-below
                         "3"       'split-window-right
+                        "d"       'delete-window
+                        "h"       'split-window-below
+                        "v"       'split-window-right
                         "|"       'toggle-window-split
-                        "pf"      'helm-projectile-find-file
-                        "pt"      'projectile-find-test-file
-                        "po"      'projectile-find-other-file
+                        "p"       'helm-projectile-find-file
+                        "Pt"      'projectile-find-test-file
+                        "Po"      'projectile-find-other-file
                         "s"       'ag-project
                         "="       'toggle-light-dark-theme
                         "t"       'org-todo
@@ -453,12 +456,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "l"       'hbournis/org-make-word-link-from-clipboard
                         "g"       'magit-status
                         "x"       'helm-M-x
-                        "//"      'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
-                        "/l"      'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
-                        "/c"      'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
-                        "/p"      'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
-                        "/r"      'comment-or-uncomment-region                   ;; Un/Comment selection
-                        "/v"      'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
+                        "/"      'evilnc-comment-or-uncomment-lines              ;; Un/Comment current line
+                        "?l"      'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
+                        "?c"      'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
+                        "?p"      'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
+                        "?r"      'comment-or-uncomment-region                   ;; Un/Comment selection
+                        "?v"      'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
                         "[d"      'sp-unwrap-sexp
                         "[["      'wrap-with-brackets
                         "[("      'wrap-with-parens
@@ -468,6 +471,9 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[\""     'wrap-with-double-quotes
                         "[`"      'wrap-with-back-quotes
                         "]"       'org-align-all-tags-right
+                        "fn"      'flycheck-next-error
+                        "fp"      'flycheck-previous-error
+                        "fl"      'flycheck-list-errors
                         "*"       (lambda() (interactive) (forward-char 1) (insert " ⭐"))))
 #+END_SRC
 *** org-mode
@@ -613,6 +619,14 @@ Relative line numbers
   ;;   (setq nlinum-relative-redisplay-delay 0)
   ;;   (global-nlinum-relative-mode))
 
+#+END_SRC
+*** flycheck
+Syntax checking
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
 #+END_SRC
 *** helm
 Completion
