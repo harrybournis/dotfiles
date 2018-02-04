@@ -42,14 +42,6 @@ cd ~/.dotfiles
 ./script/bootstrap
 ```
 
-## Emacs
-
-To compile the `init.el` file the first time after cloning, run:
-
-``` sh
-emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'
-```
-
 ## Setup New Mac
 
 Steps:
