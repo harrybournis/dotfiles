@@ -54,10 +54,11 @@ Determine whether the system is mac or linux
   (defconst IS-LINUX (eq system-type 'gnu/linux))
 #+END_SRC
 * Prerequisites
-- [[http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack][ag ("the silver searcher")]]
+- [[http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack][ag ("the silver searcher")]] for searching
 - [[http://git-scm.com/][git]]
-- [[https://www.gnupg.org/][gnupg]]
+- [[https://www.gnupg.org/][gnupg]] for encryption
 - [[http://www.latex-project.org/][latex]] and [[http://pygments.org/][pygments]] to pdf export with syntax highlighting
+- [[http://aspell.net/][GNU aspell]] for spell checking
 
 * Packages Setup
 ** Repositories
@@ -622,6 +623,12 @@ Syntax checking
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+#+END_SRC
+*** flyspell
+Spell checking. Needs the aspell program installed.
+
+#+BEGIN_SRC emacs-lisp
+  (setq ispell-program-name "aspell")
 #+END_SRC
 *** helm
 Completion

@@ -47,6 +47,7 @@ brew "testdisk"
 brew "ranger"
 brew "poppler"
 brew "automake"
+brew "aspell"
 
 # Cask
 cask "google-chrome"
