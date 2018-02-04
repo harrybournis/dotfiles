@@ -1,4 +1,3 @@
-init.el
 init.elc
 custom.el
 elpa/
@@ -14,4 +13,4 @@ org-gcal/
 bookmarks
 .org-id-locations
 lisp/org-fancy-priorities/
-abbrev_defs
+init-tangled.el

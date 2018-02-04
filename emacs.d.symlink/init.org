@@ -10,49 +10,14 @@
 #+LaTeX_HEADER: \pagenumbering{gobble}
 #+LaTeX_HEADER: \usepackage[T1]{fontenc}
 #+LaTeX_HEADER: \usepackage{fontspec}
-#+LaTeX_HEADER: \setmonofont[Scale=0.7]{DejaVu Sans Mono}
 #+LaTeX_HEADER: \usepackage{mathpazo}
 #+LaTeX_HEADER: \usepackage{geometry}
 #+LaTeX_HEADER: \geometry{a4paper, margin=20mm}
-#+LaTeX_HEADER: \usepackage{minted}
+#+LaTeX_HEADER: \usepackage[cache=false]{minted}
+#+LaTeX_HEADER: \usemintedstyle{trac}
 #+LaTeX_HEADER: \setminted{breaklines}
 
 
-* Emacs configuration using org-babel
-** Code to recreate init.el on save
-
-#+BEGIN_SRC emacs-lisp
-  ;; originaly seen at
-  ;; https://github.com/larstvei/dot-emacs/blob/master/init.org
-  ;; https://github.com/joedicastro/dotfiles/tree/master/emacs/.emacs.d
-  (defun tangle-init ()
-    "if the current buffer is 'init.org' the code-blocks are
-       tangled, and the tangled file is compiled."
-    (when  (or
-            (equal (buffer-file-name)
-                   (expand-file-name (concat user-emacs-directory "init.org")))
-            (equal (buffer-file-name)
-                   (expand-file-name "~/.dotfiles/emacs.d.symlink/init.org")))
-      (call-process-shell-command
-       "emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'" nil 0)
-      ;; (byte-compile-file (concat user-emacs-directory "init.el"))
-      ))
-
-  (add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
-** How to generate the init.el file the first time
-
-#+BEGIN_EXAMPLE bash
-  $ emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'
-#+END_EXAMPLE
-
-** IS-MAC/IS-LINUX
-Determine whether the system is mac or linux
-
-#+BEGIN_SRC emacs-lisp
-  (defconst IS-MAC   (eq system-type 'darwin))
-  (defconst IS-LINUX (eq system-type 'gnu/linux))
-#+END_SRC
 * Prerequisites
 - [[http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack][ag ("the silver searcher")]] for searching
 - [[http://git-scm.com/][git]]
@@ -96,6 +61,13 @@ the elpa repositories from where the packages are fetched.
     (require 'bind-key)                ;; if you use any :bind variant
 #+END_SRC
 
+** IS-MAC/IS-LINUX
+Determine whether the system is mac or linux
+
+#+BEGIN_SRC emacs-lisp
+  (defconst IS-MAC   (eq system-type 'darwin))
+  (defconst IS-LINUX (eq system-type 'gnu/linux))
+#+END_SRC
 * Variables
 Variables are set here that are used in the configuration below
 
@@ -607,14 +579,13 @@ Better performance in line numbers?
 Relative line numbers
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package nlinum-relative
-  ;;   :ensure t
-  ;;   :config
-  ;;   (nlinum-relative-setup-evil)
-  ;;   (add-hook 'prog-mode-hook 'nlinum-relative-mode)
-  ;;   (setq nlinum-relative-redisplay-delay 0)
-  ;;   (global-nlinum-relative-mode))
-
+  (use-package nlinum-relative
+    :ensure t
+    :config
+    (nlinum-relative-setup-evil)
+    (add-hook 'prog-mode-hook 'nlinum-relative-mode)
+    (setq nlinum-relative-redisplay-delay 0)
+    (global-nlinum-relative-mode))
 #+END_SRC
 *** flycheck
 Syntax checking
@@ -878,10 +849,10 @@ guesses the correct indentation
 highlights cursor after a jump. Disabled in favor of ~global-hl-line-mode~.
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package beacon
-  ;;   :ensure t
-  ;;   :config
-  ;;   (beacon-mode t))
+  (use-package beacon
+    :ensure t
+    :config
+    (beacon-mode t))
 #+END_SRC
 *** lorem-ipsum
 #+BEGIN_SRC emacs-lisp
@@ -907,11 +878,11 @@ shows the color of hex color codes as their background
 Show emojis
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package emojify
-    ;; :ensure t
-    ;; :config
-    ;; disabled by default
-    ;; (global-emojify-mode nil))
+  (use-package emojify
+    :ensure t
+    :config
+    disabled by default
+    (global-emojify-mode nil))
 #+end_src
 *** diminish
 hide specific modes from the modeline
@@ -1049,37 +1020,37 @@ Use C-j to expand.
 *** Ruby
 **** DISABLED projectile-rails
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package projectile-rails
-  ;;   :ensure t
-  ;;   :require projectile
-  ;;   :pin melpa-stable
-  ;;   (projectile-rails-global-mode))
+  (use-package projectile-rails
+    :ensure t
+    :require projectile
+    :pin melpa-stable
+    (projectile-rails-global-mode))
 #+END_SRC
 **** DISABLED rspec-mode
 Enhancements to ruby-mode for RSpec files.
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package rspec-mode
-  ;;   :ensure t)
+  (use-package rspec-mode
+    :ensure t)
 #+END_SRC
 **** DISABLED bundler
 Interact with bundler with Emacs
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package bundler
-  ;;   :ensure t)
+  (use-package bundler
+    :ensure t)
 #+END_SRC
 *** JavaScript
 **** DISABLED company-tern
 JavaScript auto-completion
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package company-tern
-  ;;   :ensure t
-  ;;   :require company
-  ;;   :pin melpa-stable
-  ;;   :config
-  ;;   (add-to-list 'company-backends 'company-tern))
+  (use-package company-tern
+    :ensure t
+    :require company
+    :pin melpa-stable
+    :config
+    (add-to-list 'company-backends 'company-tern))
 #+END_SRC
 **** js2-mode
 Improved JavaScript editing mode
@@ -1182,16 +1153,16 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 [[https://github.com/dbordak/telephone-line][Github]]
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package telephone-line
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-  ;;         telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-  ;;         telephone-line-primary-right-separator 'telephone-line-cubed-right
-  ;;         telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-  ;;   (setq telephone-line-height 24
-  ;;         telephone-line-evil-use-short-tag t)
-  ;;   (telephone-line-evil-config))
+  (use-package telephone-line
+    :ensure t
+    :config
+    (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+          telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+          telephone-line-primary-right-separator 'telephone-line-cubed-right
+          telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+    (setq telephone-line-height 24
+          telephone-line-evil-use-short-tag t)
+    (telephone-line-evil-config))
 #+END_SRC
 *** Toggle Light/Dark Theme Functions
 #+BEGIN_SRC emacs-lisp
