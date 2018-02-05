@@ -1177,8 +1177,8 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 *** Theme Functions
 #+BEGIN_SRC emacs-lisp
   (defun switch-theme (theme)
-    ;; This interactive call is taken from `load-theme'
-    ;; Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/
+    "This interactive call is taken from `load-theme'
+  Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/ "
     (interactive
      (list
       (intern (completing-read "Load custom theme: "
@@ -1188,18 +1188,16 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (load-theme theme t))
 
   (defun toggle-light-dark-theme ()
-    ;; Toggles between the selected dark and light
-    ;; themes.
+    "Toggle between the selected dark and light themes."
     (interactive)
-    (if dark-theme-loaded
-        (load-light-theme)
-      (load-dark-theme)))
+    (if (get 'toggle-light-dark-theme 'light-theme-loaded)
+        (load-dark-theme)
+      (load-light-theme))
+    (put 'toggle-light-dark-theme 'light-theme-loaded (not (get 'toggle-light-dark-theme 'light-theme-loaded))))
 
   (defun load-dark-theme ()
-    ;; Load the specified dark theme. It uses the variables
-    ;; dark-theme-var, dark-theme-modeline-var. Also sets some
-    ;; faces for org-checkbox, strings, org TODO items and evil
-    ;; mode cursors.
+    "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
+  Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
     (switch-theme dark-theme-var)
     (load-theme dark-theme-modeline-var)
 
@@ -1227,13 +1225,13 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq evil-insert-state-cursor   '("cyan" box))
     (setq evil-replace-state-cursor  '("red" box))
     (setq evil-operator-state-cursor '("red" box))
-    (setq dark-theme-loaded t))
+    (doom-themes-org-config))
 
   (defun load-light-theme ()
-    ;; Load the specified light theme. It uses the variables
-    ;; light-theme-var, light-theme-modeline-var. Also sets some
-    ;; faces for org-checkbox, strings, org TODO items and evil
-    ;; mode cursors.
+    "Load the specified light theme.
+  It uses the variables light-theme-var, light-theme-modeline-var.
+  Also sets some faces for org-checkbox, strings, org TODO items and evil
+  mode cursors."
     (switch-theme light-theme-var)
     (load-theme light-theme-modeline-var)
     (set-face-attribute 'org-checkbox nil
@@ -1254,13 +1252,19 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq evil-visual-state-cursor   '("orange" box))
     (setq evil-insert-state-cursor   '("#9b59b6" box))
     (setq evil-replace-state-cursor  '("red" box))
-    (setq evil-operator-state-cursor '("red" box))
-    (setq dark-theme-loaded nil))
+    (setq evil-operator-state-cursor '("red" box)))
 #+END_SRC
 *** Load Theme
 #+BEGIN_SRC emacs-lisp
   (load-dark-theme)
-  (doom-themes-org-config)
+  ;; (add-hook 'after-init-hook (lambda ()
+  ;;                              (put 'toggle-light-dark-theme 'light-theme-loaded t)
+  ;;                              (toggle-light-dark-theme)
+  ;;                              )
+  ;;           )
+
+  ;; (put 'toggle-light-dark-theme 'light-theme-loaded t)
+  ;; (toggle-light-dark-theme)
 #+END_SRC
 
 * Custom Functions
