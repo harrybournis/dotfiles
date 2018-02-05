@@ -13,4 +13,5 @@ org-gcal/
 bookmarks
 .org-id-locations
 lisp/org-fancy-priorities/
+lisp/soft-charcoal-theme/
 init-tangled.el

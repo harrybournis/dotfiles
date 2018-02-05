@@ -466,10 +466,10 @@ the best thing in emacs/computer science.
           org-src-tab-acts-natively t
           org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
           org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
-          org-todo-keyword-faces '(("TODO"        . "red")
-                                   ("DOING"       . "yellow")
-                                   ("WAITING"     . "#7453ef")
-                                   ("DONE"        . (:foreground "green" :weight bold)))
+          ;; org-todo-keyword-faces '(("TODO"        . "red")
+          ;;                          ("DOING"       . "yellow")
+          ;;                          ("WAITING"     . "#7453ef")
+          ;;                          ("DONE"        . (:foreground "green" :weight bold)))
           org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
 
           org-startup-indented t                   ;; indent on startup
@@ -1116,19 +1116,22 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
   (setq light-theme-var 'tango)
   (setq dark-theme-var  'tsdh-dark)
 
-  (use-package inkpot-theme
+  (use-package doom-themes
     :ensure t
     :config
-    (setq dark-theme-var 'inkpot))
+    (require 'doom-themes)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic nil) ; if nil, italics is universally disabled
+
+    (setq dark-theme-var 'doom-one)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)
+    )
 
   (use-package flatui-theme
     :ensure t
     :config
     (setq light-theme-var 'flatui))
-
-  ;; Load the dark theme by default
-  ;; (load-theme dark-theme-var t)
-  ;; (setq dark-theme-loaded t)
 #+END_SRC
 
 *** Modeline
@@ -1164,8 +1167,26 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           telephone-line-evil-use-short-tag t)
     (telephone-line-evil-config))
 #+END_SRC
-*** Toggle Light/Dark Theme Functions
+**** DISABLED spaceline
 #+BEGIN_SRC emacs-lisp
+  (use-package spaceline
+    :ensure t
+    :config
+    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+#+END_SRC
+*** Theme Functions
+#+BEGIN_SRC emacs-lisp
+  (defun switch-theme (theme)
+    ;; This interactive call is taken from `load-theme'
+    ;; Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/
+    (interactive
+     (list
+      (intern (completing-read "Load custom theme: "
+                               (mapcar 'symbol-name
+                                       (custom-available-themes))))))
+    (mapcar #'disable-theme custom-enabled-themes)
+    (load-theme theme t))
+
   (defun toggle-light-dark-theme ()
     ;; Toggles between the selected dark and light
     ;; themes.
@@ -1179,8 +1200,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     ;; dark-theme-var, dark-theme-modeline-var. Also sets some
     ;; faces for org-checkbox, strings, org TODO items and evil
     ;; mode cursors.
-    (load-theme dark-theme-var t)
+    (switch-theme dark-theme-var)
     (load-theme dark-theme-modeline-var)
+
     (set-face-attribute 'org-checkbox nil
                         :bold 'normal
                         :box '(:line-width 1 :color "dim gray" :style nil)
@@ -1189,10 +1211,16 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (set-face-attribute 'font-lock-string-face nil
                         :background "#404040"
                         :foreground "#ffcd8b")
-    (setq org-todo-keyword-faces '(("TODO"        . "red")
-                                   ("DOING"       . "yellow")
-                                   ("WAITING"     . "#7453ef")
-                                   ("DONE"        . (:foreground "green" :weight bold))))
+
+    (set-face-attribute 'org-level-1 nil
+                        :background "#23272e")
+
+    (set-face-background 'fringe "#23272e")
+
+    ;; (setq org-todo-keyword-faces '(("TODO"        . "red")
+    ;;                                ("DOING"       . "yellow")
+    ;;                                ("WAITING"     . "#7453ef")
+    ;;                                ("DONE"        . (:foreground "green" :weight bold))))
     (setq evil-emacs-state-cursor    '("red" box))
     (setq evil-normal-state-cursor   '("white" box))
     (setq evil-visual-state-cursor   '("orange" box))
@@ -1206,7 +1234,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     ;; light-theme-var, light-theme-modeline-var. Also sets some
     ;; faces for org-checkbox, strings, org TODO items and evil
     ;; mode cursors.
-    (load-theme light-theme-var t)
+    (switch-theme light-theme-var)
     (load-theme light-theme-modeline-var)
     (set-face-attribute 'org-checkbox nil
                         :box nil
@@ -1232,7 +1260,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 *** Load Theme
 #+BEGIN_SRC emacs-lisp
   (load-dark-theme)
+  (doom-themes-org-config)
 #+END_SRC
+
 * Custom Functions
 ** Toggle Window Split
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
