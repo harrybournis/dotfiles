@@ -545,6 +545,11 @@ the best thing in emacs/computer science.
                                    "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
                                   ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                    "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
+                                  ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
+                                                                   ,(format "%s" (format-time-string "%Y")))
+                                   "* TO_READ %^{Title}\n:LOGBOOK:\n- Added on %U\n:END:
+                                   \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
+                                   :empty-lines 1)
                                   ))
 
 
