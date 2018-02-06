@@ -936,7 +936,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
                 org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location)))
           (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
           (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
-    (error "%s" "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload.")
+    (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
     )
 #+END_SRC
 *** calfw
@@ -1453,11 +1453,20 @@ global shortcuts
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
 * Autostart Org Agenda
+If at least one org agenda file exists, show the agenda on startup. Otherwise it
+gets really annoying when setting Emacs up at a new computer that does not have
+all your files yet.
 
 #+BEGIN_SRC emacs-lisp
-  (setq initial-buffer-choice (lambda ()
-                                (org-agenda-list 10)
-                                (get-buffer "*Org Agenda*")))
+  (let ((result nil))
+    (dolist (e org-agenda-files result)
+      (if (file-exists-p e) (setq result t)))
+    (if result
+        (setq initial-buffer-choice (lambda ()
+                                      (org-agenda-list 10)
+                                      (get-buffer "*Org Agenda*")))))
+
+
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
