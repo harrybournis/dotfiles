@@ -235,11 +235,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
 
 [[https://github.com/jojojames/evil-collection][Evil Collection]] aims to bring evil mode to every Emacs mode eventually. It has
 keybindings for many modes, but I felt that I should enable it for a particular
-mode only when it is needed. Also enabling it all at once messed up some org
-mode functionality for me, although this might be fixed by now. To enable
-specific modes I overrode ~evil-collection-mode-list~ and added only the modes
-that I was interested in. I am not sure how maintanable this solution is, as the
-package is fairly new.
+mode only when it is needed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -247,7 +243,7 @@ package is fairly new.
     :pin melpa-stable
     :init
     ;; Disable evil integration for evil collection to work correctly
-    ;; (evil-want-integration nil)
+    (setq evil-want-integration nil)
 
     ;; evil surround
     (use-package evil-surround
@@ -315,6 +311,7 @@ package is fairly new.
           edebug
           emms
           eval-sexp-fu
+          flycheck
           ggtags
           ;; help
           ibuffer
@@ -323,6 +320,7 @@ package is fairly new.
           info
           man
           (package-menu package)
+          (pdf pdf-view)
           )
         "The list of modes which will be evilified by `evil-collection-init'.
         Elements are either target mode symbols or lists which `car' is the
