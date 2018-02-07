@@ -1216,7 +1216,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+BEGIN_SRC emacs-lisp
   (defun switch-theme (theme)
     "This interactive call is taken from `load-theme'
-  Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/ "
+        Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/ "
     (interactive
      (list
       (intern (completing-read "Load custom theme: "
@@ -1235,7 +1235,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
   (defun load-dark-theme ()
     "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
-  Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
+    Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
     (switch-theme dark-theme-var)
     (load-theme dark-theme-modeline-var)
 
@@ -1253,6 +1253,19 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
     (set-face-background 'fringe "#23272e")
 
+    (set-face-attribute 'org-headline-done nil
+                        :foreground "#626970")
+
+    (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
+                               (?B . (:foreground "orange"))
+                               (?C . (:foreground "yellow"))
+                               (?D . (:foreground "green"))))
+
+    (set-face-attribute 'org-agenda-date          nil :height 1.1)
+    (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
+    (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
+    (set-face-attribute 'org-agenda-structure     nil :height 1.1)
+
     ;; (setq org-todo-keyword-faces '(("TODO"        . "red")
     ;;                                ("DOING"       . "yellow")
     ;;                                ("WAITING"     . "#7453ef")
@@ -1267,9 +1280,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
   (defun load-light-theme ()
     "Load the specified light theme.
-  It uses the variables light-theme-var, light-theme-modeline-var.
-  Also sets some faces for org-checkbox, strings, org TODO items and evil
-  mode cursors."
+        It uses the variables light-theme-var, light-theme-modeline-var.
+        Also sets some faces for org-checkbox, strings, org TODO items and evil
+        mode cursors."
     (switch-theme light-theme-var)
     (load-theme light-theme-modeline-var)
     (set-face-attribute 'org-checkbox nil
