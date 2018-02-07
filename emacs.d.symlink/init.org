@@ -983,6 +983,16 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
           ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi"))
     (ranger-override-dired-mode t))
 #+END_SRC
+*** DISABLED pdf-tools
+Disabled for now because it requires extra packages to be installed in the
+system in order to work.
+#+BEGIN_SRC emacs-lisp
+    (use-package pdf-tools
+      :ensure t
+      :pin melpa-stable
+      :config
+      (pdf-tools-install))
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
