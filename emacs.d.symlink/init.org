@@ -443,14 +443,14 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "?p"  'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
                         "?r"  'comment-or-uncomment-region                   ;; Un/Comment selection
                         "?v"  'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
-                        "[d"  'sp-unwrap-sexp
-                        "[["  'wrap-with-brackets
-                        "[("  'wrap-with-parens
-                        "\\"  'wrap-with-parens
-                        "[{"  'wrap-with-braces
-                        "['"  'wrap-with-single-quotes
-                        "[\"" 'wrap-with-double-quotes
-                        "[`"  'wrap-with-back-quotes
+                        "\\"  'sp-unwrap-sexp
+                        "{["  'wrap-with-brackets
+                        "{("  'wrap-with-parens
+                        "["  'wrap-with-parens
+                        "{{"  'wrap-with-braces
+                        "{'"  'wrap-with-single-quotes
+                        "{\"" 'wrap-with-double-quotes
+                        "{`"  'wrap-with-back-quotes
                         "]"   'org-align-all-tags-right
                         "fn"  'flycheck-next-error
                         "fp"  'flycheck-previous-error
