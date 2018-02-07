@@ -313,7 +313,7 @@ mode only when it is needed.
           eval-sexp-fu
           flycheck
           ggtags
-          ;; help
+          help
           ibuffer
           image
           image+
@@ -374,13 +374,17 @@ Improvement on evil-leader. Specify mutliple leaders.
   (use-package general
     :ensure t
     :config
+    (setq general-override-states '(emacs
+                                    hybrid
+                                    normal
+                                    visual
+                                    motion
+                                    operator))
     (general-evil-setup t)
-    ;; (setq general-default-keymaps 'evil-normal-state-map
-    ;;       basic-nav-leader "SPC"
-    ;;       extra-tools-leader "'")
+    (general-override-mode)
 
     ;; In order for Space to work everywhere. "" nil is used to unbind it first.
-    (general-create-definer basic-nav-leader :prefix "SPC" :keymaps '(normal visual motion) :non-normal-prefix "C-SPC")
+    (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
     (basic-nav-leader "" nil
                       "b"       'list-buffers
                       "TAB"     'mode-line-other-buffer
@@ -415,7 +419,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
                       "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
-    (general-create-definer extra-tools-leader :prefix "'" :keymaps '(normal visual))
+    (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
     (extra-tools-leader "`"   'shell
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
