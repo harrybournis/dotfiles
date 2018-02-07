@@ -244,60 +244,16 @@ mode only when it is needed.
     :init
     ;; Disable evil integration for evil collection to work correctly
     (setq evil-want-integration nil)
+    :config
 
-    ;; evil surround
-    (use-package evil-surround
-      :ensure t
-      :config
-      (global-evil-surround-mode))
-
-    ;; indents to a similar level elements on similar lines
-    ;; e.g. all '=' in variable assignments
-    (use-package evil-lion
-      :ensure t
-      :config
-      (evil-lion-mode))
-
-    ;; press % to move between opening and closing tag in any language
-    (use-package evil-matchit
-      :ensure t
-      :config
-      (global-evil-matchit-mode t))
-
-    ;; increment / decrement binary, octal, decimal and hex literals
-    (use-package evil-numbers
-      :ensure t
-      :config
-      (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-      (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
-
-    ;; Nerd commenter emulation
-    (use-package evil-nerd-commenter
-      :ensure t)
-
-    ;; Org mode key bindings for evil mode
-    (use-package evil-org
-      :ensure t
-      :after org
-      :config
-      (add-hook 'org-mode-hook 'evil-org-mode)
-      (add-hook 'evil-org-mode-hook
-                (lambda ()
-                  (evil-org-set-key-theme '(return))
-                  (require 'evil-org-agenda)
-                  (evil-org-agenda-set-keys))))
-
-    ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
-    (use-package evil-string-inflection
-      :ensure t
-      :pin melpa-stable)
-
+    (evil-mode t)
     ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
     ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
     (use-package evil-collection
       :ensure t
-      ;; :init (evil-collection-init))
+      :after evil
       :init
+      (setq evil-want-integration nil)
       (defcustom evil-collection-mode-list
         `(eshell
           calendar
@@ -332,12 +288,68 @@ mode only when it is needed.
         :group 'evil-collection)
       (evil-collection-init))
 
+
+    ;; evil surround
+    (use-package evil-surround
+      :ensure t
+      :after evil
+      :config
+      (global-evil-surround-mode))
+
+    ;; indents to a similar level elements on similar lines
+    ;; e.g. all '=' in variable assignments
+    (use-package evil-lion
+      :ensure t
+      :after evil
+      :config
+      (evil-lion-mode))
+
+    ;; press % to move between opening and closing tag in any language
+    (use-package evil-matchit
+      :ensure t
+      :after evil
+      :config
+      (global-evil-matchit-mode t))
+
+    ;; increment / decrement binary, octal, decimal and hex literals
+    (use-package evil-numbers
+      :ensure t
+      :after evil
+      :config
+      (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+      (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
+
+    ;; Nerd commenter emulation
+    (use-package evil-nerd-commenter
+      :ensure t
+      :after evil)
+
+
+    ;; Org mode key bindings for evil mode
+    (use-package evil-org
+      :ensure t
+      :after (evil org)
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode)
+      (add-hook 'evil-org-mode-hook
+                (lambda ()
+                  (evil-org-set-key-theme '(return))
+                  (require 'evil-org-agenda)
+                  (evil-org-agenda-set-keys))))
+
+    ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
+    (use-package evil-string-inflection
+      :ensure t
+      :after evil
+      :pin melpa-stable)
+
+
     ;; Make ediff evil
     (use-package evil-ediff
       :ensure t
+      :after evil
       :defer t)
 
-    :config
     ;; Scroll faster with C-e and C-y
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
@@ -364,8 +376,7 @@ mode only when it is needed.
 
     ;; Does not replace clipboard copy with the text selected while in visual mode
     (fset 'evil-visual-update-x-selection 'ignore)
-
-    (evil-mode t))
+    )
 #+END_SRC
 *** general.el
 Improvement on evil-leader. Specify mutliple leaders.
@@ -490,6 +501,7 @@ the best thing in emacs/computer science.
           org-agenda-span 10                       ;; org agenda shows 10 days
           org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
           org-agenda-start-day "-3d"               ;; org agenda starts 3 days before today
+          org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
           org-babel-do-load-languages
           (quote (org-babel-load-languages (quote ((emacs-lisp . t)
                                                    (ruby . t)
@@ -513,6 +525,7 @@ the best thing in emacs/computer science.
                         org-collector)
 
           org-lowest-priority ?D
+          org-default-priority ?C
 
           ;; custom colors for priorities
           org-priority-faces '((?A . (:foreground "red" :weight bold))
@@ -550,10 +563,18 @@ the best thing in emacs/computer science.
                                   ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
                                                                    ,(format "%s" (format-time-string "%Y")))
                                    "* TO_READ %^{Title}\n:LOGBOOK:\n- Added on %U\n:END:
-                                   \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
+                                     \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
                                    :empty-lines 1)
                                   ))
 
+    (setq org-agenda-custom-commands '(("c" "Startup Agenda"
+                                        ((tags "PRIORITY=\"A\""
+                                               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                                (org-agenda-overriding-header "High-priority unfinished tasks:")))
+                                         (agenda "")
+                                         (tags "PRIORITY=\"B\""
+                                               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                                (org-agenda-overriding-header "Mid-priority unfinished tasks:")))))))
 
     ;; Type <el to add an emacs-lisp code block
     (add-to-list 'org-structure-template-alist
@@ -1480,8 +1501,9 @@ all your files yet.
       (if (file-exists-p e) (setq result t)))
     (if result
         (setq initial-buffer-choice (lambda ()
-                                      (org-agenda-list 10)
-                                      (get-buffer "*Org Agenda*")))))
+                                      (org-agenda nil "c")
+                                      (get-buffer "*Org Agenda*")
+                                      (delete-other-windows)))))
 
 
 #+END_SRC
