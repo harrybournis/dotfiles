@@ -435,6 +435,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
                         "l"   'hbournis/org-make-word-link-from-clipboard
+                        "c"   'hbournis-position-to-kill-ring
                         "g"   'magit-status
                         "x"   'helm-M-x
                         "/"   'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
@@ -1436,6 +1437,22 @@ future.
             ;; Insert the link with the text in org mode link format
             (insert (concat "[[" link "][" text "]]")))
         (error "There is no URL at the clipboard."))))
+#+END_SRC
+** Copy to clipboard link to current file and current line
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis-position-to-kill-ring ()
+    "Copy to the kill ring a string in the format \"file-name:line-number\"
+      for the current buffer's file name, and the line number at point.
+      Originally seen: https://stackoverflow.com/a/10682397"
+    (interactive)
+    (let ((linum (save-restriction (widen) (line-number-at-pos))))
+      (kill-new
+       (format "[[file:%s::%d][⮴\"%s\":%d]]"
+               (buffer-file-name)
+               linum
+               (file-name-nondirectory (buffer-file-name))
+               linum))
+      (message "Copied link to position")))
 #+END_SRC
 ** Smartparens wrap-with- functions
 For each pair character, generate a function called ~wrap-with-<pair name>~. [[https://ebzzry.io/en/emacs-pairs/][Source]]
