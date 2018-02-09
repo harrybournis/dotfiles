@@ -402,7 +402,6 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "TAB"     'mode-line-other-buffer
                       "x"       'execute-extended-command
                       "o"       'occur
-                      ;; "f"       'ace-window
                       "<up>"    'windmove-up
                       "<down>"  'windmove-down
                       "<right>" 'windmove-right
@@ -694,30 +693,31 @@ Completion
 #+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
-    (use-package ivy
-      :ensure t
-      :diminish (ivy-mode . "")
-      :config
-      (ivy-mode 1)
-      ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
-      (setq ivy-use-virtual-buffers t)
-      ;; number of result lines to display
-      ;; (setq ivy-height 10)
-      ;; does not count candidates
-      (setq ivy-count-format "(%d/%d) ")
-      ;; no regexp by default
-      ;; (setq ivy-initial-inputs-alist nil)
-      ;; configure regexp engine.
-      ;; (setq ivy-re-builders-alist
-      ;; allow input not in order
-      ;; '((t   . ivy--regex-ignore-order)))
-      ;; Set ivy for completion in projectile
-      (setq projectile-completion-system 'ivy)
-      (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
-      (global-set-key (kbd "C-s") 'swiper)
-      (global-set-key (kbd "M-x") 'counsel-M-x)
-      (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-      (global-set-key (kbd "C-x f") 'counsel-recentf))
+  (use-package ivy
+    :ensure t
+    :diminish (ivy-mode . "")
+    :config
+    (ivy-mode 1)
+    ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+    (setq ivy-use-virtual-buffers t)
+    ;; number of result lines to display
+    ;; (setq ivy-height 10)
+    ;; does not count candidates
+    (setq ivy-count-format "(%d/%d) ")
+    ;; no regexp by default
+    ;; (setq ivy-initial-inputs-alist nil)
+    ;; configure regexp engine.
+    ;; (setq ivy-re-builders-alist
+    ;; allow input not in order
+    ;; '((t   . ivy--regex-ignore-order)))
+    ;; Set ivy for completion in projectile
+    (setq projectile-completion-system 'ivy)
+    (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
+    (define-key ivy-minibuffer-map [escape] 'minibuffer-keyboard-quit)
+    (global-set-key (kbd "C-s") 'swiper)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "C-x f") 'counsel-recentf))
 #+END_SRC
 *** projectile
 #+BEGIN_SRC emacs-lisp
@@ -806,8 +806,9 @@ open recently closed files
     :ensure t)
 #+END_SRC
 
-*** ace-window
-move between windows by pressing a key
+*** DISABLED ace-window
+move between windows by pressing a key. Disabled in favor of windmove mapped to
+<leader> hjkl.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
