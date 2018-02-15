@@ -75,10 +75,10 @@ Variables are set here that are used in the configuration below
   (setq org-main-file-location "~/Dropbox/org/stuff.org"
         org-mobile-file-location "~/Dropbox/org/mobile/mobile_notes.org"
         org-gcal-file-location   "~/Dropbox/org/gcal.org"
-        org-agenda-files-var  (quote ("~/Dropbox/org/stuff.org"
-                                      "~/Dropbox/org/mobile/mobile_notes.org"
-                                      "~/Dropbox/org/gcal.org"
-                                      "~/Dropbox/org/mobile/album.org")))
+        org-agenda-files-var  '("~/Dropbox/org/stuff.org"
+                                "~/Dropbox/org/mobile/mobile_notes.org"
+                                "~/Dropbox/org/gcal.org"
+                                "~/Dropbox/org/mobile/album.org"))
 #+END_SRC
 * Built-in Settings
 ** General
@@ -329,6 +329,7 @@ mode only when it is needed.
     (use-package evil-org
       :ensure t
       :after (evil org)
+      :diminish
       :config
       (add-hook 'org-mode-hook 'evil-org-mode)
       (add-hook 'evil-org-mode-hook
@@ -425,6 +426,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "="       'toggle-light-dark-theme
                       "t"       'org-todo
                       "ns"      'hbournis/create-scratch-buffer
+                      "c"       'cfw:open-org-calendar
+                      ";"       'evilmi-jump-items
                       "SPC"     (lambda () (interactive) (find-file org-main-file-location))
                       "a"       (lambda () (interactive) (find-file org-mobile-file-location))
                       "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
@@ -437,25 +440,28 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "l"   'hbournis/org-make-word-link-from-clipboard
                         "c"   'hbournis-position-to-kill-ring
                         "g"   'magit-status
-                        "/"   'evilnc-comment-or-uncomment-lines             ;; Un/Comment current line
-                        "?l"  'evilnc-quick-comment-or-uncomment-to-the-line ;; Type the number of line you want commented first
-                        "?c"  'evilnc-copy-and-comment-lines                 ;; Copy down and comment line
-                        "?p"  'evilnc-comment-or-uncomment-paragraphs        ;; Un/Comment paragraph
-                        "?r"  'comment-or-uncomment-region                   ;; Un/Comment selection
-                        "?v"  'evilnc-toggle-invert-comment-line-by-line     ;; Toggle invert comment status flag
+                        "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
                         "\\"  'sp-unwrap-sexp
-                        "{["  'wrap-with-brackets
-                        "{("  'wrap-with-parens
                         "["   'wrap-with-parens
-                        "{{"  'wrap-with-braces
-                        "{'"  'wrap-with-single-quotes
-                        "{\"" 'wrap-with-double-quotes
-                        "{`"  'wrap-with-back-quotes
                         "]"   'org-align-all-tags-right
                         "fn"  'flycheck-next-error
                         "fp"  'flycheck-previous-error
                         "fl"  'flycheck-list-errors
-                        "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐"))))
+                        "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
+
+    (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
+    (extra-tools-alternate-leader
+                        "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
+                        "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
+                        "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
+                        "/r"  'comment-or-uncomment-region                   ; Un/Comment selection
+                        "/v"  'evilnc-toggle-invert-comment-line-by-line     ; Toggle invert comment status flag
+                        "[["  'wrap-with-brackets
+                        "[("  'wrap-with-parens
+                        "[{"  'wrap-with-braces
+                        "['"  'wrap-with-single-quotes
+                        "[\"" 'wrap-with-double-quotes
+                        "[`"  'wrap-with-back-quotes))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
@@ -708,8 +714,7 @@ Completion
     ;; (setq ivy-initial-inputs-alist nil)
     ;; configure regexp engine.
     ;; (setq ivy-re-builders-alist
-    ;; allow input not in order
-    ;; '((t   . ivy--regex-ignore-order)))
+    ;;   '((t   . ivy--regex-ignore-order)))
     ;; Set ivy for completion in projectile
     (setq projectile-completion-system 'ivy)
     (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
@@ -1288,7 +1293,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (set-face-background 'fringe "#23272e")
 
     (set-face-attribute 'org-headline-done nil
-                        :foreground "#626970")
+                        :foreground "#767F87")
 
     (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
                                (?B . (:foreground "orange"))
@@ -1559,16 +1564,13 @@ gets really annoying when setting Emacs up at a new computer that does not have
 all your files yet.
 
 #+BEGIN_SRC emacs-lisp
-  (let ((result nil))
-    (dolist (e org-agenda-files result)
-      (if (file-exists-p e) (setq result t)))
-    (if result
-        (setq initial-buffer-choice (lambda ()
-                                      (org-agenda nil "c")
-                                      (get-buffer "*Org Agenda*")
-                                      (delete-other-windows)))))
-
-
+  (let (result)
+    (if (dolist (e org-agenda-files result)
+          (if (file-exists-p e) (setq result t)))
+    (setq initial-buffer-choice (lambda ()
+                                  (org-agenda nil "c")
+                                  (get-buffer "*Org Agenda*")
+                                  (delete-other-windows)))))
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
