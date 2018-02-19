@@ -1563,21 +1563,32 @@ If at least one org agenda file exists, show the agenda on startup. Otherwise it
 gets really annoying when setting Emacs up at a new computer that does not have
 all your files yet.
 
+Also reload all agenda files before before showing the agenda, since they might
+have been edited from the mobile app.
+
 #+BEGIN_SRC emacs-lisp
   (let (result)
     (if (dolist (e org-agenda-files result)
           (if (file-exists-p e) (setq result t)))
-    (setq initial-buffer-choice (lambda ()
-                                  (org-agenda nil "c")
-                                  (get-buffer "*Org Agenda*")
-                                  (delete-other-windows)))))
+        (setq initial-buffer-choice (lambda ()
+                                      (dolist (file-name org-agenda-files-var)
+                                        (let ((buf (find-buffer-visiting file-name)))
+                                          (if buf
+                                              (with-current-buffer buf
+                                                (when (and (buffer-file-name) (file-exists-p (buffer-file-name)))
+                                                  (revert-buffer :ignore-auto :noconfirm))))))
+                                      (org-agenda nil "c")
+                                      (get-buffer "*Org Agenda*")
+                                      (delete-other-windows)))))
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
 emacsclient
 
 #+BEGIN_SRC emacs-lisp
-  (server-start)
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
 #+END_SRC
 * Start fullscreen
 #+BEGIN_SRC emacs-lisp
