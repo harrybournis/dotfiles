@@ -1,7 +1,6 @@
 #+TITLE:     My Emacs Configuration
 #+EMAIL:     harrybournis@gmail.com
 #+AUTHOR:    Harry Bournis
-#+DATE:      2017-11-30
 #+STARTUP: content
 #+TODO: TODO WAITING DISABLED | DONE
 #+LANGUAGE:  en
@@ -1065,6 +1064,11 @@ system in order to work.
       :pin melpa-stable
       :config
       (pdf-tools-install))
+#+END_SRC
+*** git-timemachine
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine
+    :ensure t)
 #+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
