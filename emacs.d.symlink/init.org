@@ -419,6 +419,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "v"       'split-window-right
                       "|"       'toggle-window-split
                       "p"       'projectile-find-file
+                      "PP"      'projectile-switch-project
                       "Pt"      'projectile-find-test-file
                       "Po"      'projectile-find-other-file
                       "s"       'counsel-projectile-ag
@@ -568,12 +569,13 @@ the best thing in emacs/computer science.
                                   ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
                                                                    ,(format "%s" (format-time-string "%Y")))
                                    "* TO_READ %^{Title}\n:LOGBOOK:\n- Added on %U\n:END:
-                                     \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
+                                         \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
                                    :empty-lines 1)
                                   ))
 
     (setq org-agenda-custom-commands '(("c" "Startup Agenda"
-                                        ((tags "PRIORITY=\"A\""
+                                        (
+                                         (tags "PRIORITY=\"A\""
                                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
                                          (agenda "")
@@ -605,6 +607,10 @@ Display org priorities as custom strings
   (use-package org-fancy-priorities
     :ensure t
     :diminish
+    :hook
+    (org-mode . org-fancy-priorities-mode)
+    (org-agenda-mode . org-fancy-priorities-mode)
+    (cfw:calendar-mode . org-fancy-priorities-mode)
     :config
     (setq org-fancy-priorities-list '((?A . "❗")
                                       (?B . "⬆")
@@ -614,7 +620,8 @@ Display org priorities as custom strings
                                       (?2 . "⮬")
                                       (?3 . "⮮")
                                       (?4 . "☠")))
-    (add-hook 'org-mode-hook 'org-fancy-priorities-mode))
+    ;; (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+    )
 #+END_SRC
 *** nlinum
 Better performance in line numbers?
@@ -1316,6 +1323,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
     (set-face-attribute 'org-headline-done nil
                         :foreground "#767F87")
+
+    (set-face-attribute 'org-agenda-dimmed-todo-face nil
+                        :foreground nil)
 
     (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
                                (?B . (:foreground "orange"))
