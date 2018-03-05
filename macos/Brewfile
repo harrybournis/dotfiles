@@ -48,6 +48,7 @@ brew "ranger"
 brew "poppler"
 brew "automake"
 brew "aspell"
+brew "terminal-notifier"
 
 # Cask
 cask "google-chrome"
