@@ -15,3 +15,5 @@ bookmarks
 lisp/org-fancy-priorities/
 lisp/soft-charcoal-theme/
 init-tangled.el
+eshell/
+games/

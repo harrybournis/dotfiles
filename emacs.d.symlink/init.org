@@ -618,7 +618,6 @@ Display org priorities as custom strings
     :diminish
     :hook
     (org-mode . org-fancy-priorities-mode)
-    (org-agenda-mode . org-fancy-priorities-mode)
     (cfw:calendar-mode . org-fancy-priorities-mode)
     :config
     (setq org-fancy-priorities-list '((?A . "❗")
@@ -628,9 +627,7 @@ Display org priorities as custom strings
                                       (?1 . "❗")
                                       (?2 . "⮬")
                                       (?3 . "⮮")
-                                      (?4 . "☠")))
-    ;; (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
-    )
+                                      (?4 . "☠"))))
 #+END_SRC
 *** nlinum
 Better performance in line numbers?
@@ -1322,6 +1319,10 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                         :box '(:line-width 1 :color "dim gray" :style nil)
                         :foreground "gray"
                         :background nil)
+
+    ;; (set-face-attribute 'org-checkbox-statistics-todo nil
+    ;;                     :foreground "#ff6c6b")
+
     (set-face-attribute 'font-lock-string-face nil
                         :background "#404040"
                         :foreground "#ffcd8b")
@@ -1336,6 +1337,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
     (set-face-attribute 'org-agenda-dimmed-todo-face nil
                         :foreground nil)
+
+    (set-face-attribute 'org-property-value nil
+                        :foreground "white")
 
     (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
                                (?B . (:foreground "orange"))
@@ -1366,19 +1370,24 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           mode cursors."
     (switch-theme light-theme-var)
     (load-theme light-theme-modeline-var)
+
     (set-face-attribute 'org-checkbox nil
                         :box nil
                         :bold 'normal
                         :background nil)
+
     (set-face-attribute 'font-lock-string-face nil
                         :background nil
                         :foreground "#0a74b9")
-    (setq org-todo-keyword-faces '(("TODO"        . "#e74c3c")
-                                   ("DOING" . "#2980b9")
-                                   ;; ("IN-PROGRESS" . "#0da4e5")
-                                   ("WAITING"     . "#8e44ad")
-                                   ;; ("WAITING"     . "#7453ef")
+
+    (set-face-attribute 'org-property-value nil
+                        :foreground "black")
+
+    (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
+                                   ("DOING"       . (:foreground "#2980b9" :weight bold))
+                                   ("WAITING"     . (:foreground "#8e44ad" :weight bold))
                                    ("DONE"        . (:foreground "green" :weight bold))))
+
     (setq evil-emacs-state-cursor    '("red" box))
     (setq evil-normal-state-cursor   '("#1abc9c" box))
     (setq evil-visual-state-cursor   '("orange" box))
@@ -1581,13 +1590,13 @@ For development only.
         (add-to-list 'load-path "~/.emacs.d/lisp/org-fancy-priorities/")
         (require 'org-fancy-priorities)
         (setq org-fancy-priorities-list '((?A . "❗")
-                                         (?B . "⬆")
-                                         (?C . "⬇")
-                                         (?D . "☕")
-                                         (?1 . "❗")
-                                         (?2 . "⮬")
-                                         (?3 . "⮮")
-                                         (?4 . "☠")))
+                                          (?B . "⬆")
+                                          (?C . "⬇")
+                                          (?D . "☕")
+                                          (?1 . "❗")
+                                          (?2 . "⮬")
+                                          (?3 . "⮮")
+                                          (?4 . "☠")))
         (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
         (diminish 'org-fancy-priorities-mode)))
 #+END_SRC
