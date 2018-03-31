@@ -191,6 +191,9 @@ Variables are set here that are used in the configuration below
   ;; save all backups to a single folder to avoid clutter
   (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
 
+  ;; Automatically refresh buffers that changed on disk
+  (global-auto-revert-mode t)
+
   ;; check if history file exists, otherwise create it
   ;; (unless (file-exists-p "~/.emacs.d/etc/savehist")
   ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
