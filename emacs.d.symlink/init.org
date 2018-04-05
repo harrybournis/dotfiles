@@ -73,16 +73,24 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-main-file-location "~/Dropbox/org/stuff.org"
-        org-mobile-file-location "~/Dropbox/org/mobile/mobile_notes.org"
-        org-gcal-file-location   "~/Dropbox/org/gcal.org"
-        org-agenda-files-var  '(
-                                "~/Dropbox/org/stuff.org"
-                                "~/Dropbox/org/mobile/mobile_notes.org"
-                                "~/Dropbox/org/gcal.org"
-                                ;; "~/Dropbox/org/my-tasks.org"
-                                "~/Dropbox/org/mobile/album.org"
-                                ))
+  (setq org-main-file-location-var   "~/Dropbox/org/stuff.org"
+        org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
+        org-gcal-file-location-var   "~/Dropbox/org/gcal.org"
+        org-agenda-files-var         '(
+                                     "~/Dropbox/org/stuff.org"
+                                     "~/Dropbox/org/mobile/mobile_notes.org"
+                                     "~/Dropbox/org/gcal.org"
+                                ;;   "~/Dropbox/org/my-tasks.org"
+                                     "~/Dropbox/org/mobile/album.org"
+                                     )
+        default-font-var             "SauceCodePro Nerd Font Mono"
+        ;; default-font-var             "BigBlue_TerminalPlus Nerd Font Mono"
+        ;; default-font-var             "ProFontIIx Nerd Font Mono"
+        fallback-font-var            "Courier New"
+        unicode-font-var             "Unifont"
+        default-font-size-var        "15"
+        alternate-font-size-var      "11"
+        )
 #+END_SRC
 * Built-in Settings
 ** General
@@ -436,8 +444,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "ns"      'hbournis/create-scratch-buffer
                         "c"       'cfw:open-org-calendar
                         ";"       'evilmi-jump-items
-                        "SPC"     (lambda () (interactive) (find-file org-main-file-location))
-                        "a"       (lambda () (interactive) (find-file org-mobile-file-location))
+                        "SPC"     (lambda () (interactive) (find-file org-main-file-location-var))
+                        "a"       (lambda () (interactive) (find-file org-mobile-file-location-var))
                         "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
                         "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
@@ -569,7 +577,7 @@ the best thing in emacs/computer science.
         )
 
       (setq org-capture-templates `(
-                                    ("a" "Google Calendar Event" entry (file  org-gcal-file-location)
+                                    ("a" "Google Calendar Event" entry (file  org-gcal-file-location-var)
                                      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
                                     ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                      "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
@@ -1029,7 +1037,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
           :config
           (setq org-gcal-client-id     api-keys-org-gcal-client-id
                 org-gcal-client-secret api-keys-org-gcal-client-secret
-                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location)))
+                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)))
           (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
           (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
     (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
@@ -1201,21 +1209,23 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 Emacs expects you to write them.
 
 #+BEGIN_SRC emacs-lisp
+
+  ;; Turn off antialiasing for BigBlue Terminal Font
+  ;; (setq mac-allow-anti-aliasing nil)
+
   ;; Something to do with resolution
-  (if (member "SauceCodePro Nerd Font" (font-family-list))
+  (if (member default-font-var (font-family-list))
       (cond (IS-MAC
-             (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-15"))
+             (set-face-attribute 'default nil :font (concat default-font-var "-" default-font-size-var)))
             (IS-LINUX
-             (set-face-attribute 'default nil :font "SauceCodePro Nerd Font Mono-11")))
-    (set-face-attribute 'default nil :font "Courier New-15"))
+             (set-face-attribute 'default nil :font (concat default-font-var "-" alternate-font-size-var))))
+    (set-face-attribute 'default nil :font (concat fallback-font-var "-" default-font-size-var)))
 
   ;; Set a font with great support for Unicode Symbols to fallback in
   ;; those case where certain Unicode glyphs are missing in the current
   ;; font.
-  (when (member "Unifont" (font-family-list))
-    (set-fontset-font t 'unicode "Unifont-15" nil 'prepend))
-
-  ;; (set-face-attribute 'default nil :font "Unifont-15")
+  (when (member unicode-font-var (font-family-list))
+    (set-fontset-font t 'unicode (concat unicode-font-var "-" default-font-size-var) nil 'prepend))
 #+END_SRC
 ** Themes
 *** Color Scheme
