@@ -60,11 +60,14 @@ call plug#end()
 
 " Vim settings
 set backspace=indent,eol,start
+set ignorecase     " ignore case when searching
+set smartcase      " search case insensitive unless pattern contains upper case
 syntax on
 set relativenumber "relative line numbers
 set number         "also display normal line numbers
 filetype plugin on
 set grepprg=ack    "Use ack instead of grep"
+let mapleader = " "
 
 " Syntastic
 " Default recommended settings
