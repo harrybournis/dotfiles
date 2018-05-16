@@ -1215,6 +1215,58 @@ was broken, so melpa-stable should be preferred.
       :ensure t
       :pin melpa-stable)
 #+END_SRC
+*** Prolog
+**** Prolog-mode
+#+BEGIN_SRC emacs-lisp
+(setq prolog-system 'swi)
+(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+#+END_SRC
+**** Ediprolog
+"[[https://github.com/triska/ediprolog][ediprolog]] lets you interact with SWI-Prolog in all Emacs buffers. You can
+consult Prolog programs and evaluate embedded queries."
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ediprolog
+    :ensure t
+    :config
+    (global-set-key [f10] 'ediprolog-dwim))
+#+END_SRC
+**** ob-prolog
+Org-babel support for prolog.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-prolog
+    :ensure t)
+#+END_SRC
+*** DISABLED Clojure/ClojureScript
+**** clojure-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package clojure-mode
+    :ensure t
+    :pin melpa-stable
+    :hook
+    (clojure-mode-hook . #'smartparens-strict-mode)
+    (clojurescript-mode-hook . #'smartparens-strict-mode))
+#+END_SRC
+**** ob-clojurescript
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-clojurescript
+    :ensure t)
+#+END_SRC
+*** Latex
+**** Auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :ensure auctex)
+#+END_SRC
+**** DISABLED latex-preview-pane
+#+BEGIN_SRC emacs-lisp
+  (use-package latex-preview-pane
+    :ensure t
+    :config
+    (latex-preview-pane-enable))
+#+END_SRC
 * Font and Theme
 ** Fonts
 SourceCodePro is my default font.
@@ -1607,6 +1659,16 @@ A simple function from [[https://www.emacswiki.org/emacs/RecreateScratchBuffer][
     (interactive)
     (switch-to-buffer (get-buffer-create "*scratch*"))
     (lisp-interaction-mode))
+#+END_SRC
+** Hide ^M in files with DOS line endings
+[[https://stackoverflow.com/a/750933][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun remove-dos-eol ()
+    "Do not show ^M in files containing mixed UNIX and DOS line endings."
+    (interactive)
+    (setq buffer-display-table (make-display-table))
+    (aset buffer-display-table ?\^M []))
 #+END_SRC
 ** DISABLED org-fancy-priorities
 For development only.
