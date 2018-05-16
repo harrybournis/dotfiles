@@ -49,6 +49,7 @@ brew "poppler"
 brew "automake"
 brew "aspell"
 brew "terminal-notifier"
+brew "swi-prolog"
 
 # Cask
 cask "google-chrome"
