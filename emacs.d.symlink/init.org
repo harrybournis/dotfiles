@@ -1302,17 +1302,10 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
   (setq light-theme-var 'tango)
   (setq dark-theme-var  'tsdh-dark)
 
-  (use-package doom-themes
+  (use-package challenger-deep-theme
     :ensure t
     :config
-    (require 'doom-themes)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic nil) ; if nil, italics is universally disabled
-
-    (setq dark-theme-var 'doom-one)
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config)
-    )
+    (setq dark-theme-var 'challenger-deep))
 
   (use-package flatui-theme
     :ensure t
@@ -1439,7 +1432,12 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq evil-insert-state-cursor   '("cyan" box))
     (setq evil-replace-state-cursor  '("red" box))
     (setq evil-operator-state-cursor '("red" box))
-    (doom-themes-org-config))
+
+    ;; (doom-themes-org-config)
+
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
+    )
+
 
   (defun load-light-theme ()
     "Load the specified light theme.
