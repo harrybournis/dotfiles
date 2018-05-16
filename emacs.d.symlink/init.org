@@ -919,11 +919,16 @@ Save emacs session
   (use-package magit
     :ensure t
     :defer t
-    :pin melpa-stable
     :config
     (use-package evil-magit
-      :ensure t
-      :pin melpa-stable))
+      :ensure t))
+#+END_SRC
+*** gitignore-templates
+An Emacs Package for GitHub .gitignore templates
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gitignore-templates
+    :ensure t)
 #+END_SRC
 *** ag
 
