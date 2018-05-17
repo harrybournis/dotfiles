@@ -1121,6 +1121,20 @@ Use C-j to expand.
     (add-hook 'sgml-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook 'emmet-mode))
 #+END_SRC
+**** web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :pin melpa-stable
+    :config
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode)))
+#+END_SRC
 *** Markdown
 **** markdown-mode
 #+BEGIN_SRC emacs-lisp
