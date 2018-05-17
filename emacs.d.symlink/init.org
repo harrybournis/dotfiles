@@ -1281,6 +1281,23 @@ Org-babel support for prolog.
     :config
     (latex-preview-pane-enable))
 #+END_SRC
+*** PlantUML
+**** plantuml-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package plantuml-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+    (require 'ob-plantuml) ;; org blocks don't work without this
+    (setq org-plantuml-jar-path
+          (expand-file-name "/usr/local/Cellar/plantuml/1.2018.5/libexec/plantuml.jar"))
+          ;; (expand-file-name "/usr/local/bin/plantuml"))
+    (use-package flycheck-plantuml
+      :ensure t
+      :config
+      (flycheck-plantuml-setup)))
+#+END_SRC
 * Font and Theme
 ** Fonts
 SourceCodePro is my default font.
