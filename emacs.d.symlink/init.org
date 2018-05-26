@@ -399,87 +399,93 @@ mode only when it is needed.
 Improvement on evil-leader. Specify mutliple leaders.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package general
-      :ensure t
-      :config
-      (setq general-override-states '(emacs
-                                      hybrid
-                                      normal
-                                      visual
-                                      motion
-                                      operator))
-      (general-evil-setup t)
-      (general-override-mode)
+  (use-package general
+    :ensure t
+    :config
+    (setq general-override-states '(emacs
+                                    hybrid
+                                    normal
+                                    visual
+                                    motion
+                                    operator))
+    (general-evil-setup t)
+    (general-override-mode)
 
-      ;; In order for Space to work everywhere. "" nil is used to unbind it first.
-      (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
-      (basic-nav-leader "" nil
-                        "b"       'list-buffers
-                        "f"       'list-buffers
-                        "TAB"     'mode-line-other-buffer
-                        "x"       'execute-extended-command
-                        "o"       'occur
-                        "<up>"    'windmove-up
-                        "<down>"  'windmove-down
-                        "<right>" 'windmove-right
-                        "<left>"  'windmove-left
-                        "k"       'windmove-up
-                        "j"       'windmove-down
-                        "l"       'windmove-right
-                        "h"       'windmove-left
-                        "0"       'delete-window
-                        "1"       'delete-other-windows
-                        "2"       'split-window-below
-                        "3"       'split-window-right
-                        "d"       'delete-window
-                        "V"       'split-window-below
-                        "v"       'split-window-right
-                        "|"       'toggle-window-split
-                        "p"       'projectile-find-file
-                        "PP"      'projectile-switch-project
-                        "Pt"      'projectile-find-test-file
-                        "Po"      'projectile-find-other-file
-                        "s"       'counsel-projectile-ag
-                        "="       'toggle-light-dark-theme
-                        "t"       'org-todo
-                        "ns"      'hbournis/create-scratch-buffer
-                        "c"       'cfw:open-org-calendar
-                        ";"       'evilmi-jump-items
-                        "SPC"     (lambda () (interactive) (find-file org-main-file-location-var))
-                        "a"       (lambda () (interactive) (find-file org-mobile-file-location-var))
-                        "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
-                        "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
+    ;; In order for Space to work everywhere. "" nil is used to unbind it first.
+    (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
+    (basic-nav-leader "" nil
+                      "f"       'list-buffers
+                      "TAB"     'mode-line-other-buffer
+                      "x"       'execute-extended-command
+                      "o"       'occur
+                      "<up>"    'windmove-up
+                      "<down>"  'windmove-down
+                      "<right>" 'windmove-right
+                      "<left>"  'windmove-left
+                      "k"       'windmove-up
+                      "j"       'windmove-down
+                      "l"       'windmove-right
+                      "h"       'windmove-left
+                      "K"       'shrink-window
+                      "J"       'enlarge-window
+                      "H"       'shrink-window-horizontally
+                      "L"       'enlarge-window-horizontally
+                      "0"       'delete-window
+                      "1"       'delete-other-windows
+                      "2"       'split-window-below
+                      "3"       'split-window-right
+                      "d"       'delete-window
+                      "V"       'split-window-below
+                      "v"       'split-window-right
+                      "|"       'toggle-window-split
+                      "p"       'projectile-find-file
+                      "PP"      'projectile-switch-project
+                      "Pt"      'projectile-find-test-file
+                      "Po"      'projectile-find-other-file
+                      "s"       'counsel-projectile-ag
+                      "="       'toggle-light-dark-theme
+                      "t"       'org-todo
+                      "ns"      'hbournis/create-scratch-buffer
+                      "c"       'cfw:open-org-calendar
+                      ";"       'evilmi-jump-items
+                      "i"       'org-toggle-inline-images
+                      "w"       'resize-window
+                      "SPC"     (lambda () (interactive) (find-file org-main-file-location-var))
+                      "a"       (lambda () (interactive) (find-file org-mobile-file-location-var))
+                      "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
+                      "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
-      (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
-      (extra-tools-leader "`"   'shell
-                          "v"   'org-cliplink
-                          "p"   'hbournis/insert-url-as-org-link
-                          "l"   'hbournis/org-make-word-link-from-clipboard
-                          "c"   'hbournis-position-to-kill-ring
-                          "g"   'magit-status
-                          "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
-                          "\\"  'sp-unwrap-sexp
-                          "["   'wrap-with-parens
-                          "]"   'org-align-all-tags-right
-                          "fn"  'flycheck-next-error
-                          "fp"  'flycheck-previous-error
-                          "fl"  'flycheck-list-errors
-                          "j"   (lambda() (interactive) (insert "* ") (backward-char 1))
-                          "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
+    (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
+    (extra-tools-leader "`"   'open-terminal-below
+                        "v"   'org-cliplink
+                        "p"   'hbournis/insert-url-as-org-link
+                        "l"   'hbournis/org-make-word-link-from-clipboard
+                        "c"   'hbournis-position-to-kill-ring
+                        "t"   'hbournis/insert-timestamp
+                        "g"   'magit-status
+                        "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
+                        "\\"  'sp-unwrap-sexp
+                        "["   'wrap-with-parens
+                        "]"   'org-align-all-tags-right
+                        "fn"  'flycheck-next-error
+                        "fp"  'flycheck-previous-error
+                        "fl"  'flycheck-list-errors
+                        "j"   (lambda() (interactive) (insert "* ") (backward-char 1))
+                        "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
-      (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
-      (extra-tools-alternate-leader
-                          "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
-                          "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
-                          "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
-                          "/r"  'comment-or-uncomment-region                   ; Un/Comment selection
-                          "/v"  'evilnc-toggle-invert-comment-line-by-line     ; Toggle invert comment status flag
-                          "[["  'wrap-with-brackets
-                          "[("  'wrap-with-parens
-                          "[{"  'wrap-with-braces
-                          "['"  'wrap-with-single-quotes
-                          "[\"" 'wrap-with-double-quotes
-                          "[`"  'wrap-with-back-quotes))
+    (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
+    (extra-tools-alternate-leader
+                        "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
+                        "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
+                        "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
+                        "/r"  'comment-or-uncomment-region                   ; Un/Comment selection
+                        "/v"  'evilnc-toggle-invert-comment-line-by-line     ; Toggle invert comment status flag
+                        "[["  'wrap-with-brackets
+                        "[("  'wrap-with-parens
+                        "[{"  'wrap-with-braces
+                        "['"  'wrap-with-single-quotes
+                        "[\"" 'wrap-with-double-quotes
+                        "[`"  'wrap-with-back-quotes))
 #+END_SRC
 *** org-mode
 the best thing in emacs/computer science.
@@ -1405,8 +1411,8 @@ Org-babel support for prolog.
   (use-package ob-prolog
     :ensure t)
 #+END_SRC
-*** DISABLED Clojure/ClojureScript
-**** clojure-mode
+*** Clojure/ClojureScript
+**** DISABLED clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :ensure t
