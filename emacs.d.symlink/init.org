@@ -179,8 +179,6 @@ Variables are set here that are used in the configuration below
   ;; (when window-system
   ;;   (global-hl-line-mode))
 
-  ;; open fish for shell
-  (setq explicit-shell-file-name "/usr/local/bin/fish")
 
   ;; set the calendar to my country and city's calendar standards
   (setq-default calendar-week-start-day  1
@@ -223,6 +221,34 @@ Variables are set here that are used in the configuration below
   ;; Don't require password each time on enryption with symmetric cyphers
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (setf epa-pinentry-mode 'loopback)
+#+END_SRC
+** Terminal
+#+BEGIN_SRC emacs-lisp
+  ;; open fish for shell
+  (setq explicit-shell-file-name "/usr/local/bin/fish")
+#+END_SRC
+*** open terminal below
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/open-terminal-below ()
+    (interactive)
+    (progn
+      (split-window-below)
+      (other-window 1)
+      (ansi-term explicit-shell-file-name)))
+#+END_SRC
+*** Kill the buffer when term exits
+[[https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-term-mode.el][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  ;; {{ @see http://emacs-journey.blogspot.com.au/2012/06/improving-ansi-term.html
+  ;; kill the buffer when terminal is exited
+  (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+    (if (memq (process-status proc) '(signal exit))
+        (let ((buffer (process-buffer proc)))
+          ad-do-it
+            (kill-buffer-and-its-windows buffer))
+      ad-do-it))
+  (ad-activate 'term-sentinel)
 #+END_SRC
 * Packages
 ** Common
@@ -456,7 +482,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
-    (extra-tools-leader "`"   'open-terminal-below
+    (extra-tools-leader "`"   'hbournis/open-terminal-below
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
                         "l"   'hbournis/org-make-word-link-from-clipboard
@@ -1947,14 +1973,33 @@ Just a simple function for when I want the current time stamp inside an org file
     (insert " --- ⏱⏱⏱\n------------------------------------------")
     (newline-and-indent))
 #+END_SRC
-** open terminal below
+** kill-window-and-its-windows
+[[https://www.emacswiki.org/emacs/misc-cmds.el][Source]]
+
 #+BEGIN_SRC emacs-lisp
-  (defun open-terminal-below ()
-    (interactive)
-    (progn
-      (split-window-below)
-      (other-window 1)
-      (ansi-term "/usr/local/bin/fish")))
+;; Candidate as a replacement for `kill-buffer', at least when used interactively.
+;; For example: (define-key global-map [remap kill-buffer] 'kill-buffer-and-its-windows)
+;;
+;; We cannot just redefine `kill-buffer', because some programs count on a
+;; specific other buffer taking the place of the killed buffer (in the window).
+(defun kill-buffer-and-its-windows (buffer)
+  "Kill BUFFER and delete its windows.  Default is `current-buffer'.
+BUFFER may be either a buffer or its name (a string)."
+  (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
+  (setq buffer  (get-buffer buffer))
+  (if (buffer-live-p buffer)            ; Kill live buffer only.
+      (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
+        (when (and (buffer-modified-p buffer)
+                   (fboundp '1on1-flash-ding-minibuffer-frame))
+          (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
+        (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
+          (dolist (win  wins)           ; (User might keep buffer if modified.)
+            (when (window-live-p win)
+              ;; Ignore error, in particular,
+              ;; "Attempt to delete the sole visible or iconified frame".
+              (condition-case nil (delete-window win) (error nil))))))
+    (when (interactive-p)
+      (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 #+END_SRC
 * Shortcuts
 global shortcuts
