@@ -18,7 +18,8 @@
 ;; set correct user-emacs-directory on Windows
 
 
-(setq gc-cons-threshold 50000000)
+;; (setq gc-cons-threshold 50000000)
+(setq gc-cons-threshold 4000000)
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
