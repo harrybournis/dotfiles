@@ -1561,6 +1561,12 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 [[https://github.com/milkypostman/powerline][Github]]
 [[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
 
+Favorite dark themes:
+- simple
+- serene
+- dark
+- behelit
+
 #+BEGIN_SRC emacs-lisp
   (use-package powerline
     :ensure t
@@ -1568,11 +1574,8 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (use-package airline-themes
       :ensure t
       :config
-      ;; (load-theme 'airline-doom-one)
       (setq light-theme-modeline-var 'airline-silver)
-      (setq dark-theme-modeline-var 'airline-simple)
-      ;; (load-theme dark-theme-modeline-var)
-      ))
+      (setq dark-theme-modeline-var 'airline-behelit)))
 #+END_SRC
 **** DISABLED telephone-line
 [[https://github.com/dbordak/telephone-line][Github]]
@@ -1641,7 +1644,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
       (set-face-attribute 'org-level-1 nil
                           :background "#23272e")
 
-      (set-face-background 'fringe "#23272e")
+      (set-face-background 'fringe "#050505")
 
       (set-face-attribute 'org-headline-done nil
                           :foreground "#767F87")
