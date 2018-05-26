@@ -288,6 +288,7 @@ mode only when it is needed.
           ibuffer
           image
           image+
+          neotree
           info
           man
           (package-menu package)
@@ -536,6 +537,7 @@ the best thing in emacs/computer science.
                                                    (r . t)
                                                    (prolog . t)
                                                    (clojurescript . t)
+                                                   (plantuml . t)
                                                    ))))
           org-export-backends (quote (ascii
                                       html
@@ -660,11 +662,12 @@ Relative line numbers
 #+BEGIN_SRC emacs-lisp
   (use-package nlinum-relative
     :ensure t
+    :hook (purescript-mode . nlinum-relative-mode)
     :config
-    (nlinum-relative-setup-evil)
-    (add-hook 'prog-mode-hook 'nlinum-relative-mode)
+    ;; (nlinum-relative-setup-evil)
     (setq nlinum-relative-redisplay-delay 0)
-    (global-nlinum-relative-mode))
+    ;; (global-nlinum-relative-mode)
+    )
 #+END_SRC
 *** flycheck
 Syntax checking
@@ -673,7 +676,26 @@ Syntax checking
   (use-package flycheck
     :ensure t
     :diminish
-    :init (global-flycheck-mode))
+    :init (global-flycheck-mode)
+    :config
+    (setq-default flycheck-disabled-checkers
+                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss-lint)))
+    (setq-default flycheck-temp-prefix ".flycheck"))
+#+END_SRC
+**** Use local eslint if available
+[[https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my/use-eslint-from-node-modules ()
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (eslint (and root
+                      (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                        root))))
+    (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
 #+END_SRC
 *** flyspell
 Spell checking. Needs the aspell program installed.
@@ -1196,6 +1218,7 @@ Use C-j to expand.
     :ensure t
     :config
     ;; Autostart on any markup modes and CSS
+    (define-key emmet-mode-keymap [tab] 'emmet-expand-line)
     (add-hook 'sgml-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook 'emmet-mode))
 #+END_SRC
@@ -1205,13 +1228,86 @@ Use C-j to expand.
     :ensure t
     :pin melpa-stable
     :config
+    (flycheck-add-mode 'javascript-eslint 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode)))
+#+END_SRC
+
+**** Improving the JSX syntax-hightlighting in web-mode
+#+BEGIN_SRC emacs-lisp
+;; for better jsx syntax-highlighting in web-mode
+;; - courtesy of Patrick @halbtuerke
+(defadvice web-mode-highlight-part (around tweak-jsx activate)
+  (if (equal web-mode-content-type "jsx")
+    (let ((web-mode-enable-part-face nil))
+      ad-do-it)
+    ad-do-it))
+#+END_SRC
+*** JavaScript
+**** company-tern
+JavaScript auto-completion
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-tern
+    :ensure t
+    :pin melpa-stable
+    :hook (js2-mode . tern-mode)
+    :config
+    (add-to-list 'company-backends 'company-tern))
+#+END_SRC
+**** js2-mode
+Improved JavaScript editing mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :pin melpa-stable
+    :config
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+#+END_SRC
+**** rjsx-mode
+Better syntax highlighting for jsx files
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rjsx-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+#+END_SRC
+**** json-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package json-mode
+    :ensure t)
+#+END_SRC
+**** typescript-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package typescript-mode
+    :ensure t)
+#+END_SRC
+*** PureScript
+**** purescript-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package purescript-mode
+    :ensure t)
+#+END_SRC
+**** psc-ide
+#+BEGIN_SRC emacs-lisp
+  (use-package psc-ide
+    :ensure t
+    :config
+    (add-hook 'purescript-mode-hook
+              (lambda ()
+                (psc-ide-mode)
+                (company-mode)
+                (flycheck-mode)
+                (turn-on-purescript-indentation))))
 #+END_SRC
 *** Markdown
 **** markdown-mode
@@ -1263,28 +1359,6 @@ Interact with bundler with Emacs
 #+BEGIN_SRC emacs-lisp
   (use-package bundler
     :ensure t)
-#+END_SRC
-*** JavaScript
-**** company-tern
-JavaScript auto-completion
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company-tern
-    :ensure t
-    :pin melpa-stable
-    :hook (js2-mode . tern-mode)
-    :config
-    (add-to-list 'company-backends 'company-tern))
-#+END_SRC
-**** js2-mode
-Improved JavaScript editing mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :pin melpa-stable
-    :config
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+END_SRC
 *** Haskell
 **** intero
@@ -1341,7 +1415,7 @@ Org-babel support for prolog.
     (clojure-mode-hook . #'smartparens-strict-mode)
     (clojurescript-mode-hook . #'smartparens-strict-mode))
 #+END_SRC
-**** ob-clojurescript
+**** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
   (use-package ob-clojurescript
     :ensure t)
