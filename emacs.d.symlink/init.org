@@ -1901,6 +1901,61 @@ For development only.
   (setq org-show-notification-handler
         (lambda (msg) (timed-notification nil msg)))
 #+END_SRC
+** DISABLED Refresh agenda when files change on disk
+#+BEGIN_SRC emacs-lisp
+  (defun inform-revert-modified-file (&optional p1 p2)
+    "bdimych custom function"
+    (let ((revert-buffer-function nil))
+      (revert-buffer p1 p2)
+      (message (concat "buffer file name is: " buffer-file-name))
+      ;; (if (member buffer-file-name)
+      ;;     )
+      (if (get-buffer "*Org Agenda*")
+          (with-current-buffer "*Org Agenda*"
+            (org-agenda-redo)))))
+
+  (setq revert-buffer-function 'inform-revert-modified-file)
+#+END_SRC
+** Open file in an external program
+[[http://batsov.com/articles/2011/11/12/emacs-tip-number-2-open-file-in-external-program/][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun prelude-open-with ()
+    "Simple function that allows us to open the underlying
+  file of a buffer in an external program."
+    (interactive)
+    (when buffer-file-name
+      (shell-command (concat
+                      (if (eq system-type 'darwin)
+                          "open"
+                        (read-shell-command "Open current file with: "))
+                      " "
+                      buffer-file-name))))
+
+  (global-set-key (kbd "C-c o") 'prelude-open-with)
+#+END_SRC
+** Insert current time stamp
+Just a simple function for when I want the current time stamp inside an org file
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/insert-timestamp ()
+    "Inserts inactive timestamp with time"
+    (interactive)
+    (newline-and-indent)
+    (insert "⏱⏱⏱ --- ")
+    (org-insert-time-stamp (current-time) t t)
+    (insert " --- ⏱⏱⏱\n------------------------------------------")
+    (newline-and-indent))
+#+END_SRC
+** open terminal below
+#+BEGIN_SRC emacs-lisp
+  (defun open-terminal-below ()
+    (interactive)
+    (progn
+      (split-window-below)
+      (other-window 1)
+      (ansi-term "/usr/local/bin/fish")))
+#+END_SRC
 * Shortcuts
 global shortcuts
 
