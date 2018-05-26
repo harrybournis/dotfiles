@@ -967,6 +967,31 @@ Save emacs session
                     register-alist)))
     (desktop-save-mode t))
 #+END_SRC
+*** workgroups2
+#+BEGIN_SRC emacs-lisp
+  (use-package workgroups2
+    :ensure t
+    :config
+    ;; Change prefix key (before activating WG)
+    (setq wg-prefix-key (kbd "C-c z"))
+
+    ;; Change workgroups session file
+    (setq wg-use-default-session-file nil)
+    (setq wg-session-file "~/Dropbox/emacs/.emacs_workgroups")
+    (setq wg-load-last-workgroup nil)
+    (setq wg-open-this-wg nil)
+
+    ;; Set your own keyboard shortcuts to reload/save/switch WGs:
+    ;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
+    (global-set-key (kbd "<pause>")     'wg-reload-session)
+    (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
+    (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
+    (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
+    ;; (setq wg-mode-line-display-on nil)
+    (setq wg-mode-line-only-name t)
+    (setq wg-flag-modified nil)
+    (workgroups-mode 1))
+#+END_SRC
 *** magit
 
 #+BEGIN_SRC emacs-lisp
