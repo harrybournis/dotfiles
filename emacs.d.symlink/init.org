@@ -253,6 +253,7 @@ Variables are set here that are used in the configuration below
 * Packages
 ** Common
 *** evil-mode
+**** evil
 Vim emulation. It is extended with various packages that provide existing Vim
 functionalities. Bellow is a list of the Emacs package with the functionality
 it provides in parentheses:
@@ -274,124 +275,16 @@ context-aware functionality it adds to the <return> key. For example, if you are
 on a list item, pressing it will add a new list item bellow, including a
 checkbox, if it is a checklist.. I found the rest of the keybindings distracting.
 
-[[https://github.com/jojojames/evil-collection][Evil Collection]] aims to bring evil mode to every Emacs mode eventually. It has
-keybindings for many modes, but I felt that I should enable it for a particular
-mode only when it is needed.
-
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
     :pin melpa-stable
     :init
-    ;; Disable evil integration for evil collection to work correctly
     (setq evil-want-integration nil)
     :config
-
     (evil-mode t)
     ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
     ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
-    (use-package evil-collection
-      :ensure t
-      :after evil
-      :init
-      (setq evil-want-integration nil)
-      (defcustom evil-collection-mode-list
-        `(eshell
-          calendar
-          custom
-          cus-theme
-          debbugs
-          debug
-          diff-mode
-          dired
-          doc-view
-          edebug
-          emms
-          eval-sexp-fu
-          flycheck
-          ggtags
-          help
-          ibuffer
-          image
-          image+
-          neotree
-          info
-          man
-          (package-menu package)
-          (pdf pdf-view)
-          )
-        "The list of modes which will be evilified by `evil-collection-init'.
-        Elements are either target mode symbols or lists which `car' is the
-        mode symbol and `cdr' the packages to register.
-        By default, `minibuffer' is not included because many users find
-        this confusing. It will be included if
-        `evil-collection-setup-minibuffer' is set to t."
-        :type '(repeat (choice symbol sexp))
-        :group 'evil-collection)
-      (evil-collection-init))
-
-
-    ;; evil surround
-    (use-package evil-surround
-      :ensure t
-      :after evil
-      :config
-      (global-evil-surround-mode))
-
-    ;; indents to a similar level elements on similar lines
-    ;; e.g. all '=' in variable assignments
-    (use-package evil-lion
-      :ensure t
-      :after evil
-      :config
-      (evil-lion-mode))
-
-    ;; press % to move between opening and closing tag in any language
-    (use-package evil-matchit
-      :ensure t
-      :after evil
-      :config
-      (global-evil-matchit-mode t))
-
-    ;; increment / decrement binary, octal, decimal and hex literals
-    (use-package evil-numbers
-      :ensure t
-      :after evil
-      :config
-      (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-      (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
-
-    ;; Nerd commenter emulation
-    (use-package evil-nerd-commenter
-      :ensure t
-      :after evil)
-
-
-    ;; Org mode key bindings for evil mode
-    (use-package evil-org
-      :ensure t
-      :after (evil org)
-      :diminish
-      :config
-      (add-hook 'org-mode-hook 'evil-org-mode)
-      (add-hook 'evil-org-mode-hook
-                (lambda ()
-                  (evil-org-set-key-theme '(return))
-                  (require 'evil-org-agenda)
-                  (evil-org-agenda-set-keys))))
-
-    ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
-    (use-package evil-string-inflection
-      :ensure t
-      :after evil
-      :pin melpa-stable)
-
-
-    ;; Make ediff evil
-    (use-package evil-ediff
-      :ensure t
-      :after evil
-      :defer t)
 
     ;; Scroll faster with C-e and C-y
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
@@ -420,6 +313,116 @@ mode only when it is needed.
     ;; Does not replace clipboard copy with the text selected while in visual mode
     (fset 'evil-visual-update-x-selection 'ignore)
     )
+#+END_SRC
+
+**** evil-collection
+[[https://github.com/jojojames/evil-collection][Evil Collection]] aims to bring evil mode to every Emacs mode eventually. It has
+keybindings for many modes, but I felt that I should enable it for a particular
+mode only when it is needed.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :init
+    (defcustom evil-collection-mode-list
+      `(eshell
+        calendar
+        custom
+        cus-theme
+        debbugs
+        debug
+        diff-mode
+        dired
+        doc-view
+        edebug
+        emms
+        eval-sexp-fu
+        flycheck
+        ggtags
+        help
+        ibuffer
+        image
+        image+
+        neotree
+        info
+        man
+        (package-menu package)
+        (pdf pdf-view)
+        )
+      "The list of modes which will be evilified by `evil-collection-init'.
+      Elements are either target mode symbols or lists which `car' is the
+      mode symbol and `cdr' the packages to register.
+      By default, `minibuffer' is not included because many users find
+      this confusing. It will be included if
+      `evil-collection-setup-minibuffer' is set to t."
+      :type '(repeat (choice symbol sexp))
+      :group 'evil-collection)
+    :config
+    (evil-collection-init))
+#+END_SRC
+**** Other Evil Packages
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-surround
+    :ensure t
+    :after evil
+    :config
+    (global-evil-surround-mode))
+
+  ;; indents to a similar level elements on similar lines
+  ;; e.g. all '=' in variable assignments
+  (use-package evil-lion
+    :ensure t
+    :after evil
+    :config
+    (evil-lion-mode))
+
+  ;; press % to move between opening and closing tag in any language
+  (use-package evil-matchit
+    :ensure t
+    :after evil
+    :config
+    (global-evil-matchit-mode t))
+
+  ;; increment / decrement binary, octal, decimal and hex literals
+  (use-package evil-numbers
+    :ensure t
+    :after evil
+    :config
+    (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+    (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
+
+  ;; Nerd commenter emulation
+  (use-package evil-nerd-commenter
+    :ensure t
+    :after evil)
+
+
+  ;; Org mode key bindings for evil mode
+  (use-package evil-org
+    :ensure t
+    :after (evil org)
+    :diminish
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+              (lambda ()
+                (evil-org-set-key-theme '(return))
+                (require 'evil-org-agenda)
+                (evil-org-agenda-set-keys))))
+
+  ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
+  (use-package evil-string-inflection
+    :ensure t
+    :after evil
+    :pin melpa-stable)
+
+
+  ;; Make ediff evil
+  (use-package evil-ediff
+    :ensure t
+    :after evil
+    :defer t)
 #+END_SRC
 *** general.el
 Improvement on evil-leader. Specify mutliple leaders.
@@ -711,7 +714,7 @@ Syntax checking
     :init (global-flycheck-mode)
     :config
     (setq-default flycheck-disabled-checkers
-                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss-lint)))
+                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint)))
     (setq-default flycheck-temp-prefix ".flycheck"))
 #+END_SRC
 **** Use local eslint if available
@@ -976,8 +979,8 @@ Save emacs session
     (setq wg-prefix-key (kbd "C-c z"))
 
     ;; Change workgroups session file
-    (setq wg-use-default-session-file nil)
-    (setq wg-session-file "~/Dropbox/emacs/.emacs_workgroups")
+    (setq wg-use-default-session-file t)
+    (setq wg-default-session-file "~/Dropbox/emacs/.emacs_workgroups")
     (setq wg-load-last-workgroup nil)
     (setq wg-open-this-wg nil)
 
@@ -1500,8 +1503,8 @@ Org-babel support for prolog.
     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
     (require 'ob-plantuml) ;; org blocks don't work without this
     (setq org-plantuml-jar-path
-          (expand-file-name "/usr/local/Cellar/plantuml/1.2018.5/libexec/plantuml.jar"))
-          ;; (expand-file-name "/usr/local/bin/plantuml"))
+          ;; (expand-file-name "/usr/local/Cellar/plantuml/1.2018.5/libexec/plantuml.jar"))
+          (expand-file-name "/usr/local/bin/plantuml"))
     (use-package flycheck-plantuml
       :ensure t
       :config
