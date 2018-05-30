@@ -449,49 +449,55 @@ Improvement on evil-leader. Specify mutliple leaders.
     ;; In order for Space to work everywhere. "" nil is used to unbind it first.
     (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
     (basic-nav-leader "" nil
-                      "f"       'list-buffers
-                      "TAB"     'mode-line-other-buffer
-                      "x"       'execute-extended-command
-                      "o"       'occur
-                      "<up>"    'windmove-up
-                      "<down>"  'windmove-down
-                      "<right>" 'windmove-right
-                      "<left>"  'windmove-left
-                      "k"       'windmove-up
-                      "j"       'windmove-down
-                      "l"       'windmove-right
-                      "h"       'windmove-left
-                      "K"       'shrink-window
-                      "J"       'enlarge-window
-                      "H"       'shrink-window-horizontally
-                      "L"       'enlarge-window-horizontally
-                      "0"       'delete-window
-                      "1"       'delete-other-windows
-                      "2"       'split-window-below
-                      "3"       'split-window-right
-                      "d"       'delete-window
-                      "V"       'split-window-below
-                      "v"       'split-window-right
-                      "|"       'toggle-window-split
-                      "p"       'projectile-find-file
-                      "PP"      'projectile-switch-project
-                      "Pt"      'projectile-find-test-file
-                      "Po"      'projectile-find-other-file
-                      "s"       'counsel-projectile-ag
-                      "="       'toggle-light-dark-theme
-                      "t"       'org-todo
-                      "ns"      'hbournis/create-scratch-buffer
-                      "c"       'cfw:open-org-calendar
-                      ";"       'evilmi-jump-items
-                      "i"       'org-toggle-inline-images
-                      "w"       'resize-window
-                      "SPC"     (lambda () (interactive) (find-file org-main-file-location-var))
-                      "a"       (lambda () (interactive) (find-file org-mobile-file-location-var))
-                      "!"       (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
-                      "m"       (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
+                      "f"         'list-buffers
+                      "TAB"       'mode-line-other-buffer
+                      "<backtab>" 'hbournis/toggle-workspaces-1-2
+                      "x"         'execute-extended-command
+                      "o"         'occur
+                      "<up>"      'windmove-up
+                      "<down>"    'windmove-down
+                      "<right>"   'windmove-right
+                      "<left>"    'windmove-left
+                      "k"         'windmove-up
+                      "j"         'windmove-down
+                      "l"         'windmove-right
+                      "h"         'windmove-left
+                      "K"         'shrink-window
+                      "J"         'enlarge-window
+                      "H"         'shrink-window-horizontally
+                      "L"         'enlarge-window-horizontally
+                      "0"         'delete-window
+                      "1"         'delete-other-windows
+                      "2"         'split-window-below
+                      "3"         'split-window-right
+                      "d"         'delete-window
+                      "V"         'split-window-below
+                      "v"         'split-window-right
+                      "|"         'toggle-window-split
+                      "p"         'projectile-find-file
+                      "PP"        'projectile-switch-project
+                      "Pt"        'projectile-find-test-file
+                      "Po"        'projectile-find-other-file
+                      "s"         'counsel-projectile-ag
+                      "="         'toggle-light-dark-theme
+                      "t"         'org-todo
+                      "ns"        'hbournis/create-scratch-buffer
+                      "c"         'cfw:open-org-calendar
+                      ";"         'evilmi-jump-items
+
+                      "i"         'org-toggle-inline-images
+                      "w"         'hydra-window-deluxe-custom/body
+                      "W1"        'eyebrowse-switch-to-window-config-1
+                      "W2"        'eyebrowse-switch-to-window-config-2
+                      "W3"        'eyebrowse-switch-to-window-config-3
+                      "W4"        'eyebrowse-switch-to-window-config-4
+                      "SPC"       (lambda () (interactive) (find-file org-main-file-location-var))
+                      "a"         (lambda () (interactive) (find-file org-mobile-file-location-var))
+                      "!"         (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
+                      "m"         (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
-    (extra-tools-leader "`"   'hbournis/open-terminal-below
+    (extra-tools-leader "`"   'hbournis/open-terminal
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
                         "l"   'hbournis/org-make-word-link-from-clipboard
@@ -977,7 +983,18 @@ Save emacs session
                     register-alist)))
     (desktop-save-mode t))
 #+END_SRC
-*** workgroups2
+*** Workgroups/Perspectives/Layouts
+**** DISABLED workgroups2
+Pros:
++ Saves/Restores state on shutdown
++ Does what i want
+Cons:
+- Slow startup
+- Opens everything from all workgroups
+- Does not show current workgroup in powerline
+- Breaks powerline and evil mode for some buffers
+
+Would use it if it did not load everything at once and worked with powerline
 #+BEGIN_SRC emacs-lisp
   (use-package workgroups2
     :ensure t
@@ -997,10 +1014,80 @@ Save emacs session
     (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
     (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
     (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
-    ;; (setq wg-mode-line-display-on nil)
-    (setq wg-mode-line-only-name t)
-    (setq wg-flag-modified nil)
+
+    ;; Mode Line changes
+    ;; Display workgroups in Mode Line?
+    (setq wg-mode-line-display-on t)          ; Default: (not (featurep 'powerline))
+    (setq wg-flag-modified t)                 ; Display modified flags as well
+    (setq wg-mode-line-decor-left-brace "["
+          wg-mode-line-decor-right-brace "]"  ; how to surround it
+          wg-mode-line-decor-divider ":")
     (workgroups-mode 1))
+#+END_SRC
+**** DISABLED perspective-el
+Pros:
++ Easy to use, understandable
++ Works well with powerline, shoes all available perspectives
++ Lightweight
+Cons:
+- Does not persist perspectives on shutdown
+- If installed with use-package it does not work (why?), must use package installer
+- Will [[https://github.com/nex3/perspective-el/issues/64][potentially break with Emacs 26]]
+
+Would choose it, if it persisted/restored perspectives
+#+BEGIN_SRC emacs-lisp
+  (use-package perspective
+    :ensure t
+    :config
+    (persp-mode))
+#+END_SRC
+**** DISABLED persp-mode
+Pros:
++ Lightweight like perspective
++ Works with powerline
++ Saves/restores previous perspectives
++ can select perspective none
+Cons:
+- Can't save terminal windows (unlike workgroups2) [[https://github.com/Bad-ptr/persp-mode.el/issues/76][Issue]] (managed to save them,
+  but requires custom code see bellow, also opening in Dropbox/org directory)
+- Stops showing org-agenda on startup for some reason [[https://github.com/Bad-ptr/persp-mode.el/issues/91][Issue]]
+- Shows the album.org file on startup even though i never opened it
+- Seems too buggy
+
+#+BEGIN_SRC emacs-lisp
+  (use-package persp-mode
+    :ensure t
+    :defer 10
+    :config
+    (setq persp-auto-save-fname "~/Dropbox/emacs/persp-confs")
+    (persp-def-buffer-save/load
+     :mode 'shell-mode
+     :mode-restore-function #'(lambda (_mode) (ansi-term explicit-shell-file-name)) ; or #'identity if you do not want to start shell process
+     :tag-symbol 'def-shell
+     :save-vars '(major-mode default-directory))
+    (persp-mode 1))
+#+END_SRC
+**** eyebrowse
+Pros:
++ Fast, light
++ Depends on desktop for persistence
++ nice modeline indicator
++ shows all available werkgroups
++ Fails gracefully on terminal, showing scratch buffer instead
++ org agenda works at startup
+Cons:
+- not restoring terminals
+- Can't share save file, must share entire desktop save file
+- Does not start on the 1st workgroup, starts on the last used, which causes it
+  to be overriden by org agenda
+
+#+BEGIN_SRC emacs-lisp
+  (use-package eyebrowse
+    :ensure t
+    :config
+    (add-to-list 'window-persistent-parameters '(window-side . writable))
+    (add-to-list 'window-persistent-parameters '(window-slot . writable))
+    (eyebrowse-mode t))
 #+END_SRC
 *** magit
 
@@ -2091,6 +2178,16 @@ BUFFER may be either a buffer or its name (a string)."
               (condition-case nil (delete-window win) (error nil))))))
     (when (interactive-p)
       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
+#+END_SRC
+** Toggle between workspace 1 and 2
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/toggle-workspaces-1-2 ()
+    "Change between workspace 1 and 2 using the eyebrowse package"
+    (interactive)
+    (let ((current (eyebrowse--get 'current-slot)))
+      (cond ((eql current 1) (eyebrowse-switch-to-window-config-2))
+            ((eql current 2) (eyebrowse-switch-to-window-config-1))
+            (t (eyebrowse-switch-to-window-config-1)))))
 #+END_SRC
 * Shortcuts
 global shortcuts
