@@ -200,6 +200,9 @@ Variables are set here that are used in the configuration below
   ;; Automatically refresh buffers that changed on disk
   (global-auto-revert-mode t)
 
+  ;; Undo/Redo changes in window configuration
+  (when (fboundp 'winner-mode)
+    (winner-mode 1))
   ;; check if history file exists, otherwise create it
   ;; (unless (file-exists-p "~/.emacs.d/etc/savehist")
   ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
@@ -1254,19 +1257,72 @@ system in order to work.
     :after treemacs projectile
     :ensure t)
 #+END_SRC
-*** resize-window
+*** hydra
 #+BEGIN_SRC emacs-lisp
-  (use-package resize-window
+  (use-package hydra
     :ensure t
     :config
-    (push '(?l ?b) resize-window-alias-list)
-    (push '(?j ?p) resize-window-alias-list)
-    (push '(?k ?n) resize-window-alias-list)
-    (push '(?h ?f) resize-window-alias-list)
-    (push '(?L ?B) resize-window-alias-list)
-    (push '(?J ?P) resize-window-alias-list)
-    (push '(?K ?N) resize-window-alias-list)
-    (push '(?H ?F) resize-window-alias-list))
+    (require 'hydra-examples)
+
+    (defhydra hydra-zoom (global-map "<f2>")
+      "zoom"
+      ("g" text-scale-increase "in")
+      ("l" text-scale-decrease "out"))
+
+    (defhydra hydra-global-org (:color blue)
+      "Org"
+      ("t" org-timer-start "Start Timer")
+      ("s" org-timer-stop "Stop Timer")
+      ("r" org-timer-set-timer "Set Timer") ; This one requires you be in an orgmode doc, as it sets the timer for the header
+      ("p" org-timer "Print Timer") ; output timer value to buffer
+      ("w" (org-clock-in '(4)) "Clock-In") ; used with (org-clock-persistence-insinuate) (setq org-clock-persist t)
+      ("o" org-clock-out "Clock-Out") ; you might also want (setq org-log-note-clock-out t)
+      ("j" org-clock-goto "Clock Goto") ; global visit the clocked task
+      ("c" org-capture "Capture") ; Don't forget to define the captures you want http://orgmode.org/manual/Capture.html
+      ("l" org-capture-goto-last-stored "Last Capture"))
+
+    (defhydra hydra-window-deluxe-custom (global-map "<f3>")
+      "
+  Move^^  ^Resize^ ^Split^          ^Switch^
+  --------------------------------------------
+  _h_ ←   _H_ X←   _v_ertical       _b_uffer
+  _j_ ↓   _J_ X↓   _x_ horizontal   _f_ind
+  _k_ ↑   _K_ X↑   _z_ undo         _d_elete
+  _l_ →   _L_ X→   _Z_ redo         _s_wap
+  "
+      ("h" windmove-left )
+      ("j" windmove-down )
+      ("k" windmove-up )
+      ("l" windmove-right )
+      ("H" hydra-move-splitter-left)
+      ("J" hydra-move-splitter-down)
+      ("K" hydra-move-splitter-up)
+      ("L" hydra-move-splitter-right)
+      ("b" helm-mini)
+      ("f" helm-find-files)
+      ("v" (lambda ()
+             (interactive)
+             (split-window-right)
+             (windmove-right))
+       )
+      ("x" (lambda ()
+             (interactive)
+             (split-window-below)
+             (windmove-down))
+       )
+      ("s" (lambda ()
+             (interactive)
+             (ace-window 4)
+             (add-hook 'ace-window-end-once-hook
+                       'hydra-window/body)))
+      ("d" delete-window)
+      ("z" (progn
+             (winner-undo)
+             (setq this-command 'winner-undo))
+       )
+      ("Z" winner-redo)
+      )
+    (global-set-key (kbd "M-#") 'hydra-windows/body))
 #+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
