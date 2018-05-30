@@ -232,12 +232,15 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 *** open terminal below
 #+BEGIN_SRC emacs-lisp
-  (defun hbournis/open-terminal-below ()
+  (defun hbournis/open-terminal ()
+    "Open a terminal.  If less than 3 windows, split and open it below.
+  Otherwise open it in current window"
     (interactive)
-    (progn
-      (split-window-below)
-      (other-window 1)
-      (ansi-term explicit-shell-file-name)))
+    (if (< (count-windows) 3)
+        (progn
+          (split-window-below)
+          (other-window 1)))
+    (ansi-term explicit-shell-file-name))
 #+END_SRC
 *** Kill the buffer when term exits
 [[https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-term-mode.el][Source]]
@@ -564,6 +567,7 @@ the best thing in emacs/computer science.
           org-agenda-span 10                       ;; org agenda shows 10 days
           org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
           org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
+          org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
           org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
           org-babel-do-load-languages
           (quote (org-babel-load-languages (quote ((emacs-lisp . t)
