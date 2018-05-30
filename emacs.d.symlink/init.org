@@ -66,8 +66,9 @@ the elpa repositories from where the packages are fetched.
 Determine whether the system is mac or linux
 
 #+BEGIN_SRC emacs-lisp
-  (defconst IS-MAC   (eq system-type 'darwin))
-  (defconst IS-LINUX (eq system-type 'gnu/linux))
+  (defconst IS-MAC     (eq system-type 'darwin))
+  (defconst IS-LINUX   (eq system-type 'gnu/linux))
+  (defconst IS-WINDOWS (eq system-type 'windows-nt))
 #+END_SRC
 * Variables
 Variables are set here that are used in the configuration below
@@ -1664,7 +1665,6 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 Emacs expects you to write them.
 
 #+BEGIN_SRC emacs-lisp
-
   ;; Turn off antialiasing for BigBlue Terminal Font
   ;; (setq mac-allow-anti-aliasing nil)
 
@@ -1674,7 +1674,10 @@ Emacs expects you to write them.
              (set-face-attribute 'default nil :font (concat default-font-var "-" default-font-size-var)))
             (IS-LINUX
              (set-face-attribute 'default nil :font (concat default-font-var "-" alternate-font-size-var))))
-    (set-face-attribute 'default nil :font (concat fallback-font-var "-" default-font-size-var)))
+
+    (cond (IS-WINDOWS
+           (set-face-attribute 'default nil :font (concat fallback-font-var "-" alternate-font-size-var)))
+          (t (set-face-attribute 'default nil :font (concat fallback-font-var "-" default-font-size-var)))))
 
   ;; Set a font with great support for Unicode Symbols to fallback in
   ;; those case where certain Unicode glyphs are missing in the current
