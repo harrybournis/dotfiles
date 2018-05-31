@@ -269,6 +269,9 @@ Variables are set here that are used in the configuration below
 * Packages
 ** Common
 *** evil-mode
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 **** evil
 Vim emulation. It is extended with various packages that provide existing Vim
 functionalities. Bellow is a list of the Emacs package with the functionality
@@ -377,44 +380,52 @@ mode only when it is needed.
     :config
     (evil-collection-init))
 #+END_SRC
-**** Other Evil Packages
+**** evil-surround
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :ensure t
     :after evil
     :config
     (global-evil-surround-mode))
-
-  ;; indents to a similar level elements on similar lines
-  ;; e.g. all '=' in variable assignments
+#+END_SRC
+**** evil-lion
+Indents to a similar level elements on similar lines e.g. all '=' in variable assignments
+#+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :ensure t
     :after evil
     :config
     (evil-lion-mode))
-
-  ;; press % to move between opening and closing tag in any language
+#+END_SRC
+**** evil-matchit
+Press % to move between opening and closing tag in any language
+#+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :ensure t
     :after evil
     :config
     (global-evil-matchit-mode t))
-
-  ;; increment / decrement binary, octal, decimal and hex literals
+#+END_SRC
+**** evil-numbers
+Increment / decrement binary, octal, decimal and hex literals
+#+BEGIN_SRC emacs-lisp
   (use-package evil-numbers
     :ensure t
     :after evil
     :config
     (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
     (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
-
-  ;; Nerd commenter emulation
+#+END_SRC
+**** evil-nerd-commenter
+Nerd commenter emulation
+#+BEGIN_SRC emacs-lisp
   (use-package evil-nerd-commenter
     :ensure t
     :after evil)
-
-
-  ;; Org mode key bindings for evil mode
+#+END_SRC
+**** evil-org
+Org mode key bindings for evil mode
+#+BEGIN_SRC emacs-lisp
   (use-package evil-org
     :ensure t
     :after (evil org)
@@ -426,15 +437,18 @@ mode only when it is needed.
                 (evil-org-set-key-theme '(return))
                 (require 'evil-org-agenda)
                 (evil-org-agenda-set-keys))))
-
-  ;; Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
+#+END_SRC
+**** evil-string-inflection
+Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
+#+BEGIN_SRC emacs-lisp
   (use-package evil-string-inflection
     :ensure t
     :after evil
     :pin melpa-stable)
-
-
-  ;; Make ediff evil
+#+END_SRC
+**** evil-ediff
+Make ediff evil
+#+BEGIN_SRC emacs-lisp
   (use-package evil-ediff
     :ensure t
     :after evil
@@ -539,152 +553,31 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[`"  'wrap-with-back-quotes))
 #+END_SRC
 *** org-mode
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 the best thing in emacs/computer science.
-
+**** Org
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t
-    :pin org
-    :config
-    ;; enable org-bullets
-    (use-package org-bullets
-      :ensure t
-      :config
-      (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
-      (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
-
-
-    ;; Load org-collector
-    (add-to-list 'load-path "~/.emacs.d/lisp/org-collector")
-
-    (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
-          org-src-tab-acts-natively t
-          org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
-          org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
-          ;; org-todo-keyword-faces '(("TODO"        . "red")
-          ;;                          ("DOING"       . "yellow")
-          ;;                          ("WAITING"     . "#7453ef")
-          ;;                          ("DONE"        . (:foreground "green" :weight bold)))
-          org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
-
-          org-startup-indented t                   ;; indent on startup
-          org-indent-indentation-per-level 2       ;; indent each level by 2
-          org-list-indent-offset 2                 ;; indent lists by 2
-          org-display-inline-images t              ;; display images in org by default
-          org-hide-emphasis-markers t              ;; hide bold, italics etc markers
-          org-tags-column (- (window-total-width)) ;; make tags align at right window width
-          org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
-          org-log-into-drawer t                    ;; save logs in the drawer of current item
-          org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
-          org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
-          org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
-          org-directory (expand-file-name "~/Dropbox/org/")
-          org-agenda-files org-agenda-files-var
-          org-agenda-span 10                       ;; org agenda shows 10 days
-          org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
-          org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
-          org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
-          org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
-          org-babel-do-load-languages
-          (quote (org-babel-load-languages (quote ((emacs-lisp . t)
-                                                   (ruby . t)
-                                                   (python . t)
-                                                   (haskell . t)
-                                                   (js . t)
-                                                   (shell . t)
-                                                   (r . t)
-                                                   (prolog . t)
-                                                   (clojurescript . t)
-                                                   (plantuml . t)
-                                                   ))))
-          org-export-backends (quote (ascii
-                                      html
-                                      icalendar
-                                      latex
-                                      md
-                                      odt))
-          org-modules '(org-bbdb
-                        org-docview
-                        org-info
-                        org-w3m
-                        org-protocol
-                        org-bibtex
-                        org-collector)
-
-          org-lowest-priority ?D
-          org-default-priority ?D
-
-          ;; custom colors for priorities
-          org-priority-faces '((?A . (:foreground "red" :weight bold))
-                               (?B . (:foreground "orange"))
-                               (?C . (:foreground "yellow"))
-                               (?D . (:foreground "green"))))
-
-    ;; display week numbers in org calendar
-    (copy-face font-lock-constant-face 'calendar-iso-week-face)
-    (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
-    (setq calendar-intermonth-text
-          '(propertize
-            (format "%2d"
-                    (car
-                     (calendar-iso-from-absolute
-                      (calendar-absolute-from-gregorian (list month day year)))))
-            'font-lock-face 'calendar-iso-week-face))
-
-    (define-key org-mode-map (kbd "C-k") nil)
-
-    ;; Used for the protocol link see below
-    (defun transform-square-brackets-to-round-ones(string-to-transform)
-      "Transforms [ into ( and ] into ), other chars left unchanged."
-      (concat
-       (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
-      )
-
-    (setq org-capture-templates `(
-                                  ("a" "Google Calendar Event" entry (file  org-gcal-file-location-var)
-                                   "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-                                  ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                   "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                  ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                   "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
-                                  ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
-                                                                   ,(format "%s" (format-time-string "%Y")))
-                                   "* TO_READ %^{Title}\n:LOGBOOK:\n- Added on %U\n:END:
-                                         \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
-                                   :empty-lines 1)
-                                  ))
-
-    (setq org-agenda-custom-commands '(("c" "Startup Agenda"
-                                        (
-                                         (tags "PRIORITY=\"A\""
-                                               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                                (org-agenda-overriding-header "High-priority unfinished tasks:")))
-                                         (agenda "")
-                                         (tags "PRIORITY=\"B\""
-                                               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                                (org-agenda-overriding-header "Mid-priority unfinished tasks:")))
-                                        (tags "PRIORITY=\"C\""
-                                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                               (org-agenda-overriding-header "Low-priority unfinished tasks:")))))))
-
-    ;; Type <el to add an emacs-lisp code block
-    (add-to-list 'org-structure-template-alist
-                 '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-
-    ;; Show only the time when a note is added, instead of 'Note taken on..'
-    (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
-    (add-to-list 'org-log-note-headings '(note . "%t"))
-
-    ;; Keep inherited tags on archived headings.
-    ;; source: https://orgmode.org/worg/org-hacks.html
-    (defadvice org-archive-subtree
-        (before add-inherited-tags-before-org-archive-subtree activate)
-      "add inherited tags before org-archive-subtree"
-      (org-set-tags-to (org-get-tags-at)))
-    )
+    :pin org)
 #+END_SRC
-
-**** org-fancy-priorities
+**** Org-related packages
+***** org-bullets
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+#+END_SRC
+***** org-collector
+#+BEGIN_SRC emacs-lisp
+  ;; Load org-collector
+  (add-to-list 'load-path "~/.emacs.d/lisp/org-collector")
+#+END_SRC
+***** org-fancy-priorities
 Display org priorities as custom strings
 
 #+BEGIN_SRC emacs-lisp
@@ -703,6 +596,170 @@ Display org priorities as custom strings
                                       (?2 . "⮬")
                                       (?3 . "⮮")
                                       (?4 . "☠"))))
+#+END_SRC
+***** org-cliplink
+Pretty-copy links from the browser to org with title instead of just url
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-cliplink
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c p b") 'org-cliplink))
+#+END_SRC
+**** org-gcal
+Google calendar integration with org mode. Sync both ways. There is currently a
+bug where events created in Emacs get duplicated in Google Calendar.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Load api keys for google calendar API
+
+  ;; Only load org-gcal if the .api-keys file is present. Prompt user to rename the
+  ;; .api-keys-sample file to .api-keys and fill in their info.
+  (if (file-exists-p (concat user-emacs-directory ".api-keys"))
+      (progn
+        (load (concat user-emacs-directory ".api-keys"))
+
+        (use-package org-gcal
+          :ensure t
+          :config
+          (setq org-gcal-client-id     api-keys-org-gcal-client-id
+                org-gcal-client-secret api-keys-org-gcal-client-secret
+                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)))
+          (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+          (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
+    (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
+    )
+#+END_SRC
+**** Org Settings
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
+        org-src-tab-acts-natively t
+        org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
+        org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
+        org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
+
+        org-startup-indented t                   ;; indent on startup
+        org-indent-indentation-per-level 2       ;; indent each level by 2
+        org-list-indent-offset 2                 ;; indent lists by 2
+        org-display-inline-images t              ;; display images in org by default
+        org-hide-emphasis-markers t              ;; hide bold, italics etc markers
+        org-tags-column (- (window-total-width)) ;; make tags align at right window width
+        org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
+        org-log-into-drawer t                    ;; save logs in the drawer of current item
+        org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
+        org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
+        org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
+        org-directory (expand-file-name "~/Dropbox/org/")
+        org-babel-do-load-languages
+        (quote (org-babel-load-languages (quote ((emacs-lisp . t)
+                                                 (ruby . t)
+                                                 (python . t)
+                                                 (haskell . t)
+                                                 (js . t)
+                                                 (shell . t)
+                                                 (r . t)
+                                                 (prolog . t)
+                                                 (clojurescript . t)
+                                                 (plantuml . t)
+                                                 ))))
+        org-export-backends (quote (ascii
+                                    html
+                                    icalendar
+                                    latex
+                                    md
+                                    odt))
+        org-modules '(org-bbdb
+                      org-docview
+                      org-info
+                      org-w3m
+                      org-protocol
+                      org-bibtex
+                      org-collector)
+
+        org-lowest-priority ?D
+        org-default-priority ?D
+
+        ;; custom colors for priorities
+        org-priority-faces '((?A . (:foreground "red" :weight bold))
+                             (?B . (:foreground "orange"))
+                             (?C . (:foreground "yellow"))
+                             (?D . (:foreground "green"))))
+
+  (define-key org-mode-map (kbd "C-k") nil)
+
+
+  ;; Type <el to add an emacs-lisp code block
+  (add-to-list 'org-structure-template-alist
+               '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+
+  ;; Show only the time when a note is added, instead of 'Note taken on..'
+  (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
+  (add-to-list 'org-log-note-headings '(note . "%t"))
+#+END_SRC
+**** Org custom functions
+#+BEGIN_SRC emacs-lisp
+  ;; display week numbers in org calendar
+  (copy-face font-lock-constant-face 'calendar-iso-week-face)
+  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
+  (setq calendar-intermonth-text
+        '(propertize
+          (format "%2d"
+                  (car
+                   (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian (list month day year)))))
+          'font-lock-face 'calendar-iso-week-face))
+
+  ;; Used for the protocol link see below
+  (defun transform-square-brackets-to-round-ones(string-to-transform)
+    "Transforms [ into ( and ] into ), other chars left unchanged."
+    (concat
+     (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform)))
+
+  ;; Keep inherited tags on archived headings.
+  ;; source: https://orgmode.org/worg/org-hacks.html
+  (defadvice org-archive-subtree
+      (before add-inherited-tags-before-org-archive-subtree activate)
+    "add inherited tags before org-archive-subtree"
+    (org-set-tags-to (org-get-tags-at)))
+#+END_SRC
+**** Org Capture
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates `(
+                                ("a" "Google Calendar Event" entry (file  org-gcal-file-location-var)
+                                 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+                                ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                 "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                 "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
+                                ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
+                                                                 ,(format "%s" (format-time-string "%Y")))
+                                 "* TO_READ %^{Title}\n:PROPERTIES:\n:VISIBILITY: folded\n:END:\n:LOGBOOK:\n- Added on %U\n:END:
+                                       \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
+                                 :prepend t)
+                                ))
+#+END_SRC
+**** Org Agenda
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files org-agenda-files-var
+        org-agenda-span 10                       ;; org agenda shows 10 days
+        org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
+        org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
+        org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
+        org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
+        )
+
+  (setq org-agenda-custom-commands '(("c" "Startup Agenda"
+                                      (
+                                       (tags "PRIORITY=\"A\""
+                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header "High-priority unfinished tasks:")))
+                                       (agenda "")
+                                       (tags "PRIORITY=\"B\""
+                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header "Mid-priority unfinished tasks:")))
+                                       (tags "PRIORITY=\"C\""
+                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header "Low-priority unfinished tasks:")))))))
 #+END_SRC
 *** DISABLED nlinum
 Better performance in line numbers?
@@ -1208,39 +1265,6 @@ Get environment variables from the shell
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
-#+END_SRC
-*** org-cliplink
-Pretty-copy links from the browser to org with title instead of just url
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-cliplink
-    :ensure t
-    :config
-    (global-set-key (kbd "C-c p b") 'org-cliplink))
-#+END_SRC
-*** org-gcal
-Google calendar integration with org mode. Sync both ways. There is currently a
-bug where events created in Emacs get duplicated in Google Calendar.
-
-#+BEGIN_SRC emacs-lisp
-  ;; Load api keys for google calendar API
-
-  ;; Only load org-gcal if the .api-keys file is present. Prompt user to rename the
-  ;; .api-keys-sample file to .api-keys and fill in their info.
-  (if (file-exists-p (concat user-emacs-directory ".api-keys"))
-      (progn
-        (load (concat user-emacs-directory ".api-keys"))
-
-        (use-package org-gcal
-          :ensure t
-          :config
-          (setq org-gcal-client-id     api-keys-org-gcal-client-id
-                org-gcal-client-secret api-keys-org-gcal-client-secret
-                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)))
-          (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
-          (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
-    (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
-    )
 #+END_SRC
 *** calfw
 Calendar framework
