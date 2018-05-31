@@ -1,0 +1,17 @@
+* TO_READ %(ocv/prmt "Title" 'book-title), %(ocv/prmt "Author" 'book-author) %^{Tags}
+:PROPERTIES:
+:TITLE: %(progn book-title)
+:AUTHOR: %(progn book-author)
+:RATING:
+:VISIBILITY: folded
+:END:
+:LOGBOOK:
+ - Added on %U
+:END:
+** Suggested by:
+- %?
+** Description
+
+
+** Links
+-
