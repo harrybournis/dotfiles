@@ -597,6 +597,12 @@ Display org priorities as custom strings
                                       (?3 . "⮮")
                                       (?4 . "☠"))))
 #+END_SRC
+***** org-capture-vars
+#+BEGIN_SRC emacs-lisp
+  ;; Load org-capture-vars
+  (add-to-list 'load-path "~/.emacs.d/lisp/org-capture-vars")
+  (with-eval-after-load 'org-capture (require 'org-capture-vars))
+#+END_SRC
 ***** org-cliplink
 Pretty-copy links from the browser to org with title instead of just url
 
