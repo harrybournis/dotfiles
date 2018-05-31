@@ -561,7 +561,9 @@ the best thing in emacs/computer science.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t
-    :pin org)
+    :pin org
+    :config
+    (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode)))
 #+END_SRC
 **** Org-related packages
 ***** org-bullets
@@ -738,10 +740,8 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                 ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                  "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
                                 ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
-                                                                 ,(format "%s" (format-time-string "%Y")))
-                                 "* TO_READ %^{Title}\n:PROPERTIES:\n:VISIBILITY: folded\n:END:\n:LOGBOOK:\n- Added on %U\n:END:
-                                       \n** Suggested by:\n- %?\n** Description\n\n** Links\n- \n\n"
-                                 :prepend t)
+                                                                     ,(format "%s" (format-time-string "%Y")))
+                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
                                 ))
 #+END_SRC
 **** Org Agenda
