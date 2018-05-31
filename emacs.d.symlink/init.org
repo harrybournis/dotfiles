@@ -169,10 +169,6 @@ Variables are set here that are used in the configuration below
   ;; cleanup whitespace on save
   (add-hook 'before-save-hook 'whitespace-cleanup)
 
-  ;; set line numbers on for every buffer
-  ;; Disabled in favor of nlinum. See below in packages.
-  ;; (global-linum-mode t)
-
   ;; set line spacing
   (setq-default line-spacing 0.2)
 
@@ -218,7 +214,20 @@ Variables are set here that are used in the configuration below
   ;;         regexp-search-ring))
 
 #+END_SRC
+*** Emacs 26.1 Settings
+#+BEGIN_SRC emacs-lisp
+  ;; Scroll horizontally using mouse, touchpad and trackbar
+  (setq mouse-wheel-tilt-scroll t)
 
+  ;; Native line numbers
+  ;; Can be enabled via variable, as a minor mode, or global mode
+  ;; Variable
+  ;; (setq display-line-numbers 'relative)
+
+  ;; Mode
+  (setq display-line-numbers-type 'relative)
+  ;; (global-display-line-numbers-mode)
+#+END_SRC
 ** Encryption
 
 #+BEGIN_SRC emacs-lisp
@@ -695,7 +704,7 @@ Display org priorities as custom strings
                                       (?3 . "⮮")
                                       (?4 . "☠"))))
 #+END_SRC
-*** nlinum
+*** DISABLED nlinum
 Better performance in line numbers?
 
 #+BEGIN_SRC emacs-lisp
@@ -1486,6 +1495,7 @@ Better syntax highlighting for jsx files
 #+BEGIN_SRC emacs-lisp
   (use-package rjsx-mode
     :ensure t
+    :hook (rjsx-mode . display-line-numbers-mode)
     :config
     (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
 #+END_SRC
@@ -1503,7 +1513,8 @@ Better syntax highlighting for jsx files
 **** purescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
-    :ensure t)
+    :ensure t
+    :hook (purescript-mode . display-line-numbers-mode))
 #+END_SRC
 **** psc-ide
 #+BEGIN_SRC emacs-lisp
@@ -2059,7 +2070,7 @@ A simple function from [[https://www.emacswiki.org/emacs/RecreateScratchBuffer][
     (setq buffer-display-table (make-display-table))
     (aset buffer-display-table ?\^M []))
 #+END_SRC
-** DISABLED org-fancy-priorities
+** DISABLED org-fancy-priorities development
 For development only.
 #+BEGIN_SRC emacs-lisp
   (if (file-exists-p (concat user-emacs-directory "lisp/org-fancy-priorities/org-fancy-priorities.el"))
