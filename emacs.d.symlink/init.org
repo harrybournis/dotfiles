@@ -1849,6 +1849,9 @@ Favorite dark themes:
       (set-face-attribute 'org-property-value nil
                           :foreground "white")
 
+      (set-face-attribute 'eyebrowse-mode-line-active nil
+                          :foreground "#c350ff")
+
       (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
                                  (?B . (:foreground "orange"))
                                  (?C . (:foreground "yellow"))
@@ -1897,6 +1900,9 @@ Favorite dark themes:
 
       (set-face-attribute 'org-property-value nil
                           :foreground "black")
+
+      (set-face-attribute 'eyebrowse-mode-line-active nil
+                          :foreground "#16a085")
 
       (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                      ("DOING"       . (:foreground "#2980b9" :weight bold))
