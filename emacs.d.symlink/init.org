@@ -492,11 +492,11 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "L"         'enlarge-window-horizontally
                       "0"         'delete-window
                       "1"         'delete-other-windows
-                      "2"         'split-window-below
-                      "3"         'split-window-right
+                      "2"         'split-window-below-and-switch
+                      "3"         'split-window-right-and-switch
                       "d"         'delete-window
-                      "V"         'split-window-below
-                      "v"         'split-window-right
+                      "V"         'split-window-below-and-switch
+                      "v"         'split-window-right-and-switch
                       "|"         'toggle-window-split
                       "p"         'projectile-find-file
                       "PP"        'projectile-switch-project
@@ -1042,7 +1042,7 @@ Save emacs session
           desktop-base-file-name "emacs-desktop"
           desktop-globals-to-save
           (append '((extended-command-history . 50)
-                    (file-name-history . 200)
+                    (file-name-history . 400)
                     (grep-history . 50)
                     (compile-history . 50)
                     (minibuffer-history . 100)
@@ -2205,29 +2205,29 @@ Just a simple function for when I want the current time stamp inside an org file
 [[https://www.emacswiki.org/emacs/misc-cmds.el][Source]]
 
 #+BEGIN_SRC emacs-lisp
-;; Candidate as a replacement for `kill-buffer', at least when used interactively.
-;; For example: (define-key global-map [remap kill-buffer] 'kill-buffer-and-its-windows)
-;;
-;; We cannot just redefine `kill-buffer', because some programs count on a
-;; specific other buffer taking the place of the killed buffer (in the window).
-(defun kill-buffer-and-its-windows (buffer)
-  "Kill BUFFER and delete its windows.  Default is `current-buffer'.
-BUFFER may be either a buffer or its name (a string)."
-  (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
-  (setq buffer  (get-buffer buffer))
-  (if (buffer-live-p buffer)            ; Kill live buffer only.
-      (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
-        (when (and (buffer-modified-p buffer)
-                   (fboundp '1on1-flash-ding-minibuffer-frame))
-          (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
-        (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
-          (dolist (win  wins)           ; (User might keep buffer if modified.)
-            (when (window-live-p win)
-              ;; Ignore error, in particular,
-              ;; "Attempt to delete the sole visible or iconified frame".
-              (condition-case nil (delete-window win) (error nil))))))
-    (when (interactive-p)
-      (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
+  ;; Candidate as a replacement for `kill-buffer', at least when used interactively.
+  ;; For example: (define-key global-map [remap kill-buffer] 'kill-buffer-and-its-windows)
+  ;;
+  ;; We cannot just redefine `kill-buffer', because some programs count on a
+  ;; specific other buffer taking the place of the killed buffer (in the window).
+  (defun kill-buffer-and-its-windows (buffer)
+    "Kill BUFFER and delete its windows.  Default is `current-buffer'.
+  BUFFER may be either a buffer or its name (a string)."
+    (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
+    (setq buffer  (get-buffer buffer))
+    (if (buffer-live-p buffer)            ; Kill live buffer only.
+        (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
+          (when (and (buffer-modified-p buffer)
+                     (fboundp '1on1-flash-ding-minibuffer-frame))
+            (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
+          (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
+            (dolist (win  wins)           ; (User might keep buffer if modified.)
+              (when (window-live-p win)
+                ;; Ignore error, in particular,
+                ;; "Attempt to delete the sole visible or iconified frame".
+                (condition-case nil (delete-window win) (error nil))))))
+      (when (interactive-p)
+        (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 #+END_SRC
 ** Toggle between workspace 1 and 2
 #+BEGIN_SRC emacs-lisp
@@ -2238,6 +2238,28 @@ BUFFER may be either a buffer or its name (a string)."
       (cond ((eql current 1) (eyebrowse-switch-to-window-config-2))
             ((eql current 2) (eyebrowse-switch-to-window-config-1))
             (t (eyebrowse-switch-to-window-config-1)))))
+#+END_SRC
+** Split and switch to new frame
+#+BEGIN_SRC emacs-lisp
+  (defun split-window-horizontally-and-switch ()
+    (interactive)
+    (split-window-horizontally)
+    (other-window 1))
+
+  (defun split-window-vertically-and-switch ()
+    (interactive)
+    (split-window-vertically)
+    (other-window 1))
+
+  (defun split-window-below-and-switch ()
+    (interactive)
+    (split-window-below)
+    (other-window 1))
+
+  (defun split-window-right-and-switch ()
+    (interactive)
+    (split-window-right)
+    (other-window 1))
 #+END_SRC
 * Shortcuts
 global shortcuts
