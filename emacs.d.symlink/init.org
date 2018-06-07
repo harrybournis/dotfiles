@@ -89,7 +89,8 @@ Variables are set here that are used in the configuration below
         ;; default-font-var             "ProFontIIx Nerd Font Mono"
         fallback-font-var            "Courier New"
         unicode-font-var             "Unifont"
-        default-font-size-var        "15"
+        mac-font-size-var            "15"
+        windows-font-size-var        "10"
         alternate-font-size-var      "11"
         )
 #+END_SRC
@@ -567,12 +568,14 @@ the best thing in emacs/computer science.
 #+END_SRC
 **** Org-related packages
 ***** org-bullets
+Disabled on windows because it makes emacs extremely slow
 #+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :ensure t
-    :config
-    (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+  (if (not IS-WINDOWS)
+      (use-package org-bullets
+        :ensure t
+        :config
+        (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
+        (add-hook 'org-mode-hook (lambda () (org-bullets-mode t)))))
 #+END_SRC
 ***** org-collector
 #+BEGIN_SRC emacs-lisp
@@ -1740,19 +1743,27 @@ Emacs expects you to write them.
   ;; Something to do with resolution
   (if (member default-font-var (font-family-list))
       (cond (IS-MAC
-             (set-face-attribute 'default nil :font (concat default-font-var "-" default-font-size-var)))
+             (set-face-attribute 'default nil :font (concat default-font-var "-" mac-font-size-var)))
             (IS-LINUX
-             (set-face-attribute 'default nil :font (concat default-font-var "-" alternate-font-size-var))))
+             (set-face-attribute 'default nil :font (concat default-font-var "-" alternate-font-size-var)))
+            (IS-WINDOWS
+             (set-face-attribute 'default nil :font (concat default-font-var "-" windows-font-size-var))))
 
     (cond (IS-WINDOWS
-           (set-face-attribute 'default nil :font (concat fallback-font-var "-" alternate-font-size-var)))
-          (t (set-face-attribute 'default nil :font (concat fallback-font-var "-" default-font-size-var)))))
+           (set-face-attribute 'default nil :font (concat fallback-font-var "-" windows-font-size-var)))
+          (t (set-face-attribute 'default nil :font (concat fallback-font-var "-" mac-font-size-var)))))
 
   ;; Set a font with great support for Unicode Symbols to fallback in
   ;; those case where certain Unicode glyphs are missing in the current
   ;; font.
   (when (member unicode-font-var (font-family-list))
-    (set-fontset-font t 'unicode (concat unicode-font-var "-" default-font-size-var) nil 'prepend))
+    (cond (IS-MAC
+           (set-fontset-font t 'unicode (concat unicode-font-var "-" mac-font-size-var) nil 'prepend))
+          (IS-LINUX
+           (set-fontset-font t 'unicode (concat unicode-font-var "-" mac-font-size-var) nil 'prepend))
+          (IS-WINDOWS
+           (set-fontset-font t 'unicode (concat unicode-font-var "-" windows-font-size-var) nil 'prepend)))
+    )
 #+END_SRC
 ** Themes
 *** Color Scheme
