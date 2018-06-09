@@ -1458,6 +1458,29 @@ system in order to work.
       )
     (global-set-key (kbd "M-#") 'hydra-windows/body))
 #+END_SRC
+*** Docker
+**** DISABLED docker
+#+BEGIN_SRC emacs-lisp
+  (use-package docker
+    :ensure t
+    :config
+    (setenv "DOCKER_TLS_VERIFY" "1")
+    (setenv "DOCKER_HOST" "tcp://10.11.12.13:2376")
+    (setenv "DOCKER_CERT_PATH" "/Users/foo/.docker/machine/machines/box")
+    (setenv "DOCKER_MACHINE_NAME" "box"))
+#+END_SRC
+**** dockerfile-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package dockerfile-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+#+END_SRC
+**** docker-compose-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package docker-compose-mode
+    :ensure t)
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
