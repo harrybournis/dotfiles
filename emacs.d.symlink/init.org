@@ -74,13 +74,13 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-main-file-location-var   "~/Dropbox/org/stuff.org"
+  (setq org-main-file-location-var   "~/Google Drive/org/stuff.org"
         org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
-        org-gcal-file-location-var   "~/Dropbox/org/gcal.org"
+        org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
         org-agenda-files-var         '(
-                                     "~/Dropbox/org/stuff.org"
+                                     "~/Google Drive/org/stuff.org"
                                      "~/Dropbox/org/mobile/mobile_notes.org"
-                                     "~/Dropbox/org/gcal.org"
+                                     "~/Google Drive/org/gcal.org"
                                   ;; "~/Dropbox/org/my-tasks.org"
                                      "~/Dropbox/org/mobile/album.org"
                                      )
@@ -660,7 +660,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
         org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
         org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
         org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
-        org-directory (expand-file-name "~/Dropbox/org/")
+        org-directory (expand-file-name "~/Google Drive/org/")
         org-babel-do-load-languages
         (quote (org-babel-load-languages (quote ((emacs-lisp . t)
                                                  (ruby . t)
