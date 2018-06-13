@@ -100,7 +100,7 @@ Variables are set here that are used in the configuration below
         fallback-font-var            "Courier New"
         unicode-font-var             "Unifont"
         mac-font-size-var            "15"
-        windows-font-size-var        "10"
+        windows-font-size-var        "11"
         alternate-font-size-var      "11"
         )
 #+END_SRC
@@ -261,7 +261,9 @@ Variables are set here that are used in the configuration below
         (progn
           (split-window-below)
           (other-window 1)))
-    (ansi-term explicit-shell-file-name))
+    (if IS-WINDOWS
+        (eshell)
+      (ansi-term explicit-shell-file-name)))
 #+END_SRC
 *** Kill the buffer when term exits
 [[https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-term-mode.el][Source]]
@@ -529,7 +531,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "SPC"       (lambda () (interactive) (find-file org-main-file-location-var))
                       "a"         (lambda () (interactive) (find-file org-mobile-file-location-var))
                       "!"         (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
-                      "m"         (lambda () (interactive) (find-file "~/.emacs.d/init.org")))
+                      "m"         (lambda () (interactive) (find-file "~/.emacs.d/init.org"))
+                      "z"         (lambda () (interactive) (find-file "~/Documents/work.org")))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
     (extra-tools-leader "`"   'hbournis/open-terminal
@@ -936,6 +939,8 @@ Completion
     :ensure t
     :pin melpa-stable
     :config
+    (if IS-WINDOWS
+        (setq projectile-indexing-method 'alien))
     (use-package counsel-projectile
       :ensure t
       :config
@@ -1373,7 +1378,7 @@ system in order to work.
             treemacs-sorting                    'alphabetic-desc
             treemacs-tag-follow-cleanup         t
             treemacs-tag-follow-delay           1.5
-            treemacs-width                      25)
+            treemacs-width                      40)
 
       (treemacs-follow-mode t)
       (treemacs-filewatch-mode t)
