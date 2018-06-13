@@ -1515,6 +1515,8 @@ Use C-j to expand.
   (use-package web-mode
     :ensure t
     :pin melpa-stable
+    :hook
+    (web-mode . display-line-numbers-mode)
     :config
     (flycheck-add-mode 'javascript-eslint 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -1557,6 +1559,8 @@ Improved JavaScript editing mode
   (use-package js2-mode
     :ensure t
     :pin melpa-stable
+    :hook
+    (js-mode . display-line-numbers-mode)
     :config
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+END_SRC
@@ -1578,7 +1582,9 @@ Better syntax highlighting for jsx files
 **** typescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package typescript-mode
-    :ensure t)
+    :ensure t
+    :hook
+    (typescript-mode . display-line-numbers-mode))
 #+END_SRC
 *** PureScript
 **** purescript-mode
