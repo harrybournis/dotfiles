@@ -245,6 +245,12 @@ Variables are set here that are used in the configuration below
   ;; Don't require password each time on enryption with symmetric cyphers
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (setf epa-pinentry-mode 'loopback)
+
+  (if IS-WINDOWS
+      (progn
+        (setq epg-gpg-home-directory "c:/Users/dfkjlsdf/AppData/Roaming/gnupg")
+        (setq epg-gpg-program "c:/Program Files (x86)/GnuPG/bin/gpg.exe")
+        (setq epg-gpgconf-program "c:/Program Files (x86)/GnuPG/bin/gpgconf.exe")))
 #+END_SRC
 ** Terminal
 #+BEGIN_SRC emacs-lisp
