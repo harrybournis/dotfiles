@@ -2344,6 +2344,21 @@ Just a simple function for when I want the current time stamp inside an org file
     (split-window-right)
     (other-window 1))
 #+END_SRC
+** Copy file name to clipboard
+ [[https://stackoverflow.com/a/2417617][Source]]
+#+BEGIN_SRC emacs-lisp
+(defun my-put-file-name-on-clipboard ()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+#+END_SRC
 * Shortcuts
 global shortcuts
 
