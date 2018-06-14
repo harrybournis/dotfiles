@@ -536,8 +536,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "W4"        'eyebrowse-switch-to-window-config-4
                       "SPC"       (lambda () (interactive) (find-file org-main-file-location-var))
                       "a"         (lambda () (interactive) (find-file org-mobile-file-location-var))
-                      "!"         (lambda () (interactive) (load-file "~/.emacs.d/init.el"))
-                      "m"         (lambda () (interactive) (find-file "~/.emacs.d/init.org"))
+                      "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
+                      "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
                       "z"         (lambda () (interactive) (find-file "~/Documents/work.org")))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
