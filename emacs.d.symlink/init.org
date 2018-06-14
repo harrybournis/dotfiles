@@ -778,10 +778,10 @@ bug where events created in Emacs get duplicated in Google Calendar.
 
   (setq org-agenda-custom-commands '(("c" "Startup Agenda"
                                       (
+                                       (agenda "")
                                        (tags "PRIORITY=\"A\""
                                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header "High-priority unfinished tasks:")))
-                                       (agenda "")
                                        (tags "PRIORITY=\"B\""
                                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header "Mid-priority unfinished tasks:")))
