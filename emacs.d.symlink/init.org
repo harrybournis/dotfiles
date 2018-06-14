@@ -209,8 +209,10 @@ Variables are set here that are used in the configuration below
   (global-auto-revert-mode t)
 
   ;; Undo/Redo changes in window configuration
-  (when (fboundp 'winner-mode)
-    (winner-mode 1))
+  ;; Disabled in windows for performance
+  (unless IS-WINDOWS
+    (when (fboundp 'winner-mode)
+      (winner-mode 1)))
   ;; check if history file exists, otherwise create it
   ;; (unless (file-exists-p "~/.emacs.d/etc/savehist")
   ;; (with-temp-buffer (write-file "~/.emacs.d/etc/savehist")))
@@ -823,7 +825,10 @@ Syntax checking
     :config
     (setq-default flycheck-disabled-checkers
                   (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint)))
-    (setq-default flycheck-temp-prefix ".flycheck"))
+    (setq-default flycheck-temp-prefix ".flycheck")
+    ;; Set flycheck to only check when saving a file or changin a major mode
+    ;; Done mainly for performance on windows
+    (setq flycheck-check-syntax-automatically '(save mode-enable)))
 #+END_SRC
 **** Use local eslint if available
 [[https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable][Source]]
