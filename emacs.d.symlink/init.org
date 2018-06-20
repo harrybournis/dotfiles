@@ -1507,6 +1507,11 @@ system in order to work.
   (use-package docker-compose-mode
     :ensure t)
 #+END_SRC
+*** restclient.el
+#+BEGIN_SRC emacs-lisp
+  (use-package restclient
+    :ensure t)
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
@@ -1519,6 +1524,7 @@ Use C-j to expand.
     ;; Autostart on any markup modes and CSS
     (define-key emmet-mode-keymap [tab] 'emmet-expand-line)
     (add-hook 'sgml-mode-hook 'emmet-mode)
+    (add-hook 'web-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook 'emmet-mode))
 #+END_SRC
 **** web-mode
