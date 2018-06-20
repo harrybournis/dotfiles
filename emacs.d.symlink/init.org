@@ -2385,6 +2385,9 @@ global shortcuts
   (global-unset-key (kbd "C-S-k"))
   (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-c a")  'org-agenda)
+  (global-set-key   (kbd "C-1")  'eyebrowse-switch-to-window-config-1)
+  (global-set-key   (kbd "C-2")  'eyebrowse-switch-to-window-config-2)
+  (global-set-key   (kbd "C-3")  'eyebrowse-switch-to-window-config-3)
 #+END_SRC
 * ENV variables
 
