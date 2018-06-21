@@ -2389,6 +2389,7 @@ global shortcuts
   (global-set-key   (kbd "C-1")  'eyebrowse-switch-to-window-config-1)
   (global-set-key   (kbd "C-2")  'eyebrowse-switch-to-window-config-2)
   (global-set-key   (kbd "C-3")  'eyebrowse-switch-to-window-config-3)
+  (global-set-key   (kbd "C-4")  'eyebrowse-switch-to-window-config-4)
 #+END_SRC
 * ENV variables
 
