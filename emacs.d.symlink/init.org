@@ -93,6 +93,7 @@ Variables are set here that are used in the configuration below
                                      "~/Google Drive/org/gcal.org"
                                   ;; "~/Dropbox/org/my-tasks.org"
                                      "~/Dropbox/org/mobile/album.org"
+                                     "~/Documents/work.org"
                                      )
         default-font-var             "SauceCodePro Nerd Font Mono"
         ;; default-font-var             "BigBlue_TerminalPlus Nerd Font Mono"
