@@ -32,9 +32,9 @@
       (progn
         (load (concat user-emacs-directory ".api-keys"))
         (setq url-proxy-services
-              '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-                ("http"     . api-keys-work-proxy)
-                ("https"    . api-keys-work-proxy)))))
+              `(("no_proxy" . "^\\(localhost\\|10.*\\)")
+                ("http"     . ,api-keys-work-proxy)
+                ("https"    . ,api-keys-work-proxy)))))
 #+END_SRC
 ** Repositories
 
