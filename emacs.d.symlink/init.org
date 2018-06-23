@@ -1604,6 +1604,11 @@ Better syntax highlighting for jsx files
     :hook
     (typescript-mode . display-line-numbers-mode))
 #+END_SRC
+**** ng2-mode (angular)
+#+BEGIN_SRC emacs-lisp
+  (use-package ng2-mode
+    :ensure t)
+#+END_SRC
 *** PureScript
 **** purescript-mode
 #+BEGIN_SRC emacs-lisp
