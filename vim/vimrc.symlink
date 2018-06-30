@@ -14,7 +14,7 @@ Plug 'tpope/vim-sensible'
 Plug 'ctrlpvim/ctrlp.vim'
 " Plug 'rhysd/vim-crystal'
 Plug 'scrooloose/syntastic'                            " Syntax checking
-# Plug 'valloric/youcompleteme'                          " code completion
+Plug 'valloric/youcompleteme'                          " code completion
 " Plug 'artur-shaik/vim-javacomplete2'                   " Java completion
 " Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
 " Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files

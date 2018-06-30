@@ -771,7 +771,9 @@ bug where events created in Emacs get duplicated in Google Calendar.
 #+END_SRC
 **** Org Agenda
 #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-files org-agenda-files-var
+  (require 'seq)
+
+  (setq org-agenda-files (seq-filter 'file-exists-p org-agenda-files-var)
         org-agenda-span 10                       ;; org agenda shows 10 days
         org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
         org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
