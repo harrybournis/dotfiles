@@ -2456,6 +2456,7 @@ have been edited from the mobile app.
                                               (with-current-buffer buf
                                                 (when (and (buffer-file-name) (file-exists-p (buffer-file-name)))
                                                   (revert-buffer :ignore-auto :noconfirm))))))
+                                      (eyebrowse-switch-to-window-config-1)
                                       (org-agenda nil "c")
                                       (get-buffer "*Org Agenda*")
                                       (delete-other-windows)))))
