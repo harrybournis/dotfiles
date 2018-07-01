@@ -558,7 +558,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "fn"  'flycheck-next-error
                         "fp"  'flycheck-previous-error
                         "fl"  'flycheck-list-errors
-                        "j"   (lambda() (interactive) (insert "* ") (backward-char 1))
+                        "jj"   'tide-jump-to-definition
+                        "jk"   'tide-jump-to-definition
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
@@ -1514,6 +1515,15 @@ system in order to work.
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
     :ensure t)
+#+END_SRC
+*** yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-global-mode 1))
 #+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
