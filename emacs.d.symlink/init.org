@@ -649,7 +649,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
 
   ;; Only load org-gcal if the .api-keys file is present. Prompt user to rename the
   ;; .api-keys-sample file to .api-keys and fill in their info.
-  (if (file-exists-p (concat user-emacs-directory ".api-keys"))
+  (if (and (file-exists-p (concat user-emacs-directory ".api-keys")) (not (getenv "WORK")))
       (progn
         (load (concat user-emacs-directory ".api-keys"))
 
