@@ -31,6 +31,22 @@
 
 (setq my-user-emacs-directory "~/.emacs.d/")
 
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
+(defconst IS-WINDOWS (eq system-type 'windows-nt))
+
+(defun keyword-for-wrong-platform-p (keyword)
+  ;; Returns true if the keyword does not match the current platform.
+  ;; Returns nil if the keyword is not one of the specified platform keywords
+  (let ((thing nil))
+    (if IS-WINDOWS (setq thing '("WINDOWS_ONLY")))
+    (if IS-MAC (setq thing '("MAC_ONLY" "UNIX_ONLY")))
+    (if IS-LINUX (setq thing '("LINUX_ONLY" "UNIX_ONLY")))
+
+    (if (member keyword '("WINDOWS_ONLY" "MAC_ONLY" "LINUX_ONLY" "UNIX_ONLY"))
+        (if (member keyword thing)
+            nil t)
+      nil)))
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -70,7 +86,8 @@
                (setq match_for_TODO_keyword (match-string 1))))
            (unless (or (string= "no" tfile)
                        (string= "DISABLED" match_for_TODO_keyword)
-                       (not (string= "emacs-lisp" lang)))
+                       (not (string= "emacs-lisp" lang))
+                       (keyword-for-wrong-platform-p match_for_TODO_keyword))
              (add-to-list 'body-list (concat "\n\n;; #####################################################################################\n"
                                              ";; • " (org-get-heading) "\n\n")
                           )
