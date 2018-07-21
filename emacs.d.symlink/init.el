@@ -19,8 +19,8 @@
 
 
 ;; (setq gc-cons-threshold 100000000)
-(setq gc-cons-threshold 1600000)
-;; (setq gc-cons-threshold 50000000)
+;; (setq gc-cons-threshold 1600000)
+(setq gc-cons-threshold 50000000)
 ;; (setq gc-cons-threshold 4000000)
 
 ;; Added by Package.el.  This must come before configurations of
@@ -35,18 +35,34 @@
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (eq system-type 'windows-nt))
 
-(defun keyword-for-wrong-platform-p (keyword)
-  ;; Returns true if the keyword does not match the current platform.
-  ;; Returns nil if the keyword is not one of the specified platform keywords
-  (let ((thing nil))
-    (if IS-WINDOWS (setq thing '("WINDOWS_ONLY")))
-    (if IS-MAC (setq thing '("MAC_ONLY" "UNIX_ONLY")))
-    (if IS-LINUX (setq thing '("LINUX_ONLY" "UNIX_ONLY")))
+(defun for-wrong-platform-p (keyword)
+  "Return non-nil if the KEYWORD does not match the current platform.
+Return nil if the keyword is not one of the specified platform keywords"
+  (let ((thing nil)
+        (windows-only '("WINDOWS_ONLY"))
+        (mac-only '("MAC_ONLY" "UNIX_ONLY"))
+        (linux-only '("LINUX_ONLY" "UNIX_ONLY"))
+        (not-windows '("NOT_WINDOWS"))
+        (not-mac '("NOT_MAC" "NOT_UNIX"))
+        (not-linux '("NOT_LINUX" "NOT_UNIX"))
+        )
+    (if (member keyword (append windows-only mac-only linux-only))
+        (progn
+          (if IS-WINDOWS (setq thing windows-only))
+          (if IS-MAC (setq thing mac-only))
+          (if IS-LINUX (setq thing linux-only))
 
-    (if (member keyword '("WINDOWS_ONLY" "MAC_ONLY" "LINUX_ONLY" "UNIX_ONLY"))
-        (if (member keyword thing)
-            nil t)
-      nil)))
+          (if (member keyword thing)
+              nil t))
+      (if (member keyword (append not-windows not-mac not-linux))
+          (progn
+            (if IS-WINDOWS (setq thing not-windows))
+            (if IS-MAC (setq thing not-mac))
+            (if IS-LINUX (setq thing not-linux))
+
+            (if (member keyword thing)
+                t nil))
+          nil))))
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -87,7 +103,7 @@
            (unless (or (string= "no" tfile)
                        (string= "DISABLED" match_for_TODO_keyword)
                        (not (string= "emacs-lisp" lang))
-                       (keyword-for-wrong-platform-p match_for_TODO_keyword))
+                       (for-wrong-platform-p match_for_TODO_keyword))
              (add-to-list 'body-list (concat "\n\n;; #####################################################################################\n"
                                              ";; • " (org-get-heading) "\n\n")
                           )

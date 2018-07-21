@@ -2,7 +2,7 @@
 #+EMAIL:     harrybournis@gmail.com
 #+AUTHOR:    Harry Bournis
 #+STARTUP: content
-#+TODO: TODO WAITING MAC_ONLY WINDOWS_ONLY LINUX_ONLY UNIX_ONLY DISABLED | DONE
+#+TODO: TODO WAITING MAC_ONLY WINDOWS_ONLY LINUX_ONLY UNIX_ONLY NOT_WINDOWS NOT_MAC NOT_LINUX NOT_UIX DISABLED | DONE
 #+LANGUAGE:  en
 #+PROPERTY: header-args :tangle init.el :comments org
 #+OPTIONS: author:nil date:nil toc:nil title:nil e:nil
