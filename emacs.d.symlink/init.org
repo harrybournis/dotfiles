@@ -943,6 +943,7 @@ Completion
     (setq projectile-completion-system 'ivy)
     (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
     (define-key ivy-minibuffer-map [escape] 'minibuffer-keyboard-quit)
+    (define-key ivy-minibuffer-map (kbd "<S-return>") 'ivy-immediate-done)
     (global-set-key (kbd "C-s") 'swiper)
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
