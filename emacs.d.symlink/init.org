@@ -849,7 +849,7 @@ Syntax checking
       (setq-local flycheck-javascript-eslint-executable eslint))))
 (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
 #+END_SRC
-*** flyspell
+*** UNIX_ONLY flyspell
 Spell checking. Needs the aspell program installed.
 
 #+BEGIN_SRC emacs-lisp
@@ -1500,14 +1500,14 @@ system in order to work.
     (setenv "DOCKER_CERT_PATH" "/Users/foo/.docker/machine/machines/box")
     (setenv "DOCKER_MACHINE_NAME" "box"))
 #+END_SRC
-**** dockerfile-mode
+**** NOT_WINDOWS dockerfile-mode
 #+BEGIN_SRC emacs-lisp
   (use-package dockerfile-mode
     :ensure t
     :config
     (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 #+END_SRC
-**** docker-compose-mode
+**** NOT_WINDOWS docker-compose-mode
 #+BEGIN_SRC emacs-lisp
   (use-package docker-compose-mode
     :ensure t)
@@ -1654,13 +1654,13 @@ Better syntax highlighting for jsx files
     :ensure t)
 #+END_SRC
 *** PureScript
-**** purescript-mode
+**** NOT_WINDOWS purescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
     :ensure t
     :hook (purescript-mode . display-line-numbers-mode))
 #+END_SRC
-**** psc-ide
+**** NOT_WINDOWS psc-ide
 #+BEGIN_SRC emacs-lisp
   (use-package psc-ide
     :ensure t
@@ -1673,12 +1673,12 @@ Better syntax highlighting for jsx files
                 (turn-on-purescript-indentation))))
 #+END_SRC
 *** Java
-**** java-mode (CC mode)
+**** NOT_WINDOWS java-mode (CC mode)
 #+BEGIN_SRC emacs-lisp
   ;; Set indentation to 4 for java
   (setq-default c-basic-offset 4)
 #+END_SRC
-**** eclim
+**** NOT_WINDOWS eclim
 #+BEGIN_SRC emacs-lisp
   (use-package eclim
     :ensure t
@@ -1752,7 +1752,7 @@ Interact with bundler with Emacs
     :ensure t)
 #+END_SRC
 *** Haskell
-**** intero
+**** NOT_WINDOWS intero
 Complete development mode for Haskell
 
 #+BEGIN_SRC emacs-lisp
@@ -1763,7 +1763,7 @@ Complete development mode for Haskell
     (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
 *** R & Julia
-**** ESS (Emacs Spearks Statistics)
+**** NOT_WINDOWS ESS (Emacs Spearks Statistics)
 [[http://ess.r-project.org/][ESS]] provides modes for R and Julia. When I tried to install it from master it
 was broken, so melpa-stable should be preferred.
 
@@ -1773,13 +1773,13 @@ was broken, so melpa-stable should be preferred.
       :pin melpa-stable)
 #+END_SRC
 *** Prolog
-**** Prolog-mode
+**** NOT_WINDOWS Prolog-mode
 #+BEGIN_SRC emacs-lisp
 (setq prolog-system 'swi)
 (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 #+END_SRC
-**** Ediprolog
+**** NOT_WINDOWS Ediprolog
 "[[https://github.com/triska/ediprolog][ediprolog]] lets you interact with SWI-Prolog in all Emacs buffers. You can
 consult Prolog programs and evaluate embedded queries."
 
@@ -1789,7 +1789,7 @@ consult Prolog programs and evaluate embedded queries."
     :config
     (global-set-key [f10] 'ediprolog-dwim))
 #+END_SRC
-**** ob-prolog
+**** NOT_WINDOWS ob-prolog
 Org-babel support for prolog.
 
 #+BEGIN_SRC emacs-lisp
@@ -1812,7 +1812,7 @@ Org-babel support for prolog.
     :ensure t)
 #+END_SRC
 *** Latex
-**** Auctex
+**** NOT_WINDOWS Auctex
 #+BEGIN_SRC emacs-lisp
   (use-package tex
     :ensure auctex)
@@ -1825,7 +1825,7 @@ Org-babel support for prolog.
     (latex-preview-pane-enable))
 #+END_SRC
 *** PlantUML
-**** plantuml-mode
+**** NOT_WINDOWS plantuml-mode
 #+BEGIN_SRC emacs-lisp
   (use-package plantuml-mode
     :ensure t
@@ -1885,6 +1885,8 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+BEGIN_SRC emacs-lisp
   (setq light-theme-var 'tango)
   (setq dark-theme-var  'tsdh-dark)
+  (setq light-theme-modeline-var nil)
+  (setq dark-theme-modeline-var nil)
 
   (use-package grandshell-theme
     :ensure t
@@ -1901,7 +1903,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+END_SRC
 
 *** Modeline
-**** powerline
+**** NOT_WINDOWS powerline
 [[https://github.com/milkypostman/powerline][Github]]
 [[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
 
@@ -1969,8 +1971,8 @@ Favorite dark themes:
     (defun load-dark-theme ()
       "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
         Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
-      (switch-theme dark-theme-var)
-      (load-theme dark-theme-modeline-var)
+      (if dark-theme-var (switch-theme dark-theme-var))
+      (if dark-theme-modeline-var (load-theme dark-theme-modeline-var))
 
       (set-face-attribute 'org-checkbox nil
                           :bold 'normal
@@ -2036,8 +2038,8 @@ Favorite dark themes:
             It uses the variables light-theme-var, light-theme-modeline-var.
             Also sets some faces for org-checkbox, strings, org TODO items and evil
             mode cursors."
-      (switch-theme light-theme-var)
-      (load-theme light-theme-modeline-var)
+      (if light-theme-var (switch-theme light-theme-var))
+      (if light-theme-modeline-var (load-theme light-theme-modeline-var))
 
       (set-face-attribute 'org-checkbox nil
                           :box nil
