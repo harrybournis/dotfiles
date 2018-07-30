@@ -476,6 +476,61 @@ Make ediff evil
     :after evil
     :defer t)
 #+END_SRC
+**** Greek Keybindings
+Keybindings to allow moving around when writing in Greek
+
+#+BEGIN_SRC emacs-lisp
+  ;; Vim Movements
+  (define-key evil-normal-state-map "κ" 'evil-previous-visual-line)
+  (define-key evil-normal-state-map "ξ" 'evil-next-visual-line)
+  (define-key evil-normal-state-map "λ" 'evil-forward-char)
+  (define-key evil-normal-state-map "η" 'evil-backward-char)
+  (define-key evil-normal-state-map "ς" 'evil-forward-word-begin)
+  (define-key evil-normal-state-map "ε" 'evil-forward-word-end)
+  (define-key evil-normal-state-map "β" 'evil-backward-word-end)
+  (define-key evil-normal-state-map "ν" 'evil-search-next)
+  (define-key evil-normal-state-map "Ν" 'evil-search-previous)
+  (define-key evil-normal-state-map "γγ" 'evil-goto-first-line)
+  (define-key evil-normal-state-map "Γ" 'evil-goto-line)
+
+  ;; Vim Editing
+  (define-key evil-normal-state-map "ι" 'evil-insert)
+  (define-key evil-normal-state-map "Ι" 'evil-insert-line)
+  (define-key evil-normal-state-map "θ" 'undo-tree-undo)
+  (define-key evil-normal-state-map "ω" 'evil-visual-char)
+  (define-key evil-normal-state-map "Ω" 'evil-visual-line)
+  (define-key evil-normal-state-map (kbd "C-ω") 'evil-visual-block)
+  (define-key evil-normal-state-map (kbd "C-ο") 'evil-jump-backward)
+
+  (define-key evil-normal-state-map "α" 'evil-append)
+  (define-key evil-normal-state-map "Α" 'evil-append-line)
+  (define-key evil-normal-state-map "ο" 'evil-open-below)
+  (define-key evil-normal-state-map "Ο" 'evil-open-above)
+  (define-key evil-normal-state-map "ρ" 'evil-replace)
+  (define-key evil-normal-state-map "υ" 'evil-sp-yank)
+  (define-key evil-normal-state-map "Υ" 'evil-sp-yank-line)
+  (define-key evil-normal-state-map "δ" 'evil-sp-delete)
+  (define-key evil-normal-state-map "Δ" 'evil-sp-delete-line)
+  (define-key evil-normal-state-map "σ" 'evil-sp-substitute)
+  (define-key evil-normal-state-map "Σ" 'evil-sp-change-whole-line)
+  (define-key evil-normal-state-map "ψ" 'evil-sp-change)
+  (define-key evil-normal-state-map "Ψ" 'evil-sp-change-line)
+  (define-key evil-normal-state-map "χ" 'evil-sp-delete-char)
+  (define-key evil-normal-state-map "Χ" 'evil-sp-backward-delete-char)
+  (define-key evil-normal-state-map "π" 'evil-paste-after)
+  (define-key evil-normal-state-map "Π" 'evil-paste-before)
+
+  ;; Evil-ex commands
+  (evil-ex-define-cmd "ς"  'evil-write)
+
+  ;; Emacs Globals
+  (define-key key-translation-map (kbd "C-ψ") (kbd "C-c"))
+  (define-key key-translation-map (kbd "C-χ") (kbd "C-x"))
+  (define-key key-translation-map (kbd "C-γ") (kbd "C-g"))
+  (define-key key-translation-map (kbd "C-ε") (kbd "C-e"))
+  (define-key key-translation-map (kbd "C-υ") (kbd "C-y"))
+  (define-key key-translation-map (kbd "¨") (kbd ":"))
+#+END_SRC
 *** general.el
 Improvement on evil-leader. Specify mutliple leaders.
 
