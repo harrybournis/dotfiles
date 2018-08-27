@@ -28,13 +28,13 @@
 * Packages Setup
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
-  ;; (if (and (getenv "WORK") (eq system-type 'windows-nt) (file-exists-p (concat user-emacs-directory ".api-keys")))
-  ;;     (progn
-  ;;       (load (concat user-emacs-directory ".api-keys"))
-  ;;       (setq url-proxy-services
-  ;;             `(("no_proxy" . "^\\(localhost\\|10.*\\)")
-  ;;               ("http"     . ,api-keys-work-proxy)
-  ;;               ("https"    . ,api-keys-work-proxy)))))
+ (if (and (getenv "WORK") (eq system-type 'windows-nt) (file-exists-p (concat user-emacs-directory ".api-keys")))
+     (progn
+       (load (concat user-emacs-directory ".api-keys"))
+       (setq url-proxy-services
+             `(("no_proxy" . "^\\(localhost\\|10.*\\)")
+               ("http"     . ,api-keys-work-proxy)
+               ("https"    . ,api-keys-work-proxy)))))
 #+END_SRC
 ** Repositories
 
@@ -91,9 +91,8 @@ Variables are set here that are used in the configuration below
                                      "~/Google Drive/org/stuff.org"
                                      "~/Dropbox/org/mobile/mobile_notes.org"
                                      "~/Google Drive/org/gcal.org"
-                                  ;; "~/Dropbox/org/my-tasks.org"
                                      "~/Dropbox/org/mobile/album.org"
-                                     "~/Documents/work.org"
+                                     "~/org/work.org"
                                      )
         default-font-var             "SauceCodePro Nerd Font Mono"
         ;; default-font-var             "BigBlue_TerminalPlus Nerd Font Mono"
@@ -1958,7 +1957,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+END_SRC
 
 *** Modeline
-**** NOT_WINDOWS powerline
+**** powerline
 [[https://github.com/milkypostman/powerline][Github]]
 [[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
 
@@ -2518,7 +2517,7 @@ have been edited from the mobile app.
     (if (dolist (e org-agenda-files result)
           (if (file-exists-p e) (setq result t)))
         (setq initial-buffer-choice (lambda ()
-                                      (dolist (file-name org-agenda-files-var)
+                                      (dolist (file-name (seq-filter 'file-exists-p org-agenda-files-var))
                                         (let ((buf (find-buffer-visiting file-name)))
                                           (if buf
                                               (with-current-buffer buf
