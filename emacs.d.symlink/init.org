@@ -700,6 +700,13 @@ Pretty-copy links from the browser to org with title instead of just url
     :config
     (global-set-key (kbd "C-c p b") 'org-cliplink))
 #+END_SRC
+***** org-agenda-property
+Display org properties in the agenda buffer
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-agenda-property
+    :ensure t)
+#+END_SRC
 **** org-gcal
 Google calendar integration with org mode. Sync both ways. There is currently a
 bug where events created in Emacs get duplicated in Google Calendar.
