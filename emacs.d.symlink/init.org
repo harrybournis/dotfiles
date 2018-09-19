@@ -28,7 +28,7 @@
 * Packages Setup
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
- (if (and (getenv "WORK") (eq system-type 'windows-nt) (file-exists-p (concat user-emacs-directory ".api-keys")))
+ (if (and (getenv "WORK") (file-exists-p (concat user-emacs-directory ".api-keys")))
      (progn
        (load (concat user-emacs-directory ".api-keys"))
        (setq url-proxy-services
@@ -94,7 +94,7 @@ Variables are set here that are used in the configuration below
                                      "~/Google Drive/org/gcal.org"
                                      "~/Dropbox/org/mobile/album.org"
                                      "~/Dropbox/org/mobile/Inbox.org"
-                                     "~/org/work.org"
+                                     "~/Documents/work.org"
                                      )
         default-font-var             "SauceCodePro Nerd Font Mono"
         ;; default-font-var             "BigBlue_TerminalPlus Nerd Font Mono"
