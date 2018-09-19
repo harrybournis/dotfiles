@@ -88,6 +88,7 @@ Variables are set here that are used in the configuration below
         org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
         org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
         org-inbox-file-location-var  "~/Dropbox/org/mobile/Inbox.org"
+        org-work-file-location-var   "~/Documents/work.org"
         org-agenda-files-var         '(
                                      "~/Google Drive/org/stuff.org"
                                      "~/Dropbox/org/mobile/mobile_notes.org"
@@ -601,7 +602,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
                       "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
                       "i"         (lambda () (interactive) (find-file org-inbox-file-location-var))
-                      "z"         (lambda () (interactive) (find-file "~/Documents/work.org")))
+                      "z"         (lambda () (interactive) (find-file org-work-file-location-var)))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
     (extra-tools-leader "`"   'hbournis/open-terminal
