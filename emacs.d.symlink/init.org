@@ -922,7 +922,10 @@ Syntax checking
 Spell checking. Needs the aspell program installed.
 
 #+BEGIN_SRC emacs-lisp
-  (setq ispell-program-name "aspell")
+  (use-package flyspell
+    :diminish "spell"
+    :config
+    (setq ispell-program-name "aspell"))
 #+END_SRC
 *** DISABLED helm
 Completion
@@ -1024,6 +1027,9 @@ Completion
     :ensure t
     :pin melpa-stable
     :config
+    (setq projectile-mode-line
+          (format " [%s]"
+                  (projectile-project-name)))
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
     (use-package counsel-projectile
@@ -1082,6 +1088,7 @@ visualize undo
 
     (use-package evil-smartparens
       :ensure t
+      :diminish
       :config
       (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)))
 #+END_SRC
@@ -1279,6 +1286,7 @@ Cons:
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
     :ensure t
+    :diminish
     :config
     (setq git-gutter:update-interval 2
           git-gutter:hide-gutter t)
@@ -1599,6 +1607,7 @@ system in order to work.
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
+    :diminish yas-minor-mode
     :config
     (use-package yasnippet-snippets
       :ensure t)
@@ -1790,6 +1799,7 @@ Better syntax highlighting for jsx files
     :ensure t
     :pin melpa-stable
     :commands (markdown-mode gfm-mode)
+    :hook (markdown-mode . flyspell-mode)
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
