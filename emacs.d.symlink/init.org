@@ -557,6 +557,7 @@ Improvement on evil-leader. Specify mutliple leaders.
     (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
     (basic-nav-leader "" nil
                       "f"         'list-buffers
+                      "F"         'ivy-switch-buffer-other-window
                       "TAB"       'mode-line-other-buffer
                       "<backtab>" 'hbournis/toggle-workspaces-1-2
                       "x"         'execute-extended-command
@@ -2236,7 +2237,7 @@ whether the URL in the clipboard starts with ~[~.
       (save-match-data
         (if (hbournis/cliboard-contains-url-p link)
             (progn
-              (insert (concat " [[" link "][]]"))
+              (insert (concat "[[" link "][]]"))
               (backward-char 2)
               (evil-insert 1))
           (error "No URL on the clipboard")))))
