@@ -619,9 +619,10 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "fn"  'flycheck-next-error
                         "fp"  'flycheck-previous-error
                         "fl"  'flycheck-list-errors
-                        "jj"   'tide-jump-to-definition
-                        "jk"   'tide-jump-to-definition
-                        "i"    'org-toggle-inline-images
+                        "jj"  'tide-jump-to-definition
+                        "jk"  'tide-jump-to-definition
+                        "i"   'org-toggle-inline-images
+                        "m"   'hbournis/toggle-modeline
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
@@ -922,7 +923,7 @@ Spell checking. Needs the aspell program installed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
-    :diminish "spell"
+    :diminish " ✐"
     :config
     (setq ispell-program-name "aspell"))
 #+END_SRC
@@ -2482,6 +2483,21 @@ Just a simple function for when I want the current time stamp inside an org file
       (cond ((eql current 1) (eyebrowse-switch-to-window-config-2))
             ((eql current 2) (eyebrowse-switch-to-window-config-1))
             (t (eyebrowse-switch-to-window-config-1)))))
+#+END_SRC
+** toggle modeline
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/toggle-modeline ()
+    "Show/hide modeline"
+    (interactive)
+    (if (get 'hbournis/toggle-modeline 'modeline-status)
+        (progn
+          (setq mode-line-format (get 'hbournis/toggle-modeline 'modeline-status))
+          (put 'hbournis/toggle-modeline 'modeline-status nil))
+      (progn
+        (put 'hbournis/toggle-modeline 'modeline-status mode-line-format)
+        (setq mode-line-format nil)))
+    (redraw-frame))
 #+END_SRC
 ** Split and switch to new frame
 #+BEGIN_SRC emacs-lisp
