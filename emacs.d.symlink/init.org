@@ -1613,6 +1613,15 @@ system in order to work.
       :ensure t)
     (yas-global-mode 1))
 #+END_SRC
+*** olivetti
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :ensure t
+    :pin melpa-stable
+    :config
+    (setq-default olivetti-body-width 80)
+    (setq-default olivetti-hide-mode-line t))
+#+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
