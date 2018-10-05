@@ -86,6 +86,7 @@ Variables are set here that are used in the configuration below
 #+BEGIN_SRC emacs-lisp
   (setq org-main-file-location-var   "~/Google Drive/org/stuff.org"
         org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
+        org-book-file-location-var   "~/Google Drive/org/books.org"
         org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
         org-inbox-file-location-var  "~/Dropbox/org/mobile/Inbox.org"
         org-work-file-location-var   "~/Documents/work.org"
@@ -834,7 +835,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                  "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
                                 ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
                                  "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
-                                ("b" "Book" entry (file+headline ,(concat org-directory "books.org")
+                                ("b" "Book" entry (file+headline org-book-file-location-var
                                                                      ,(format "%s" (format-time-string "%Y")))
                                  (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
                                 ))
