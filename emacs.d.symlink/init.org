@@ -88,6 +88,7 @@ Variables are set here that are used in the configuration below
         org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
         org-book-file-location-var   "~/Google Drive/org/books.org"
         org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
+        org-agenda-file-location-var "~/Google Drive/org/journal.org.gpg"
         org-inbox-file-location-var  "~/Dropbox/org/mobile/Inbox.org"
         org-work-file-location-var   "~/Documents/work.org"
         org-agenda-files-var         '(
@@ -647,7 +648,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[{"  'wrap-with-braces
                         "['"  'wrap-with-single-quotes
                         "[\"" 'wrap-with-double-quotes
-                        "[`"  'wrap-with-back-quotes))
+                        "[`"  'wrap-with-back-quotes
+                        "c"   'org-capture))
 #+END_SRC
 *** org-mode
 :PROPERTIES:
@@ -859,20 +861,48 @@ bug where events created in Emacs get duplicated in Google Calendar.
         org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
         org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
         org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
+        org-agenda-block-separator 32            ;; disable seperator between agenda sections
         )
+
+  ;; org agenda label variables
+  (setq agenda-label-work-tag "WORK TASKS"
+        agenda-label-inbox "Inbox"
+        agenda-label-calendar "10 days"
+        agenda-label-priority-a "High-Priority"
+        agenda-label-priority-b "Mid-Priority"
+        agenda-label-priority-c "Low-Priority"
+        agenda-label-priority-d "Other Todos")
 
   (setq org-agenda-custom-commands '(("c" "Startup Agenda"
                                       (
-                                       (agenda "")
+                                       (tags "-work+.*"
+                                                ((org-agenda-files `(,org-inbox-file-location-var))
+                                                 (org-agenda-overriding-header agenda-label-inbox)))
+                                       (tags "work"
+                                             ((org-agenda-overriding-header agenda-label-work-tag)))
+                                       (agenda ""
+                                               ((org-agenda-overriding-header agenda-label-calendar)))
                                        (tags "PRIORITY=\"A\""
-                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header "High-priority unfinished tasks:")))
+                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                                                            org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-a)))
                                        (tags "PRIORITY=\"B\""
-                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header "Mid-priority unfinished tasks:")))
+                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                                                           org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-b)))
                                        (tags "PRIORITY=\"C\""
-                                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header "Low-priority unfinished tasks:")))))))
+                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                                                           org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-c)))
+                                       (tags-todo "PRIORITY=\"D\""
+                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                                                           org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-sorting-strategy '(todo-state-up))
+                                              (org-agenda-overriding-header agenda-label-priority-d)))))))
 #+END_SRC
 *** DISABLED nlinum
 Better performance in line numbers?
@@ -1370,15 +1400,22 @@ shows the color of hex color codes as their background
     ;; (add-hook 'org-mode-hook 'rainbow-mode-hook)
     )
 #+END_SRC
-*** DISABLED emojify
+*** MAC_ONLY emojify
 Show emojis
 
 #+BEGIN_SRC emacs-lisp
   (use-package emojify
     :ensure t
+    :hook
+    (org-agenda-mode . emojify-mode)
     :config
-    disabled by default
-    (global-emojify-mode nil))
+    (setq agenda-label-work-tag  (concat ":bangbang: " agenda-label-work-tag)
+          agenda-label-inbox (concat ":envelope-with-arrow: " agenda-label-inbox)
+          agenda-label-calendar (concat ":calendar-spiral: " agenda-label-calendar)
+          agenda-label-priority-a (concat ":exclamation: " agenda-label-priority-a)
+          agenda-label-priority-b (concat ":warning: " agenda-label-priority-b)
+          agenda-label-priority-c (concat ":beer: " agenda-label-priority-c)
+          agenda-label-priority-d (concat ":coffee: " agenda-label-priority-d)))
 #+end_src
 *** diminish
 hide specific modes from the modeline
@@ -2132,6 +2169,15 @@ Favorite dark themes:
       (set-face-attribute 'eyebrowse-mode-line-active nil
                           :foreground "#c350ff")
 
+      (set-face-attribute 'org-agenda-date-weekend nil
+                          :weight 'normal)
+
+      (set-face-attribute 'org-agenda-date nil
+                          :foreground "#767F87")
+
+      (set-face-attribute 'org-agenda-date-today nil
+                          :foreground "white")
+
       (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
                                  (?B . (:foreground "orange"))
                                  (?C . (:foreground "yellow"))
@@ -2183,6 +2229,9 @@ Favorite dark themes:
 
       (set-face-attribute 'eyebrowse-mode-line-active nil
                           :foreground "#16a085")
+
+      (set-face-attribute 'org-agenda-date-weekend nil
+                          :weight 'normal)
 
       (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                      ("DOING"       . (:foreground "#2980b9" :weight bold))
@@ -2449,6 +2498,45 @@ For development only.
             (org-agenda-redo)))))
 
   (setq revert-buffer-function 'inform-revert-modified-file)
+#+END_SRC
+** Delete empty sections in org agenda
+[[https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-agenda-delete-empty-blocks ()
+    "Remove empty agenda blocks.
+  A block is identified as empty if there are fewer than 2
+  non-empty lines in the block (excluding the line with
+  `org-agenda-block-separator' characters)."
+    (when org-agenda-compact-blocks
+      (user-error "Cannot delete empty compact blocks"))
+    (setq buffer-read-only nil)
+    (save-excursion
+      (goto-char (point-min))
+      (let* ((blank-line-re "^\\s-*$")
+             (content-line-count (if (looking-at-p blank-line-re) 0 1))
+             (start-pos (point))
+             (block-re (format "%c\\{10,\\}" org-agenda-block-separator)))
+        (while (and (not (eobp)) (forward-line))
+          (cond
+           ((looking-at-p block-re)
+            (when (< content-line-count 2)
+              (delete-region start-pos (1+ (point-at-bol))))
+            (setq start-pos (point))
+            (forward-line)
+            (setq content-line-count (if (looking-at-p blank-line-re) 0 1)))
+           ((not (looking-at-p blank-line-re))
+            (setq content-line-count (1+ content-line-count)))))
+        (when (< content-line-count 2)
+          (delete-region start-pos (point-max)))
+        (goto-char (point-min))
+        ;; The above strategy can leave a separator line at the beginning
+        ;; of the buffer.
+        (when (looking-at-p block-re)
+          (delete-region (point) (1+ (point-at-eol))))))
+    (setq buffer-read-only t))
+
+  (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 #+END_SRC
 ** Open file in an external program
 [[http://batsov.com/articles/2011/11/12/emacs-tip-number-2-open-file-in-external-program/][Source]]
