@@ -213,6 +213,9 @@ Variables are set here that are used in the configuration below
   ;; Automatically refresh buffers that changed on disk
   (global-auto-revert-mode t)
 
+  ;; Insert brackets in pairs
+  (electric-pair-mode t)
+
   ;; Undo/Redo changes in window configuration
   ;; Disabled in windows for performance
   (unless IS-WINDOWS
@@ -230,7 +233,6 @@ Variables are set here that are used in the configuration below
   ;; (setq savehist-additional-variables
   ;;       '(kill-ring
   ;;         regexp-search-ring))
-
 #+END_SRC
 *** Emacs 26.1 Settings
 #+BEGIN_SRC emacs-lisp
@@ -294,6 +296,12 @@ Variables are set here that are used in the configuration below
             (kill-buffer-and-its-windows buffer))
       ad-do-it))
   (ad-activate 'term-sentinel)
+#+END_SRC
+*** kill ansiterm without asking on exit
+[[https://www.reddit.com/r/emacs/comments/9weic5/how_can_i_disable_ansiterm_prompt/e9k1ggd][Source]]
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'term-exec-hook
+        (lambda () (set-process-query-on-exit-flag (get-buffer-process (current-buffer)) nil)))
 #+END_SRC
 * Packages
 ** Common
