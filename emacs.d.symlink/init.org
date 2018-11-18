@@ -628,7 +628,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "fn"  'flycheck-next-error
                         "fp"  'flycheck-previous-error
                         "fl"  'flycheck-list-errors
-                        "jj"  'tide-jump-to-definition
+                        "jj"  'tide-fix
                         "jk"  'tide-jump-to-definition
                         "i"   'org-toggle-inline-images
                         "m"   'hbournis/toggle-modeline
@@ -1618,8 +1618,16 @@ system in order to work.
     :ensure t
     :diminish yas-minor-mode
     :config
+    (add-hook 'tide-mode-hook
+              #'(lambda ()
+                  (yas-activate-extra-mode 'js-mode)))
+
     (use-package yasnippet-snippets
       :ensure t)
+
+    (use-package react-snippets
+      :ensure t)
+
     (yas-global-mode 1))
 #+END_SRC
 *** olivetti
@@ -1654,7 +1662,13 @@ Use C-j to expand.
     :hook
     (web-mode . display-line-numbers-mode)
     :config
+    (setq web-mode-enable-css-colorization t
+          web-mode-enable-auto-pairing t
+          web-mode-enable-comment-keywords t
+          web-mode-enable-current-element-highlight t
+          web-mode-enable-auto-indentation nil)
     (flycheck-add-mode 'javascript-eslint 'web-mode)
+    (flycheck-add-mode 'typescript-tslint 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -1731,6 +1745,8 @@ Better syntax highlighting for jsx files
 #+BEGIN_SRC emacs-lisp
   (use-package tide
     :ensure t
+    :init
+    (setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
     :after (typescript-mode company flycheck)
     :config
     (defun setup-tide-mode ()

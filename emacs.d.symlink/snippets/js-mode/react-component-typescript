@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: React Component Typescript
+# key: rct
+# --
+import * as React from 'react';
+
+interface IProps {
+}
+
+interface IState {
+}
+
+export default class ${1:Component} extends React.Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props)
+
+    this.state = {
+    }
+  }
+
+  public render() {
+    return (
+      $0
+    )
+  }
+}
