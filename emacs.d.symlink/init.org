@@ -665,15 +665,18 @@ the best thing in emacs/computer science.
     (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode)))
 #+END_SRC
 **** Org-related packages
-***** org-bullets
+***** UNIX_ONLY org-bullets
 Disabled on windows because it makes emacs extremely slow
 #+BEGIN_SRC emacs-lisp
-  (if (not IS-WINDOWS)
-      (use-package org-bullets
-        :ensure t
-        :config
-        (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
-        (add-hook 'org-mode-hook (lambda () (org-bullets-mode t)))))
+  (use-package org-bullets
+    :ensure t
+    :config
+    ;; Performance fix for windows
+    ;; Source: https://github.com/sabof/org-bullets/issues/11#issuecomment-439228372
+    (if IS-WINDOWS
+        (setq inhibit-compacting-font-caches t))
+    (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
 #+END_SRC
 ***** org-collector
 #+BEGIN_SRC emacs-lisp
