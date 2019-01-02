@@ -49,6 +49,7 @@ brew "aspell"
 brew "terminal-notifier"
 brew "swi-prolog"
 brew "cmatrix"
+brew "ripgrep"
 
 # Cask
 cask "google-chrome"
