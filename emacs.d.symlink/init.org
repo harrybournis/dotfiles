@@ -88,6 +88,7 @@ Variables are set here that are used in the configuration below
         org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
         org-book-file-location-var   "~/Google Drive/org/books.org"
         org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
+        org-gcal-file-apergia-var    "~/Google Drive/org/gcal-apergia.org"
         org-agenda-file-location-var "~/Google Drive/org/journal.org.gpg"
         org-inbox-file-location-var  "~/Dropbox/org/mobile/Inbox.org"
         org-work-file-location-var   "~/Documents/work.org"
@@ -621,7 +622,6 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "p"   'hbournis/insert-url-as-org-link
                         "l"   'hbournis/org-make-word-link-from-clipboard
                         "c"   'hbournis-position-to-kill-ring
-                        "t"   'hbournis/insert-timestamp
                         "g"   'magit-status
                         "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
                         "\\"  'sp-unwrap-sexp
@@ -649,7 +649,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "['"  'wrap-with-single-quotes
                         "[\"" 'wrap-with-double-quotes
                         "[`"  'wrap-with-back-quotes
-                        "c"   'org-capture))
+                        "c"   'org-capture
+                        "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
 :PROPERTIES:
@@ -743,7 +744,8 @@ bug where events created in Emacs get duplicated in Google Calendar.
           :config
           (setq org-gcal-client-id     api-keys-org-gcal-client-id
                 org-gcal-client-secret api-keys-org-gcal-client-secret
-                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)))
+                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)
+                                         (,api-keys-org-gcal-apergia-id . ,org-gcal-file-apergia-var)))
           (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
           (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
     (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
@@ -2690,21 +2692,23 @@ global shortcuts
 Reload all agenda files before before showing the agenda, since they might
 have been edited from the mobile app.
 
+If eyebrowse is installed, switch to the 1st window config, to avoid overriding
+the last opened window config.
+
 #+BEGIN_SRC emacs-lisp
-  (let (result)
-    (if (dolist (e org-agenda-files result)
-          (if (file-exists-p e) (setq result t)))
-        (setq initial-buffer-choice (lambda ()
-                                      (dolist (file-name (seq-filter 'file-exists-p org-agenda-files-var))
-                                        (let ((buf (find-buffer-visiting file-name)))
-                                          (if buf
-                                              (with-current-buffer buf
-                                                (when (and (buffer-file-name) (file-exists-p (buffer-file-name)))
-                                                  (revert-buffer :ignore-auto :noconfirm))))))
-                                      (eyebrowse-switch-to-window-config-1)
-                                      (org-agenda nil "c")
-                                      (get-buffer "*Org Agenda*")
-                                      (delete-other-windows)))))
+  (setq initial-buffer-choice (lambda ()
+                                (dolist (file-name org-agenda-files)
+                                  (let ((buf (find-buffer-visiting file-name)))
+                                    (if buf
+                                        (with-current-buffer buf
+                                          (when (buffer-file-name)
+                                            (revert-buffer :ignore-auto :noconfirm))))))
+                                (if (fboundp 'eyebrowse-switch-to-window-config-1)
+                                    (eyebrowse-switch-to-window-config-1))
+                                (org-agenda nil "c")
+                                (get-buffer "*Org Agenda*")
+                                (run-at-time "20 sec" nil 'org-agenda nil "c")))
+  (delete-other-windows)
 #+END_SRC
 * Start emacs server
 Start an emacs server so you can open files from the command line using
