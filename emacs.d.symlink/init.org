@@ -633,6 +633,9 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "jj"  'tide-fix
                         "jk"  'tide-jump-to-definition
                         "i"   'org-toggle-inline-images
+                        "tf"  'mocha-test-file
+                        "tt"  'mocha-test-at-point
+                        "tp"  'mocha-test-project
                         "m"   'hbournis/toggle-modeline
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
@@ -1759,6 +1762,14 @@ Improved JavaScript editing mode
     :config
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+END_SRC
+**** js2-highlight-vars
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-highlight-vars
+    :ensure t
+    :diminish
+    :hook
+    (js2-mode . js2-highlight-vars-mode))
+#+END_SRC
 **** rjsx-mode
 Better syntax highlighting for jsx files
 
@@ -1823,6 +1834,76 @@ Better syntax highlighting for jsx files
 #+BEGIN_SRC emacs-lisp
   (use-package ng2-mode
     :ensure t)
+#+END_SRC
+**** mocha
+Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-318919735][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package mocha
+    :ensure t
+    :commands (mocha-test-project
+               mocha-debug-project
+               mocha-test-file
+               mocha-debug-file
+               mocha-test-at-point
+               mocha-debug-at-point)
+    :config
+    ;; Clear up stray ansi escape sequences.
+    (defvar jj*--mocha-ansi-escape-sequences
+      ;; https://emacs.stackexchange.com/questions/18457/stripping-stray-ansi-escape-sequences-from-eshell
+      (rx (or
+           "^[\\[[0-9]+[a-z]"
+           "�[1A"
+           "�[999D")))
+
+    (defun jj*--mocha-compilation-filter ()
+      "Filter function for compilation output."
+      (ansi-color-apply-on-region compilation-filter-start (point-max))
+      (save-excursion
+        (goto-char compilation-filter-start)
+        (while (re-search-forward jj*--mocha-ansi-escape-sequences nil t)
+          (replace-match ""))))
+
+    (advice-add 'mocha-compilation-filter :override 'jj*--mocha-compilation-filter)
+
+    ;; https://github.com/scottaj/mocha.el/issues/3
+    (defcustom mocha-jest-command "node_modules/jest/bin/jest.js --colors"
+      "The path to the jest command to run."
+      :type 'string
+      :group 'mocha)
+
+    (defun mocha-generate-command--jest-command (debug &optional filename testname)
+      "Generate a command to run the test suite with jest.
+  If DEBUG is true, then make this a debug command.
+  If FILENAME is specified run just that file otherwise run
+  MOCHA-PROJECT-TEST-DIRECTORY.
+  IF TESTNAME is specified run jest with a pattern for just that test."
+      (let ((target (if testname (concat " --testNamePattern \"" testname "\"") ""))
+            (path (if (or filename mocha-project-test-directory)
+                      (concat " --testPathPattern \""
+                              (if filename filename mocha-project-test-directory)
+                              "\"" " --config=\"jest.config.ts\"")
+                    ""))
+            (node-command
+             (concat mocha-which-node
+                     (if debug (concat " --debug=" mocha-debug-port) ""))))
+        (concat node-command " "
+                mocha-jest-command
+                target
+                path)))
+
+    (advice-add 'mocha-generate-command
+                :override 'mocha-generate-command--jest-command))
+#+END_SRC
+**** jasmine
+#+BEGIN_SRC emacs-lisp
+  (use-package jasminejs-mode
+    :ensure t
+    :defer t
+    :after yasnippet
+    :hook
+    ((js2-mode . jasminejs-mode)
+     (jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
 *** PureScript
 **** NOT_WINDOWS purescript-mode
