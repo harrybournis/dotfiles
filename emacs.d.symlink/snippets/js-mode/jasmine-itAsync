@@ -1,0 +1,10 @@
+# -*- mode: jasminejs-mode -*-
+# name: async it
+# key: ita
+# condition: (looking-back "^\s*ita")
+# expand-env: ((yas-indent-line 'fixed))
+# --
+it('${1:do something}', (done) => {
+  $0
+  done();
+});

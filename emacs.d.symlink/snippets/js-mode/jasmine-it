@@ -1,0 +1,9 @@
+# -*- mode: jasminejs-mode -*-
+# name: it
+# key: it
+# condition: (looking-back "^\s*it")
+# expand-env: ((yas-indent-line 'fixed))
+# --
+it('${1}', () => {
+  $0
+});

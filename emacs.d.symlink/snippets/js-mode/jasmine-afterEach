@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Fat Arrow Function
+# key: =>
+# --
+() => {
+    $0
+}

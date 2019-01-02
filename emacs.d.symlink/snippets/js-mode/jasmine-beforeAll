@@ -1,0 +1,8 @@
+# -*- mode: jasminejs-mode -*-
+# name: beforeAll
+# key: befa
+# expand-env: ((yas-indent-line 'fixed))
+# --
+beforeAll(() => {
+  $0
+});
