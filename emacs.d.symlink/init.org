@@ -1653,6 +1653,8 @@ system in order to work.
     :ensure t)
 #+END_SRC
 *** yasnippet
+[[https://github.com/AndreaCrotti/yasnippet-snippets][Snippets]]
+
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
