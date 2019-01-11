@@ -396,6 +396,7 @@ mode only when it is needed.
         dired
         doc-view
         edebug
+        elfeed
         emms
         eval-sexp-fu
         flycheck
@@ -1701,6 +1702,31 @@ system in order to work.
     :config
     (setq-default olivetti-body-width 80)
     (setq-default olivetti-hide-mode-line t))
+#+END_SRC
+*** UNIX_ONLY elfeed
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :defer t
+    :bind (:map elfeed-search-mode-map
+                ("q" . 'kill-this-buffer)
+                ("Q" . 'kill-this-buffer)
+                ("m" . elfeed-toggle-star)
+                ("M" . elfeed-toggle-star))
+    :config
+    (defalias 'elfeed-toggle-star
+      (elfeed-expose #'elfeed-search-toggle-all 'star))
+
+    (use-package elfeed-org
+      :ensure t
+      :config
+      (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
+      (elfeed-org))
+
+    (use-package elfeed-goodies
+      :ensure t
+      :config
+      (elfeed-goodies/setup)))
 #+END_SRC
 ** Programming Language Specific
 *** HTML/CSS
