@@ -24,6 +24,7 @@
 - [[http://www.latex-project.org/][latex]] and [[http://pygments.org/][pygments]] to pdf export with syntax highlighting
 - [[http://aspell.net/][GNU aspell]] for spell checking
 - [[https://github.com/julienXX/terminal-notifier][Terminal Notifier]] for notifications on Mac
+- [[https://github.com/BurntSushi/ripgrep][rigprep]] for [[https://github.com/alphapapa/magit-todos][magit-todos]]
 
 * Packages Setup
 ** Proxy settings
@@ -84,31 +85,32 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-main-file-location-var   "~/Google Drive/org/stuff.org"
-        org-mobile-file-location-var "~/Dropbox/org/mobile/mobile_notes.org"
-        org-book-file-location-var   "~/Google Drive/org/books.org"
-        org-gcal-file-location-var   "~/Google Drive/org/gcal.org"
-        org-gcal-file-apergia-var    "~/Google Drive/org/gcal-apergia.org"
-        org-agenda-file-location-var "~/Google Drive/org/journal.org.gpg"
-        org-inbox-file-location-var  "~/Dropbox/org/mobile/Inbox.org"
-        org-work-file-location-var   "~/Documents/work.org"
-        org-agenda-files-var         '(
-                                     "~/Google Drive/org/stuff.org"
-                                     "~/Dropbox/org/mobile/mobile_notes.org"
-                                     "~/Google Drive/org/gcal.org"
-                                     "~/Dropbox/org/mobile/album.org"
-                                     "~/Dropbox/org/mobile/Inbox.org"
-                                     "~/Documents/work.org"
-                                     "~/org/work.org"
-                                     )
-        default-font-var             "SauceCodePro Nerd Font Mono"
-        ;; default-font-var             "BigBlue_TerminalPlus Nerd Font Mono"
-        ;; default-font-var             "ProFontIIx Nerd Font Mono"
-        fallback-font-var            "Courier New"
-        unicode-font-var             "Unifont"
-        mac-font-size-var            "15"
-        windows-font-size-var        "11"
-        alternate-font-size-var      "11"
+  (setq hbournis/org-main-file             "~/org/stuff.org"
+        hbournis/org-book-file             "~/org/books.org"
+        hbournis/org-mobile-file           "~/org/mobile/mobile_notes.org"
+        hbournis/org-album-file            "~/org/mobile/album.org"
+        hbournis/org-inbox-file            "~/org/mobile/Inbox.org"
+        hbournis/org-work-file             "~/Documents/work.org"
+        hbournis/org-gcal-file             "~/org-gcal/gcal.org"
+        hbournis/org-gcal-file-apergia-var "~/org-gcal/gcal-apergia.org"
+        hbournis/org-journal-file          "~/org/journal.org.gpg"
+        hbournis/recurring-file            "~/org/recurring.org"
+        hbournis/org-agenda-files         `(,hbournis/org-main-file
+                                            ,hbournis/org-mobile-file
+                                            ,hbournis/org-gcal-file
+                                            ,hbournis/org-gcal-file-apergia-var
+                                            ,hbournis/org-album-file
+                                            ,hbournis/org-inbox-file
+                                            ,hbournis/recurring-file
+                                            ,hbournis/org-work-file)
+        hbournis/default-font              "SauceCodePro Nerd Font Mono"
+        ;; hbournis/default-font           "BigBlue_TerminalPlus Nerd Font Mono"
+        ;; hbournis/default-font           "ProFontIIx Nerd Font Mono"
+        hbournis/fallback-font             "Courier New"
+        hbournis/unicode-font              "Unifont"
+        hbournis/mac-font-size             "15"
+        hbournis/windows-font-size         "11"
+        hbournis/alternate-font-size       "11"
         )
 #+END_SRC
 * Built-in Settings
@@ -609,12 +611,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "W2"        'eyebrowse-switch-to-window-config-2
                       "W3"        'eyebrowse-switch-to-window-config-3
                       "W4"        'eyebrowse-switch-to-window-config-4
-                      "SPC"       (lambda () (interactive) (find-file org-main-file-location-var))
-                      "a"         (lambda () (interactive) (find-file org-mobile-file-location-var))
+                      "SPC"       (lambda () (interactive) (find-file hbournis/org-main-file))
+                      "a"         (lambda () (interactive) (find-file hbournis/org-mobile-file))
                       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
                       "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
-                      "i"         (lambda () (interactive) (find-file org-inbox-file-location-var))
-                      "z"         (lambda () (interactive) (find-file org-work-file-location-var)))
+                      "i"         (lambda () (interactive) (find-file hbournis/org-inbox-file))
+                      "z"         (lambda () (interactive) (find-file hbournis/org-work-file)))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
     (extra-tools-leader "`"   'hbournis/open-terminal
@@ -643,7 +645,7 @@ Improvement on evil-leader. Specify mutliple leaders.
     (extra-tools-alternate-leader
                         "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
                         "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
-                        "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
+                        "/p"  'evilnc-comment-or-uncomment-paaagraphs        ; Un/Comment paragraph
                         "/r"  'comment-or-uncomment-region                   ; Un/Comment selection
                         "/v"  'evilnc-toggle-invert-comment-line-by-line     ; Toggle invert comment status flag
                         "[["  'wrap-with-brackets
@@ -747,8 +749,8 @@ bug where events created in Emacs get duplicated in Google Calendar.
           :config
           (setq org-gcal-client-id     api-keys-org-gcal-client-id
                 org-gcal-client-secret api-keys-org-gcal-client-secret
-                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,org-gcal-file-location-var)
-                                         (,api-keys-org-gcal-apergia-id . ,org-gcal-file-apergia-var)))
+                hbournis/org-gcal-file-alist    `((,api-keys-org-gcal-email . ,hbournis/org-gcal-file)
+                                         (,api-keys-org-gcal-apergia-id . ,hbournis/org-gcal-file-apergia-var)))
           (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
           (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
     (display-warning '(init-file) "org-gcal not activated. .api-keys file is missing. Rename .api-keys-sample to .api-keys and reload." :error)
@@ -850,22 +852,25 @@ bug where events created in Emacs get duplicated in Google Calendar.
 **** Org Capture
 #+BEGIN_SRC emacs-lisp
   (setq org-capture-templates `(
-                                ("a" "Google Calendar Event" entry (file  org-gcal-file-location-var)
+                                ("a" "Google Calendar Event" entry (file  hbournis/org-gcal-file)
                                  "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-                                ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                 "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                 "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
-                                ("b" "Book" entry (file+headline org-book-file-location-var
-                                                                     ,(format "%s" (format-time-string "%Y")))
-                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
-                                ))
+                                ("p" "Protocol" entry (file+headline hbournis/org-inbox-file "Web Capture")
+                                 "* %^{Title|[[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]}\nSource: %u, [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE"
+                                 :prepend t
+                                 :immediate-finish t)
+                                ("L" "Protocol Link" entry (file+headline hbournis/org-inbox-file "Web Capture")
+                                 "* %?[[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n"
+                                 :prepend t
+                                 :immediate-finish t)
+                                ("b" "Book" entry (file+headline hbournis/org-book-file
+                                                                 ,(format "%s" (format-time-string "%Y")))
+                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)))
 #+END_SRC
 **** Org Agenda
 #+BEGIN_SRC emacs-lisp
   (require 'seq)
 
-  (setq org-agenda-files (seq-filter 'file-exists-p org-agenda-files-var)
+  (setq org-agenda-files (seq-filter 'file-exists-p hbournis/org-agenda-files)
         org-agenda-span 10                       ;; org agenda shows 10 days
         org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
         org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
@@ -886,29 +891,29 @@ bug where events created in Emacs get duplicated in Google Calendar.
   (setq org-agenda-custom-commands '(("c" "Startup Agenda"
                                       (
                                        (tags "-work+.*"
-                                                ((org-agenda-files `(,org-inbox-file-location-var))
+                                                ((org-agenda-files `(,hbournis/org-inbox-file))
                                                  (org-agenda-overriding-header agenda-label-inbox)))
                                        (tags "work"
                                              ((org-agenda-overriding-header agenda-label-work-tag)))
                                        (agenda ""
                                                ((org-agenda-overriding-header agenda-label-calendar)))
                                        (tags "PRIORITY=\"A\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
                                                                             org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-a)))
                                        (tags "PRIORITY=\"B\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-b)))
                                        (tags "PRIORITY=\"C\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))
                                        (tags-todo "PRIORITY=\"D\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal org-inbox-file-location-var)
+                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-sorting-strategy '(todo-state-up))
@@ -2115,28 +2120,28 @@ Emacs expects you to write them.
   ;; (setq mac-allow-anti-aliasing nil)
 
   ;; Something to do with resolution
-  (if (member default-font-var (font-family-list))
+  (if (member hbournis/default-font (font-family-list))
       (cond (IS-MAC
-             (set-face-attribute 'default nil :font (concat default-font-var "-" mac-font-size-var)))
+             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/mac-font-size)))
             (IS-LINUX
-             (set-face-attribute 'default nil :font (concat default-font-var "-" alternate-font-size-var)))
+             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/alternate-font-size)))
             (IS-WINDOWS
-             (set-face-attribute 'default nil :font (concat default-font-var "-" windows-font-size-var) :weight 'semi-bold)))
+             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/windows-font-size) :weight 'semi-bold)))
 
     (cond (IS-WINDOWS
-           (set-face-attribute 'default nil :font (concat fallback-font-var "-" windows-font-size-var)))
-          (t (set-face-attribute 'default nil :font (concat fallback-font-var "-" mac-font-size-var)))))
+           (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/windows-font-size)))
+          (t (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/mac-font-size)))))
 
   ;; Set a font with great support for Unicode Symbols to fallback in
   ;; those case where certain Unicode glyphs are missing in the current
   ;; font.
-  (when (member unicode-font-var (font-family-list))
+  (when (member hbournis/unicode-font (font-family-list))
     (cond (IS-MAC
-           (set-fontset-font t 'unicode (concat unicode-font-var "-" mac-font-size-var) nil 'prepend))
+           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
           (IS-LINUX
-           (set-fontset-font t 'unicode (concat unicode-font-var "-" mac-font-size-var) nil 'prepend))
+           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
           (IS-WINDOWS
-           (set-fontset-font t 'unicode (concat unicode-font-var "-" windows-font-size-var) nil 'prepend)))
+           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/windows-font-size) nil 'prepend)))
     )
 #+END_SRC
 ** Themes
@@ -2798,7 +2803,8 @@ the last opened window config.
                                     (eyebrowse-switch-to-window-config-1))
                                 (org-agenda nil "c")
                                 (get-buffer "*Org Agenda*")
-                                (run-at-time "20 sec" nil 'org-agenda nil "c")))
+                                ;; (run-at-time "20 sec" nil 'org-agenda nil "c")
+                                ))
   (delete-other-windows)
 #+END_SRC
 * Start emacs server
@@ -2809,6 +2815,8 @@ emacsclient
   (require 'server)
   (unless (server-running-p)
     (server-start))
+
+  (require 'org-protocol)
 #+END_SRC
 * Start fullscreen
 #+BEGIN_SRC emacs-lisp
