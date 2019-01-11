@@ -401,6 +401,7 @@ mode only when it is needed.
         eval-sexp-fu
         flycheck
         ggtags
+        git-timemachine
         help
         ibuffer
         image
@@ -656,6 +657,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[\"" 'wrap-with-double-quotes
                         "[`"  'wrap-with-back-quotes
                         "c"   'org-capture
+                        "g"   'git-timemachine-toggle
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
