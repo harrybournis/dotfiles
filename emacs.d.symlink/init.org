@@ -584,10 +584,10 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "j"         'windmove-down
                       "l"         'windmove-right
                       "h"         'windmove-left
-                      "K"         'shrink-window
-                      "J"         'enlarge-window
-                      "H"         'shrink-window-horizontally
-                      "L"         'enlarge-window-horizontally
+                      "K"         'split-window-below
+                      "J"         'split-window-below-and-switch
+                      "H"         'split-window-right
+                      "L"         'split-window-right-and-switch
                       "0"         'delete-window
                       "1"         'delete-other-windows
                       "2"         'split-window-below-and-switch
@@ -1498,7 +1498,13 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
           ranger-dont-show-binary t
           ranger-cleanup-on-disable t
           ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi"))
-    (ranger-override-dired-mode t))
+    (ranger-override-dired-mode t)
+    ;; Remap C-h to its normal functionality
+    (define-key ranger-mode-map "\C-h k" 'describe-key)
+    ;; Create directory with "cd" like in Treemacs
+    (define-key ranger-mode-map "cd" (lambda () (interactive) (progn (call-interactively #'dired-create-directory) (ranger-refresh))))
+    ;; Create file with "cf" like in Treemacs
+    (define-key ranger-mode-map "cf" (lambda () (interactive) (progn (call-interactively #'hbournis/dired-create-file) (ranger-refresh)))))
 #+END_SRC
 *** DISABLED pdf-tools
 Disabled for now because it requires extra packages to be installed in the
@@ -2787,6 +2793,31 @@ Just a simple function for when I want the current time stamp inside an org file
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
+#+END_SRC
+** dired create file
+[[https://stackoverflow.com/a/18885461][Source]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun hbournis/dired-create-file (file)
+    "Create a file called FILE. If FILE already exists, signal an error."
+    (interactive
+     (list (read-file-name "Create file: " (dired-current-directory))))
+    (let* ((expanded (expand-file-name file))
+           (try expanded)
+           (dir (directory-file-name (file-name-directory expanded)))
+           new)
+      (if (file-exists-p expanded)
+          (error "Cannot create file %s: file exists" expanded))
+      ;; Find the topmost nonexistent parent dir (variable `new')
+      (while (and try (not (file-exists-p try)) (not (equal new try)))
+        (setq new try
+              try (directory-file-name (file-name-directory try))))
+      (when (not (file-exists-p dir))
+        (make-directory dir t))
+      (write-region "" nil expanded t)
+      (when new
+        (dired-add-file new)
+        (dired-move-to-filename))))
 #+END_SRC
 * Shortcuts
 global shortcuts
