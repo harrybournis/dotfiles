@@ -641,6 +641,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "tt"  'mocha-test-at-point
                         "tp"  'mocha-test-project
                         "m"   'hbournis/toggle-modeline
+                        "rbf" 'rubocop-check-current-file
+                        "rba" 'rubocop-autocorrect-current-file
+                        "rtf" 'rspec-verify
+                        "rta" 'rspec-verify-all
+                        "rtt" 'rspec-verify-single
+                        "rtl" 'rspec-run-last-failed
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
@@ -2075,26 +2081,46 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 #+END_SRC
 *** Ruby
-**** DISABLED projectile-rails
+**** ruby-mode
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'ruby-mode-hook 'display-line-numbers-mode)
+#+END_SRC
+**** MAC_ONLY inf-ruby
+#+BEGIN_SRC emacs-lisp
+  (use-package inf-ruby
+    :ensure t
+    :config
+    (add-hook 'after-init-hook 'inf-ruby-switch-setup))
+#+END_SRC
+**** MAC_ONLY projectile-rails
 #+BEGIN_SRC emacs-lisp
   (use-package projectile-rails
     :ensure t
-    :require projectile
+    :requires projectile
     :pin melpa-stable
+    :config
     (projectile-rails-global-mode))
 #+END_SRC
-**** DISABLED rspec-mode
+**** MAC_ONLY rspec-mode
 Enhancements to ruby-mode for RSpec files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rspec-mode
-    :ensure t)
+    :ensure t
+    :config
+    (setq compilation-scroll-output t)
+    (eval-after-load 'rspec-mode '(rspec-install-snippets)))
 #+END_SRC
-**** DISABLED bundler
+**** MAC_ONLY bundler
 Interact with bundler with Emacs
 
 #+BEGIN_SRC emacs-lisp
   (use-package bundler
+    :ensure t)
+#+END_SRC
+**** MAC_ONLY rubocop
+#+BEGIN_SRC emacs-lisp
+  (use-package rubocop
     :ensure t)
 #+END_SRC
 *** Haskell
