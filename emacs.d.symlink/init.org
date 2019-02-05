@@ -2259,16 +2259,109 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
   (setq dark-theme-var  'tsdh-dark)
   (setq light-theme-modeline-var nil)
   (setq dark-theme-modeline-var nil)
+  (setq light-theme-overrides-var nil)
+  (setq dark-theme-overrides-var nil)
 
-  (use-package grandshell-theme
+  ;; (use-package grandshell-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq dark-theme-var 'grandshell)
+  ;;   (setq dark-theme-overrides-var
+  ;;         '((set-face-attribute 'org-checkbox nil
+  ;;                               :bold 'normal
+  ;;                               :box '(:line-width 1 :color "dim gray" :style nil)
+  ;;                               :foreground "gray"
+  ;;                               :background nil)
+
+  ;;           (set-face-attribute 'org-checkbox-statistics-todo nil
+  ;;                               :foreground "#ff6c6b")
+
+  ;;           (set-face-attribute 'font-lock-string-face nil
+  ;;                               :background "#404040"
+  ;;                               :foreground "#ffcd8b")
+
+  ;;           (set-face-background 'fringe "#050505")
+
+  ;;           (set-face-attribute 'org-headline-done nil
+  ;;                               :foreground "#767F87")
+
+  ;;           (set-face-attribute 'org-agenda-dimmed-todo-face nil
+  ;;                               :foreground nil)
+
+  ;;           (set-face-attribute 'org-property-value nil
+  ;;                               :foreground "white")
+
+  ;;           (set-face-attribute 'eyebrowse-mode-line-active nil
+  ;;                               :foreground "#c350ff")
+
+  ;;           (set-face-attribute 'org-agenda-date nil
+  ;;                               :foreground "#767F87")
+
+  ;;           (set-face-attribute 'org-agenda-date-today nil
+  ;;                               :foreground "white")
+
+  ;;           (setq org-todo-keyword-faces '(("TODO"        . "red")
+  ;;                                          ("DOING"       . "yellow")
+  ;;                                          ("WAITING"     . "#7453ef")
+  ;;                                          ("DONE"        . (:foreground "green" :weight bold)))))))
+
+  (use-package color-theme-sanityinc-tomorrow
     :ensure t
     :config
-    (setq dark-theme-var 'grandshell))
+    (setq dark-theme-var 'sanityinc-tomorrow-night)
+    (setq dark-theme-overrides-var
+          '((set-face-attribute 'hl-line nil
+                                :foreground "#FF0266"
+                                :background "black")
+            (set-face-attribute 'org-level-1 nil
+                                :foreground "#5c9ead")
+            (set-face-attribute 'org-level-4 nil
+                                :foreground "#f0a202")
+            (set-face-attribute 'org-level-2 nil
+                                :foreground "#bbbdf6")
+            (set-face-attribute 'org-level-3 nil
+                                :foreground "#f3b3a6")
+            (set-face-attribute 'org-level-5 nil
+                                :foreground "#cae7b9")
+            (set-face-attribute 'org-level-6 nil
+                                :foreground "#3ab795")
+            (set-face-attribute 'fringe nil
+                                :background "#1d1f21"))))
 
   (use-package flatui-theme
     :ensure t
     :config
-    (setq light-theme-var 'flatui))
+    (setq light-theme-var 'flatui)
+    (setq light-theme-overrides-var
+          '((set-face-attribute 'org-checkbox nil
+                               :box nil
+                               :bold 'normal
+                               :background nil)
+
+          (set-face-attribute 'font-lock-string-face nil
+                              :background nil
+                              :foreground "#0a74b9")
+
+          (set-face-attribute 'org-property-value nil
+                              :foreground "black")
+
+          (set-face-attribute 'eyebrowse-mode-line-active nil
+                              :foreground "#16a085")
+
+          (set-face-attribute 'org-agenda-date-weekend nil
+                              :weight 'normal)
+
+          (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
+                                         ("DOING"       . (:foreground "#2980b9" :weight bold))
+                                         ("WAITING"     . (:foreground "#8e44ad" :weight bold))
+                                         ("DONE"        . (:foreground "green" :weight bold))))
+
+          (setq evil-emacs-state-cursor    '("red" box))
+          (setq evil-normal-state-cursor   '("#1abc9c" box))
+          (setq evil-visual-state-cursor   '("orange" box))
+          (setq evil-insert-state-cursor   '("#9b59b6" box))
+          (setq evil-replace-state-cursor  '("red" box))
+          (setq evil-operator-state-cursor '("red" box)))))
 
   ;; Add the default theme in the load path
   (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
@@ -2293,7 +2386,9 @@ Favorite dark themes:
       :ensure t
       :config
       (setq light-theme-modeline-var 'airline-silver)
-      (setq dark-theme-modeline-var 'airline-behelit)))
+      ;; (setq dark-theme-modeline-var 'airline-behelit)
+      (setq dark-theme-modeline-var 'airline-doom-molokai)
+      ))
 #+END_SRC
 **** DISABLED telephone-line
 [[https://github.com/dbordak/telephone-line][Github]]
@@ -2319,139 +2414,68 @@ Favorite dark themes:
 #+END_SRC
 *** Theme Functions
 #+BEGIN_SRC emacs-lisp
-    (defun switch-theme (theme)
-      "This interactive call is taken from `load-theme'
-      Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/
-      It first loads the default clean Emacs theme, then disables all themes, and loads the specified THEME."
-      (interactive
-       (list
-        (intern (completing-read "Load custom theme: "
-                                 (mapcar 'symbol-name
-                                         (custom-available-themes))))))
-      (load-theme 'default-theme-clean)
-      (mapcar #'disable-theme custom-enabled-themes)
-      (load-theme theme t))
+  (defun switch-theme (theme)
+    "This interactive call is taken from `load-theme'
+    Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/
+    It first loads the default clean Emacs theme, then disables all themes, and loads the specified THEME."
+    (interactive
+     (list
+      (intern (completing-read "Load custom theme: "
+                               (mapcar 'symbol-name
+                                       (custom-available-themes))))))
+    ;; (load-theme 'default-theme-clean)
+    (mapcar #'disable-theme custom-enabled-themes)
+    (load-theme theme t))
 
-    (defun toggle-light-dark-theme ()
-      "Toggle between the selected dark and light themes."
-      (interactive)
-      (if (get 'toggle-light-dark-theme 'light-theme-loaded)
-          (load-dark-theme)
-        (load-light-theme))
-      (put 'toggle-light-dark-theme 'light-theme-loaded (not (get 'toggle-light-dark-theme 'light-theme-loaded))))
+  (defun toggle-light-dark-theme ()
+    "Toggle between the selected dark and light themes."
+    (interactive)
+    (if (get 'toggle-light-dark-theme 'light-theme-loaded)
+        (load-dark-theme)
+      (load-light-theme))
+    (put 'toggle-light-dark-theme 'light-theme-loaded (not (get 'toggle-light-dark-theme 'light-theme-loaded))))
 
-    (defun load-dark-theme ()
-      "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
-        Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
-      (if dark-theme-var (switch-theme dark-theme-var))
-      (if dark-theme-modeline-var (load-theme dark-theme-modeline-var))
+  (defun load-dark-theme ()
+    "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
+      Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
+    (if dark-theme-var (switch-theme dark-theme-var))
+    (if dark-theme-modeline-var (load-theme dark-theme-modeline-var))
+    (if (not (eq dark-theme-overrides-var nil)) (mapcar 'eval dark-theme-overrides-var))
 
-      (set-face-attribute 'org-checkbox nil
-                          :bold 'normal
-                          :box '(:line-width 1 :color "dim gray" :style nil)
-                          :foreground "gray"
-                          :background nil)
+    (set-face-attribute 'org-agenda-date-weekend nil
+                        :weight 'normal)
 
-      ;; (set-face-attribute 'org-checkbox-statistics-todo nil
-      ;;                     :foreground "#ff6c6b")
+    (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
+                               (?B . (:foreground "orange"))
+                               (?C . (:foreground "yellow"))
+                               (?D . (:foreground "green"))))
 
-      (set-face-attribute 'font-lock-string-face nil
-                          :background "#404040"
-                          :foreground "#ffcd8b")
+    (set-face-attribute 'org-agenda-date          nil :height 1.1)
+    (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
+    (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
+    (set-face-attribute 'org-agenda-structure     nil :height 1.1)
 
-      (set-face-attribute 'org-level-1 nil
-                          :background "#23272e")
+    (setq evil-emacs-state-cursor    '("red" box))
+    (setq evil-normal-state-cursor   '("white" box))
+    (setq evil-visual-state-cursor   '("orange" box))
+    (setq evil-insert-state-cursor   '("cyan" box))
+    (setq evil-replace-state-cursor  '("red" box))
+    (setq evil-operator-state-cursor '("red" box))
 
-      (set-face-background 'fringe "#050505")
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
 
-      (set-face-attribute 'org-headline-done nil
-                          :foreground "#767F87")
-
-      (set-face-attribute 'org-agenda-dimmed-todo-face nil
-                          :foreground nil)
-
-      (set-face-attribute 'org-property-value nil
-                          :foreground "white")
-
-      (set-face-attribute 'eyebrowse-mode-line-active nil
-                          :foreground "#c350ff")
-
-      (set-face-attribute 'org-agenda-date-weekend nil
-                          :weight 'normal)
-
-      (set-face-attribute 'org-agenda-date nil
-                          :foreground "#767F87")
-
-      (set-face-attribute 'org-agenda-date-today nil
-                          :foreground "white")
-
-      (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
-                                 (?B . (:foreground "orange"))
-                                 (?C . (:foreground "yellow"))
-                                 (?D . (:foreground "green"))))
-
-      (set-face-attribute 'org-agenda-date          nil :height 1.1)
-      (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
-      (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
-      (set-face-attribute 'org-agenda-structure     nil :height 1.1)
-
-      ;; (setq org-todo-keyword-faces '(("TODO"        . "red")
-      ;;                                ("DOING"       . "yellow")
-      ;;                                ("WAITING"     . "#7453ef")
-      ;;                                ("DONE"        . (:foreground "green" :weight bold))))
-      (setq evil-emacs-state-cursor    '("red" box))
-      (setq evil-normal-state-cursor   '("white" box))
-      (setq evil-visual-state-cursor   '("orange" box))
-      (setq evil-insert-state-cursor   '("cyan" box))
-      (setq evil-replace-state-cursor  '("red" box))
-      (setq evil-operator-state-cursor '("red" box))
-
-      ;; (doom-themes-org-config)
-
-      (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
-
-      (set-face-attribute 'font-lock-string-face nil :background "#050505" )
-      )
+    (set-face-attribute 'font-lock-string-face nil :background "#050505" )
+    (set-face-attribute 'font-lock-keyword-face nil :background "#050505" ))
 
 
-    (defun load-light-theme ()
-      "Load the specified light theme.
-            It uses the variables light-theme-var, light-theme-modeline-var.
-            Also sets some faces for org-checkbox, strings, org TODO items and evil
-            mode cursors."
-      (if light-theme-var (switch-theme light-theme-var))
-      (if light-theme-modeline-var (load-theme light-theme-modeline-var))
-
-      (set-face-attribute 'org-checkbox nil
-                          :box nil
-                          :bold 'normal
-                          :background nil)
-
-      (set-face-attribute 'font-lock-string-face nil
-                          :background nil
-                          :foreground "#0a74b9")
-
-      (set-face-attribute 'org-property-value nil
-                          :foreground "black")
-
-      (set-face-attribute 'eyebrowse-mode-line-active nil
-                          :foreground "#16a085")
-
-      (set-face-attribute 'org-agenda-date-weekend nil
-                          :weight 'normal)
-
-      (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
-                                     ("DOING"       . (:foreground "#2980b9" :weight bold))
-                                     ("WAITING"     . (:foreground "#8e44ad" :weight bold))
-                                     ("DONE"        . (:foreground "green" :weight bold))))
-
-      (setq evil-emacs-state-cursor    '("red" box))
-      (setq evil-normal-state-cursor   '("#1abc9c" box))
-      (setq evil-visual-state-cursor   '("orange" box))
-      (setq evil-insert-state-cursor   '("#9b59b6" box))
-      (setq evil-replace-state-cursor  '("red" box))
-      (setq evil-operator-state-cursor '("red" box))
-  )
+  (defun load-light-theme ()
+    "Load the specified light theme.
+          It uses the variables light-theme-var, light-theme-modeline-var.
+          Also sets some faces for org-checkbox, strings, org TODO items and evil
+          mode cursors."
+    (if light-theme-var (switch-theme light-theme-var))
+    (if light-theme-modeline-var (load-theme light-theme-modeline-var))
+    (if (not (eq light-theme-overrides-var nil)) (mapcar 'eval light-theme-overrides-var)))
 #+END_SRC
 *** Load Theme
 #+BEGIN_SRC emacs-lisp

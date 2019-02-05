@@ -21,3 +21,4 @@ smex-items
 .cache/
 .tern-port
 server/
+rake.cache
