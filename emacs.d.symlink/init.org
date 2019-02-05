@@ -271,7 +271,7 @@ Variables are set here that are used in the configuration below
 ** Terminal
 #+BEGIN_SRC emacs-lisp
   ;; open fish for shell
-  (setq explicit-shell-file-name "/usr/local/bin/fish")
+  (setq explicit-shell-file-name "/usr/local/bin/zsh")
 #+END_SRC
 *** open terminal below
 #+BEGIN_SRC emacs-lisp
@@ -1136,7 +1136,8 @@ Completion
     ;; (setq ivy-initial-inputs-alist nil)
     ;; configure regexp engine.
     (setq ivy-re-builders-alist
-      '((t   . ivy--regex-fuzzy)))
+          '((counsel-ag . ivy--regex-plus)
+            (t   . ivy--regex-fuzzy)))
     ;; Set ivy for completion in projectile
     (setq projectile-completion-system 'ivy)
     (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
@@ -1155,9 +1156,11 @@ Completion
     :config
     (setq projectile-mode-line
           (format " [%s]"
-                  (projectile-project-name)))
+                  (projectile-project-name))
+          projectile-globally-ignored-directories '(".stversions"))
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
+
     (use-package counsel-projectile
       :ensure t
       :config
@@ -1761,7 +1764,7 @@ system in order to work.
     (setq-default olivetti-body-width 80)
     (setq-default olivetti-hide-mode-line t))
 #+END_SRC
-*** UNIX_ONLY elfeed
+*** MAC_ONLY elfeed
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
     :ensure t
