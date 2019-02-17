@@ -341,6 +341,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     :pin melpa-stable
     :init
     (setq evil-want-integration nil)
+    (setq evil-want-keybinding nil)
     :config
     (evil-mode t)
     ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
@@ -758,7 +759,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
           :config
           (setq org-gcal-client-id     api-keys-org-gcal-client-id
                 org-gcal-client-secret api-keys-org-gcal-client-secret
-                hbournis/org-gcal-file-alist    `((,api-keys-org-gcal-email . ,hbournis/org-gcal-file)
+                org-gcal-file-alist    `((,api-keys-org-gcal-email . ,hbournis/org-gcal-file)
                                          (,api-keys-org-gcal-apergia-id . ,hbournis/org-gcal-file-apergia-var)))
           (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
           (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))))
@@ -856,7 +857,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
   (defadvice org-archive-subtree
       (before add-inherited-tags-before-org-archive-subtree activate)
     "add inherited tags before org-archive-subtree"
-    (org-set-tags-to (org-get-tags-at)))
+    (org-set-tags (org-get-tags)))
 #+END_SRC
 **** Org Capture
 #+BEGIN_SRC emacs-lisp
