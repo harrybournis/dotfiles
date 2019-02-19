@@ -2125,7 +2125,13 @@ Interact with bundler with Emacs
 **** MAC_ONLY rubocop
 #+BEGIN_SRC emacs-lisp
   (use-package rubocop
-    :ensure t)
+    :ensure t
+    :config
+    ;; Load rubocopfmt
+    (add-to-list 'load-path "~/.emacs.d/lisp/rubocopfmt.el")
+    (require 'rubocopfmt)
+    (add-hook 'ruby-mode-hook #'rubocopfmt-mode)
+    (diminish 'rubocopfmt-mode))
 #+END_SRC
 *** Haskell
 **** NOT_WINDOWS intero
