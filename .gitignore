@@ -14,5 +14,6 @@ git/gitconfig.local.symlink
 ranger/config/ranger.symlink/history
 ranger/config/ranger.symlink/bookmarks
 ranger/config/ranger.symlink/tagged
+ranger/.config/ranger.symlinkNoDot/history
 
 emacs.d.symlink/lisp/org-fancy-priorities/
