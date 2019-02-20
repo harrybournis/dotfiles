@@ -22,3 +22,5 @@ smex-items
 .tern-port
 server/
 rake.cache
+transient/
+.lsp-session-v1
