@@ -1,0 +1,57 @@
+# Taps
+tap "caskroom/cask"
+tap "caskroom/fonts"
+tap "homebrew/bundle"
+tap "homebrew/core"
+tap "homebrew/services"
+
+# Zsh
+brew "zsh"
+
+# brew
+brew "diff-so-fancy"
+brew "ruby", link: false
+brew "git-recent"
+brew "rbenv"
+brew "rbenv-default-gems"
+brew "ack"
+brew "the_silver_searcher"
+brew "gnupg"
+brew "trash"
+brew "tree"
+brew "ghostscript"
+brew "git"
+brew "wget"
+brew "vim"
+brew "ranger"
+brew "poppler"
+brew "automake"
+brew "aspell"
+brew "ripgrep"
+
+# Cask
+cask "google-chrome"
+cask "firefox"
+cask "keepassx"
+cask "flux"
+cask "google-backup-and-sync"
+cask "emacs"
+cask "sublime-text"
+cask "visual-studio-code"
+cask "bbedit"
+cask "gpgtools"
+cask "iterm2"
+cask "meld"
+cask "pgadmin4"
+cask "karabiner-elements"
+cask "skim"
+cask "keka"
+cask "postman"
+cask "spectacle"
+cask "cyberduck"
+
+# Fonts
+cask "font-sourcecodepro-nerd-font-mono"
+cask "font-sourcecodepro-nerd-font"
+cask "font-source-code-pro-for-powerline"
+cask "font-gnu-unifont"
