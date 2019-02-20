@@ -412,6 +412,7 @@ mode only when it is needed.
         man
         (package-menu package)
         (pdf pdf-view)
+        vc-annotate
         )
       "The list of modes which will be evilified by `evil-collection-init'.
       Elements are either target mode symbols or lists which `car' is the
@@ -654,7 +655,7 @@ Improvement on evil-leader. Specify mutliple leaders.
     (extra-tools-alternate-leader
                         "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
                         "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
-                        "/p"  'evilnc-comment-or-uncomment-paaagraphs        ; Un/Comment paragraph
+                        "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
                         "/r"  'comment-or-uncomment-region                   ; Un/Comment selection
                         "/v"  'evilnc-toggle-invert-comment-line-by-line     ; Toggle invert comment status flag
                         "[["  'wrap-with-brackets
@@ -664,7 +665,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[\"" 'wrap-with-double-quotes
                         "[`"  'wrap-with-back-quotes
                         "c"   'org-capture
-                        "g"   'git-timemachine-toggle
+                        "gt"  'git-timemachine-toggle
+                        "gr"  'git-gutter:revert-hunk
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
@@ -823,11 +825,6 @@ bug where events created in Emacs get duplicated in Google Calendar.
                              (?D . (:foreground "green"))))
 
   (define-key org-mode-map (kbd "C-k") nil)
-
-
-  ;; Type <el to add an emacs-lisp code block
-  (add-to-list 'org-structure-template-alist
-               '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 
   ;; Show only the time when a note is added, instead of 'Note taken on..'
   (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
@@ -1189,6 +1186,27 @@ Autocompletion
     :bind
     (("C-;" . company-complete)))
 #+END_SRC
+*** lsp-mode
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :config
+    (setq lsp-prefer-flymake nil))
+
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-line-ignore-duplicate t))
+
+  (use-package company-lsp
+    :ensure t
+    :commands company-lsp
+    :config
+    (require 'company-lsp)
+    (push 'company-lsp company-backends))
+#+end_src
 *** undo tree mode
 visualize undo
 
@@ -2130,7 +2148,7 @@ Interact with bundler with Emacs
     ;; Load rubocopfmt
     (add-to-list 'load-path "~/.emacs.d/lisp/rubocopfmt.el")
     (require 'rubocopfmt)
-    (add-hook 'ruby-mode-hook #'rubocopfmt-mode)
+    ;; (add-hook 'ruby-mode-hook #'rubocopfmt-mode)
     (diminish 'rubocopfmt-mode))
 #+END_SRC
 *** Haskell
