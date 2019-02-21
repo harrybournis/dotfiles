@@ -85,11 +85,11 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq hbournis/org-main-file             "~/org/stuff.org"
+  (setq hbournis/org-main-file             "~/org-shared/stuff.org"
         hbournis/org-book-file             "~/org/books.org"
         hbournis/org-mobile-file           "~/org/mobile/mobile_notes.org"
         hbournis/org-album-file            "~/org/mobile/album.org"
-        hbournis/org-inbox-file            "~/org/mobile/Inbox.org"
+        hbournis/org-inbox-file            "~/org-shared/mobile/Inbox.org"
         hbournis/org-work-file             "~/Documents/work.org"
         hbournis/org-gcal-file             "~/org-gcal/gcal.org"
         hbournis/org-gcal-file-apergia-var "~/org-gcal/gcal-apergia.org"
