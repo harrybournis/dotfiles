@@ -17,3 +17,4 @@ ranger/config/ranger.symlink/tagged
 ranger/.config/ranger.symlinkNoDot/history
 
 emacs.d.symlink/lisp/org-fancy-priorities/
+/.DS_Store
