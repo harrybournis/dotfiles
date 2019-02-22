@@ -1207,6 +1207,13 @@ Autocompletion
     (require 'company-lsp)
     (push 'company-lsp company-backends))
 #+end_src
+*** editorconfig
+#+BEGIN_SRC emacs-lisp
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+#+END_SRC
 *** undo tree mode
 visualize undo
 

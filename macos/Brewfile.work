@@ -28,6 +28,8 @@ brew "poppler"
 brew "automake"
 brew "aspell"
 brew "ripgrep"
+brew "editorconfig"
+brew "syncthing"
 
 # Cask
 cask "google-chrome"
@@ -49,6 +51,8 @@ cask "keka"
 cask "postman"
 cask "spectacle"
 cask "cyberduck"
+cask "tableplus"
+cask "syncthing-app"
 
 # Fonts
 cask "font-sourcecodepro-nerd-font-mono"
