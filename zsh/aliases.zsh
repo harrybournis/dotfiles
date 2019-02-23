@@ -6,6 +6,7 @@ alias lsa='ls -a'
 alias c='clear'
 # alias ls="exa --group-directories-first"
 alias lsa="ls -a"
+alias lsh='ls -a | grep "^\."'
 alias oepn='open'
 alias brwe="brew"
 alias sublime='open -a /Applications/"Sublime Text.app"'
