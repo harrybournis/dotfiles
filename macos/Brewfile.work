@@ -1,6 +1,4 @@
 # Taps
-tap "caskroom/cask"
-tap "caskroom/fonts"
 tap "homebrew/bundle"
 tap "homebrew/core"
 tap "homebrew/services"
@@ -34,6 +32,7 @@ brew "syncthing"
 # Cask
 cask "google-chrome"
 cask "firefox"
+cask "opera"
 cask "keepassx"
 cask "flux"
 cask "google-backup-and-sync"
@@ -53,6 +52,7 @@ cask "spectacle"
 cask "cyberduck"
 cask "tableplus"
 cask "syncthing-app"
+cask "basictex"
 
 # Fonts
 cask "font-sourcecodepro-nerd-font-mono"
