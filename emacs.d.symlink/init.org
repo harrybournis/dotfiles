@@ -668,6 +668,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "c"   'org-capture
                         "gt"  'git-timemachine-toggle
                         "gr"  'git-gutter:revert-hunk
+                        "gn"  'git-gutter:next-hunk
+                        "gp"  'git-gutter:previous-hunk
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
@@ -933,6 +935,13 @@ bug where events created in Emacs get duplicated in Google Calendar.
     :ensure t
     :defer t
     :config
+    (setq magit-blame-styles
+          '((margin
+            (margin-format " %C %a" " %s")
+            (margin-width . 42)
+            (margin-face . magit-blame-margin)
+            (margin-body-face magit-blame-dimmed))))
+
     (use-package evil-magit
       :ensure t)
 
