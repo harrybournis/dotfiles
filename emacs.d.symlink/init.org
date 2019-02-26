@@ -1221,6 +1221,7 @@ Autocompletion
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
     :ensure t
+    :diminish
     :config
     (editorconfig-mode 1))
 #+END_SRC
@@ -2395,6 +2396,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
           (set-face-attribute 'org-agenda-date-weekend nil
                               :weight 'normal)
+
+          (set-face-attribute 'magit-section-highlight nil
+                              :background "#dfe4ea")
 
           (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                          ("DOING"       . (:foreground "#2980b9" :weight bold))
