@@ -774,6 +774,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
 **** Org Settings
 #+BEGIN_SRC emacs-lisp
   (require 'ob-R)
+  (require 'org-tempo)
 
   (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
         org-src-tab-acts-natively t
@@ -816,7 +817,8 @@ bug where events created in Emacs get duplicated in Google Calendar.
                       org-w3m
                       org-protocol
                       org-bibtex
-                      org-collector)
+                      org-collector
+                      org-tempo)
 
         org-lowest-priority ?D
         org-default-priority ?D
