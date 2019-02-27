@@ -935,7 +935,6 @@ bug where events created in Emacs get duplicated in Google Calendar.
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
-    :defer t
     :config
     (setq magit-blame-styles
           '((margin
@@ -1163,11 +1162,14 @@ Completion
   (use-package projectile
     :ensure t
     :pin melpa-stable
+    :diminish "P"
     :config
     (setq projectile-mode-line
           (format " [%s]"
                   (projectile-project-name))
-          projectile-globally-ignored-directories '(".stversions"))
+          projectile-globally-ignored-directories (append
+                                                   projectile-globally-ignored-directories
+                                                   '(".stversions" "vendor")))
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
 
@@ -1245,6 +1247,7 @@ visualize undo
   (use-package smartparens
     :ensure t
     :pin melpa-stable
+    :diminish
     :config
     (require 'smartparens-config)
     (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
@@ -2140,6 +2143,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :ensure t
     :requires projectile
     :pin melpa-stable
+    :diminish
     :config
     (projectile-rails-global-mode))
 #+END_SRC
