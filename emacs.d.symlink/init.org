@@ -2406,6 +2406,15 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           (set-face-attribute 'magit-section-highlight nil
                               :background "#dfe4ea")
 
+          (set-face-attribute 'magit-section-heading nil
+                              :foreground "#8E44AD")
+
+          (set-face-attribute 'magit-branch-local nil
+                              :foreground "#2980B9")
+
+          (set-face-attribute 'magit-branch-remote nil
+                              :foreground "#27AE60")
+
           (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                          ("DOING"       . (:foreground "#2980b9" :weight bold))
                                          ("WAITING"     . (:foreground "#8e44ad" :weight bold))
