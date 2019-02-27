@@ -18,7 +18,7 @@
         precomposeunicode = true
         pager = diff-so-fancy | less --tabs=4 -RFX
         editor = /usr/bin/vim
-        excludesfile = /Users/harrybournis/.gitignore
+        excludesfile = ~/.gitignore
 [diff]
         tool = meld
 [help]
