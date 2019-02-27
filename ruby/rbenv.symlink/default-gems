@@ -2,3 +2,4 @@ rubocop
 awesome_print
 bundler
 solargraph
+reek
