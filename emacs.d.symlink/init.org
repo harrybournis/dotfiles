@@ -272,6 +272,7 @@ Variables are set here that are used in the configuration below
 #+BEGIN_SRC emacs-lisp
   ;; open fish for shell
   (setq explicit-shell-file-name "/usr/local/bin/zsh")
+  (setenv "INSIDE_EMACS" "true")
 #+END_SRC
 *** open terminal below
 #+BEGIN_SRC emacs-lisp
@@ -1036,7 +1037,8 @@ Syntax checking
     (setq-default flycheck-temp-prefix ".flycheck")
     ;; Set flycheck to only check when saving a file or changin a major mode
     ;; Done mainly for performance on windows
-    (setq flycheck-check-syntax-automatically '(save mode-enable)))
+    (if IS-WINDOWS
+        (setq flycheck-check-syntax-automatically '(save mode-enable))))
 #+END_SRC
 **** Use local eslint if available
 [[https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable][Source]]
@@ -1162,7 +1164,7 @@ Completion
   (use-package projectile
     :ensure t
     :pin melpa-stable
-    :diminish "P"
+    :diminish " P"
     :config
     (setq projectile-mode-line
           (format " [%s]"
@@ -2173,7 +2175,9 @@ Interact with bundler with Emacs
     (add-to-list 'load-path "~/.emacs.d/lisp/rubocopfmt.el")
     (require 'rubocopfmt)
     ;; (add-hook 'ruby-mode-hook #'rubocopfmt-mode)
-    (diminish 'rubocopfmt-mode))
+    (diminish 'rubocopfmt-mode)
+    ;; Use Gemfile's Rubocop if it exists, otherwise use global
+    (setq rubocopfmt-use-bundler-when-possible nil))
 #+END_SRC
 *** Haskell
 **** NOT_WINDOWS intero
