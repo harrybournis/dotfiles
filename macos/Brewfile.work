@@ -5,6 +5,7 @@ tap "homebrew/services"
 
 # Zsh
 brew "zsh"
+brew "zsh-completions"
 
 # brew
 brew "diff-so-fancy"
