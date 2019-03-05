@@ -1639,6 +1639,7 @@ system in order to work.
     :config
     (progn
       (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+            treemacs-python-executable          "python3"
             treemacs-file-event-delay           5000
             treemacs-follow-after-init          t
             treemacs-follow-recenter-distance   0.1
