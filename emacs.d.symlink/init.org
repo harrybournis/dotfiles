@@ -2423,6 +2423,26 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           (set-face-attribute 'magit-branch-remote nil
                               :foreground "#27AE60")
 
+          (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                              :background "#1ABC9C"
+                              :foreground "white")
+
+          (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                              :background "#2ECC71"
+                              :foreground "white")
+
+          (set-face-attribute 'ivy-minibuffer-match-face-3 nil
+                              :background "#3498DB"
+                              :foreground "white")
+
+          (set-face-attribute 'ivy-minibuffer-match-face-4 nil
+                              :background "#F1C40F"
+                              :foreground "white")
+
+          (set-face-attribute 'ivy-current-match nil
+                              :background "#9B59B6"
+                              :foreground "white")
+
           (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                          ("DOING"       . (:foreground "#2980b9" :weight bold))
                                          ("WAITING"     . (:foreground "#8e44ad" :weight bold))
