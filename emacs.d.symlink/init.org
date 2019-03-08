@@ -624,7 +624,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "i"         (lambda () (interactive) (find-file hbournis/org-inbox-file))
                       "z"         (lambda () (interactive) (find-file hbournis/org-work-file)))
 
-    (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual))
+    (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
     (extra-tools-leader "`"   'hbournis/open-terminal
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
@@ -1554,7 +1554,8 @@ hide specific modes from the modeline
     (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
     (diminish 'auto-fill-function)
-    (diminish 'auto-revert-mode))
+    (diminish 'auto-revert-mode)
+    (diminish 'eldoc-mode))
 #+END_SRC
 *** exec-path-from-shell
 Get environment variables from the shell
@@ -1673,13 +1674,7 @@ system in order to work.
          (treemacs-git-mode 'simple))))
     :bind
     (:map global-map
-          ([f8]        . treemacs)
-          ("M-0"       . treemacs-select-window)
-          ("C-x t 1"   . treemacs-delete-other-windows)
-          ("C-x t t"   . treemacs)
-          ("C-x t B"   . treemacs-bookmark)
-          ("C-x t C-t" . treemacs-find-file)
-          ("C-x t M-t" . treemacs-find-tag)))
+     ([f8] . treemacs)))
 
   (use-package treemacs-evil
     :after treemacs evil
