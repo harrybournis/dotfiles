@@ -610,8 +610,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "ns"        'hbournis/create-scratch-buffer
                       "c"         'cfw:open-org-calendar
                       ";"         'evilmi-jump-items
-                      "RET"       'lsp-find-definition
-                      "r"         'lsp-find-references
+                      "RET"       (lambda () (interactive) (robe-find-file))
+                      "r"         (lambda () (interactive) (lsp) (lsp-find-references))
                       "w"         'hydra-window-deluxe-custom/body
                       "W1"        'eyebrowse-switch-to-window-config-1
                       "W2"        'eyebrowse-switch-to-window-config-2
@@ -1214,10 +1214,11 @@ Autocompletion
     :ensure t
     :commands lsp-ui-mode
     :config
-    (setq lsp-line-ignore-duplicate t)
-    (lsp-ui-doc-enable nil)
-    (lsp-ui-peek-enable nil)
-    (lsp-ui-sideline-enable nil))
+    (setq lsp-ui-doc-enable nil
+          lsp-ui-imenu-enable nil
+          lsp-ui-peek-enable nil
+          lsp-ui-sideline-enable nil
+          lsp-line-ignore-duplicate t))
 
   (use-package company-lsp
     :ensure t
