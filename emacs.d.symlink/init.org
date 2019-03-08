@@ -2160,7 +2160,9 @@ Enhancements to ruby-mode for RSpec files.
   (use-package rspec-mode
     :ensure t
     :config
-    (setq compilation-scroll-output t)
+    (setq compilation-scroll-output t
+          rspec-use-spring-when-possible nil
+          rspec-allow-multiple-compilation-buffers t)
     (eval-after-load 'rspec-mode '(rspec-install-snippets)))
 #+END_SRC
 **** MAC_ONLY bundler
@@ -2183,6 +2185,16 @@ Interact with bundler with Emacs
     ;; Use Gemfile's Rubocop if it exists, otherwise use global
     (setq rubocopfmt-use-bundler-when-possible nil))
 #+END_SRC
+**** MAC_ONLY robe
+#+begin_src emacs-lisp
+  (use-package robe
+    :ensure t
+    :diminish
+    :config
+    (eval-after-load 'company
+      '(push 'company-robe company-backends))
+    (global-robe-mode))
+#+end_src
 *** Haskell
 **** NOT_WINDOWS intero
 Complete development mode for Haskell
