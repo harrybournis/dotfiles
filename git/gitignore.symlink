@@ -33,3 +33,5 @@ Temporary Items
 # Emacs Temporary files
 \#*\#
 .\#*
+
+.tern-port
