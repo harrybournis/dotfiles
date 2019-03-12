@@ -919,7 +919,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                        (tags "-work+.*"
                                                 ((org-agenda-files `(,hbournis/org-inbox-file))
                                                  (org-agenda-overriding-header agenda-label-inbox)))
-                                       (tags "work"
+                                       (tags-todo "work"
                                              ((org-agenda-overriding-header agenda-label-work-tag)))
                                        (agenda ""
                                                ((org-agenda-overriding-header agenda-label-calendar)))
