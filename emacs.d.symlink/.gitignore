@@ -24,3 +24,4 @@ server/
 rake.cache
 transient/
 .lsp-session-v1
+abbrev_defs
