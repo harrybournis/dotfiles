@@ -684,6 +684,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "gr"  'git-gutter:revert-hunk
                         "gn"  'git-gutter:next-hunk
                         "gp"  'git-gutter:previous-hunk
+                        "gb"  'magit-blame-echo
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
@@ -2414,7 +2415,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (set-face-attribute 'org-level-6 nil
                                 :foreground "#3ab795")
             (set-face-attribute 'fringe nil
-                                :background "#1d1f21"))))
+                                :background "#1d1f21")
+            (set-face-attribute 'org-property-value nil
+                                :foreground "white"))))
 
   (use-package flatui-theme
     :ensure t
@@ -3041,9 +3044,9 @@ Just a simple function for when I want the current time stamp inside an org file
     "Jump to function definition according to current major mode"
     (interactive)
     (let ((mode major-mode))
-      (cond ((eq mode 'ruby-mode) (robe-find-file))
-            ((eq mode 'typescript-mode) (tide-jump-to-definition))
-            (t (print (dumb-jump-go))))))
+      (cond ((eq mode 'ruby-mode) (call-interactively 'robe-jump))
+            ((eq mode 'typescript-mode) (call-interactively 'tide-jump-to-definition))
+            (t (call-interactively 'dumb-jump-go)))))
 #+end_src
 * Shortcuts
 global shortcuts
