@@ -1607,6 +1607,8 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
 #+BEGIN_SRC emacs-lisp
   (use-package ranger
     :ensure t
+    :hook
+    (ranger-mode . treemacs)
     :config
     (setq ranger-override-dired 'ranger
           ranger-show-hidden t
@@ -2158,6 +2160,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package inf-ruby
     :ensure t
     :config
+    (setq inf-ruby-console-environment "development")
     (add-hook 'after-init-hook 'inf-ruby-switch-setup))
 #+END_SRC
 **** MAC_ONLY projectile-rails
