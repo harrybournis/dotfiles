@@ -589,8 +589,8 @@ Improvement on evil-leader. Specify mutliple leaders.
     (basic-nav-leader "" nil
                       "f"         'list-buffers
                       "F"         'ivy-switch-buffer-other-window
-                      "TAB"       'mode-line-other-buffer
-                      "<backtab>" 'hbournis/toggle-workspaces-1-2
+                      "TAB"       'nswbuff-switch-to-next-buffer
+                      "<backtab>" 'nswbuff-switch-to-previous-buffer
                       "x"         'execute-extended-command
                       "o"         'occur
                       "<up>"      'windmove-up
@@ -1607,8 +1607,6 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
 #+BEGIN_SRC emacs-lisp
   (use-package ranger
     :ensure t
-    :hook
-    (ranger-mode . treemacs)
     :config
     (setq ranger-override-dired 'ranger
           ranger-show-hidden t
@@ -1856,6 +1854,18 @@ system in order to work.
       :config
       (elfeed-goodies/setup)))
 #+END_SRC
+*** nswbuff
+Go to next/previous buffer in a project-aware context
+
+#+begin_src emacs-lisp
+  (use-package nswbuff
+    :ensure t
+    :config
+    (setq nswbuff-buffer-list-function #'nswbuff-projectile-buffer-list
+          nswbuff-display-intermediate-buffers t
+          nswbuff-exclude-buffer-regexps '("^ .*" "^\\*.*\\*")))
+
+#+end_src
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
