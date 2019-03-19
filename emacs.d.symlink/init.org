@@ -2402,10 +2402,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     :config
     (setq dark-theme-var 'sanityinc-tomorrow-night)
     (setq dark-theme-overrides-var
-          '((set-face-attribute 'hl-line nil
-                                :foreground "#FF0266"
-                                :background "black")
-            (set-face-attribute 'org-level-1 nil
+          '((set-face-attribute 'org-level-1 nil
                                 :foreground "#5c9ead")
             (set-face-attribute 'org-level-4 nil
                                 :foreground "#f0a202")
@@ -2428,69 +2425,70 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq light-theme-var 'flatui)
     (setq light-theme-overrides-var
           '((set-face-attribute 'org-checkbox nil
-                               :box nil
-                               :bold 'normal
-                               :background nil)
+                                :box nil
+                                :bold 'normal
+                                :background nil)
 
-          (set-face-attribute 'font-lock-string-face nil
-                              :background nil
-                              :foreground "#0a74b9")
+            (set-face-attribute 'font-lock-string-face nil
+                                :background nil
+                                :foreground "#0a74b9")
 
-          (set-face-attribute 'org-property-value nil
-                              :foreground "black")
+            (set-face-attribute 'org-property-value nil
+                                :foreground "black")
 
-          (set-face-attribute 'eyebrowse-mode-line-active nil
-                              :foreground "#16a085")
+            (set-face-attribute 'eyebrowse-mode-line-active nil
+                                :foreground "#16a085")
 
-          (set-face-attribute 'org-agenda-date-weekend nil
-                              :weight 'normal)
+            (set-face-attribute 'org-agenda-date-weekend nil
+                                :weight 'normal)
 
-          (set-face-attribute 'magit-section-highlight nil
-                              :background "#dfe4ea")
+            (set-face-attribute 'magit-section-highlight nil
+                                :background "#dfe4ea")
 
-          (set-face-attribute 'magit-section-heading nil
-                              :foreground "#8E44AD")
+            (set-face-attribute 'magit-section-heading nil
+                                :foreground "#8E44AD")
 
-          (set-face-attribute 'magit-branch-local nil
-                              :foreground "#2980B9")
+            (set-face-attribute 'magit-branch-local nil
+                                :foreground "#2980B9")
 
-          (set-face-attribute 'magit-branch-remote nil
-                              :foreground "#27AE60")
+            (set-face-attribute 'magit-branch-remote nil
+                                :foreground "#27AE60")
 
-          (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                              :background "#1ABC9C"
-                              :foreground "white")
+            (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                                :background "#1ABC9C"
+                                :foreground "white")
 
-          (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                              :background "#2ECC71"
-                              :foreground "white")
+            (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                                :background "#2ECC71"
+                                :foreground "white")
 
-          (set-face-attribute 'ivy-minibuffer-match-face-3 nil
-                              :background "#3498DB"
-                              :foreground "white")
+            (set-face-attribute 'ivy-minibuffer-match-face-3 nil
+                                :background "#3498DB"
+                                :foreground "white")
 
-          (set-face-attribute 'ivy-minibuffer-match-face-4 nil
-                              :background "#F1C40F"
-                              :foreground "white")
+            (set-face-attribute 'ivy-minibuffer-match-face-4 nil
+                                :background "#F1C40F"
+                                :foreground "white")
 
-          (set-face-attribute 'ivy-current-match nil
-                              :background "#9B59B6"
-                              :foreground "white")
+            (set-face-attribute 'ivy-current-match nil
+                                :background "#9B59B6"
+                                :foreground "white")
 
-          (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
-                                         ("DOING"       . (:foreground "#2980b9" :weight bold))
-                                         ("WAITING"     . (:foreground "#8e44ad" :weight bold))
-                                         ("DONE"        . (:foreground "green" :weight bold))))
+            (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
+                                           ("DOING"       . (:foreground "#2980b9" :weight bold))
+                                           ("WAITING"     . (:foreground "#8e44ad" :weight bold))
+                                           ("DONE"        . (:foreground "green" :weight bold))))
 
-          (setq evil-emacs-state-cursor    '("red" box))
-          (setq evil-normal-state-cursor   '("#1abc9c" box))
-          (setq evil-visual-state-cursor   '("orange" box))
-          (setq evil-insert-state-cursor   '("#9b59b6" box))
-          (setq evil-replace-state-cursor  '("red" box))
-          (setq evil-operator-state-cursor '("red" box)))))
+            (setq evil-emacs-state-cursor    '("red" box))
+            (setq evil-normal-state-cursor   '("#1abc9c" box))
+            (setq evil-visual-state-cursor   '("orange" box))
+            (setq evil-insert-state-cursor   '("#9b59b6" box))
+            (setq evil-replace-state-cursor  '("red" box))
+            (setq evil-operator-state-cursor '("red" box)))))
 
   ;; Add the default theme in the load path
   (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
+
 #+END_SRC
 
 *** Modeline
