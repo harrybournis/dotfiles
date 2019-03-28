@@ -658,8 +658,8 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "tt"  'mocha-test-at-point
                         "tp"  'mocha-test-project
                         "m"   'hbournis/toggle-modeline
-                        "rbf" 'rubocop-check-current-file
-                        "rba" 'rubocop-autocorrect-current-file
+                        "rf"  'rubocopfmt
+                        "rb"  'ruby-toggle-block
                         "rtf" 'rspec-verify
                         "rta" 'rspec-verify-all
                         "rtt" 'rspec-verify-single
@@ -685,6 +685,10 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "gn"  'git-gutter:next-hunk
                         "gp"  'git-gutter:previous-hunk
                         "gb"  'magit-blame-echo
+                        "rr"  'projectile-rails-goto-routes
+                        "rc"  'projectile-rails-find-controller
+                        "rs"  'projectile-rails-find-spec
+                        "rm"  'projectile-rails-find-model
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
@@ -1047,7 +1051,7 @@ Syntax checking
     :init (global-flycheck-mode)
     :config
     (setq-default flycheck-disabled-checkers
-                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint)))
+                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint ruby-reek)))
     (setq-default flycheck-temp-prefix ".flycheck")
     ;; Set flycheck to only check when saving a file or changin a major mode
     ;; Done mainly for performance on windows

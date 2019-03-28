@@ -5,6 +5,10 @@ detectors:
     enabled: false
   UncommunicativeModuleName:
     enabled: false
+  FeatureEnvy:
+    enabled: false
+  DuplicateMethodCall:
+    max_calls: 2
 
 directories:
   "app/controllers":
