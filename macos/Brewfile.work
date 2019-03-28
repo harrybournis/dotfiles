@@ -60,6 +60,8 @@ cask "postico"
 cask "docker"
 cask "kitematic"
 cask "syncthing"
+cask "virtualbox"
+cask "virtualbox-extension-pack"
 
 # Fonts
 cask "font-sourcecodepro-nerd-font-mono"
