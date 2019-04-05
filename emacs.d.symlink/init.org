@@ -1892,6 +1892,7 @@ Use C-j to expand.
     :pin melpa-stable
     :hook
     (web-mode . display-line-numbers-mode)
+    (html-mode . display-line-numbers-mode)
     :config
     (setq web-mode-enable-css-colorization t
           web-mode-enable-auto-pairing t
@@ -1921,6 +1922,15 @@ Use C-j to expand.
       ad-do-it)
     ad-do-it))
 #+END_SRC
+**** haml-mode
+#+begin_src emacs-lisp
+  (use-package haml-mode
+    :ensure t
+    :hook
+    (haml-mode . display-line-numbers-mode)
+    :config
+    (add-to-list 'auto-mode-alist '("\\.hamlc\\'" . haml-mode)))
+#+end_src
 *** JavaScript
 **** company-tern
 JavaScript auto-completion
