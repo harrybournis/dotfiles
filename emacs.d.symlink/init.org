@@ -590,6 +590,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "f"         'list-buffers
                       "F"         'ivy-switch-buffer-other-window
                       "TAB"       'nswbuff-switch-to-next-buffer
+                      "ESC"       'keyboard-quit
                       "<backtab>" 'nswbuff-switch-to-previous-buffer
                       "x"         'execute-extended-command
                       "o"         'occur
@@ -639,6 +640,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
     (extra-tools-leader "`"   'hbournis/open-terminal
+                        "ESC" 'keyboard-quit
                         "v"   'org-cliplink
                         "p"   'hbournis/insert-url-as-org-link
                         "l"   'hbournis/org-make-word-link-from-clipboard
@@ -668,6 +670,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
     (extra-tools-alternate-leader
+                        "ESC" 'keyboard-quit
                         "/l"  'evilnc-quick-comment-or-uncomment-to-the-line ; Type the number of line you want commented first
                         "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
                         "/p"  'evilnc-comment-or-uncomment-paragraphs        ; Un/Comment paragraph
@@ -1869,6 +1872,14 @@ Go to next/previous buffer in a project-aware context
           nswbuff-display-intermediate-buffers t
           nswbuff-exclude-buffer-regexps '("^ .*" "^\\*.*\\*")))
 
+#+end_src
+*** aggressive-indent
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :ensure t
+    :config
+    (add-to-list 'aggressive-indent-excluded-modes 'elisp-mode)
+    (global-aggressive-indent-mode t))
 #+end_src
 ** Programming Language Specific
 *** HTML/CSS
