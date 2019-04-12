@@ -1,0 +1,6 @@
+# -*- mode: ruby-mode -*-
+# name: byebug
+# key: bb
+# expand-env: ((yas-indent-line 'auto) (yas-also-auto-indent-first-line t))
+# --
+byebug
