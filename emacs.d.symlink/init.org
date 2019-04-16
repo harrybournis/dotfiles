@@ -946,7 +946,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))
-                                       (tags-todo "PRIORITY=\"D\""
+                                       (tags-todo "-work+PRIORITY=\"D\""
                                              ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
@@ -1619,6 +1619,7 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
           ranger-show-hidden t
           ranger-modify-header t
           ranger-preview-file t
+          ranger-show-literal t
           ranger-max-preview-size 10
           ranger-dont-show-binary t
           ranger-cleanup-on-disable t
@@ -2174,6 +2175,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :ensure t
+    :hook
+    (yaml-mode . display-line-numbers-mode)
     :config
     (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)
                                   '("\\.yaml\\'" . yaml-mode))
