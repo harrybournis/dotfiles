@@ -64,7 +64,7 @@ then
   ZSH_THEME="gallois"
 
   # Enable plugins
-  plugins=(gitfast zsh-autosuggestions vi-mode)
+  plugins=(git zsh-autosuggestions vi-mode)
 
   source $ZSH/oh-my-zsh.sh
 fi
