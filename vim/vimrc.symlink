@@ -19,10 +19,10 @@ Plug 'scrooloose/syntastic'                            " Syntax checking
 " Plug 'posva/vim-vue'                                   " Vuejs Syntax Highlighting
 " Plug 'digitaltoad/vim-pug'                             " Pug syntax highlighting in .vue files
 Plug 'ngmy/vim-rubocop'
-Plug 'HerringtonDarkholme/yats.vim'                    "TypeScript Syntax highlighting
+" Plug 'HerringtonDarkholme/yats.vim'                    "TypeScript Syntax highlighting
 Plug 'darfink/vim-plist'                               " Add plist editing support to Vim
 " Plug 'mattn/emmet-vim'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "On-demand loading
+" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "On-demand loading
 Plug 'thoughtbot/vim-rspec'                            "Run RSpec from vim
 Plug 'vim-airline/vim-airline'                         "custom status/tabline bar
 Plug 'vim-airline/vim-airline-themes'
