@@ -1880,8 +1880,13 @@ Go to next/previous buffer in a project-aware context
   (use-package aggressive-indent
     :ensure t
     :config
-    (add-to-list 'aggressive-indent-excluded-modes 'elisp-mode)
+    (add-to-list 'aggressive-indent-excluded-modes 'elisp-mode 'js2-mode)
     (global-aggressive-indent-mode t))
+#+end_src
+*** csv-mode
+#+begin_src emacs-lisp
+  (use-package csv-mode
+    :ensure t)
 #+end_src
 ** Programming Language Specific
 *** HTML/CSS
@@ -1976,7 +1981,7 @@ Improved JavaScript editing mode
     :hook
     (js2-mode . js2-highlight-vars-mode))
 #+END_SRC
-**** rjsx-mode
+**** DISABLED rjsx-mode
 Better syntax highlighting for jsx files
 
 #+BEGIN_SRC emacs-lisp
@@ -2193,6 +2198,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** ruby-mode
 #+BEGIN_SRC emacs-lisp
   (add-hook 'ruby-mode-hook 'display-line-numbers-mode)
+  (setq ruby-insert-encoding-magic-comment nil)
 #+END_SRC
 **** MAC_ONLY inf-ruby
 #+BEGIN_SRC emacs-lisp
