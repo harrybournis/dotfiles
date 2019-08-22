@@ -2457,6 +2457,16 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
   ;;                                          ("DOING"       . "yellow")
   ;;                                          ("WAITING"     . "#7453ef")
   ;;                                          ("DONE"        . (:foreground "green" :weight bold)))))))
+  (use-package doom-themes
+    :ensure t
+    :config
+    (use-package all-the-icons
+      :ensure t)
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italic t
+          doom-themes-treemacs-line-spacing 2
+          doom-themes-treemacs-theme "doom-colors")
+    (doom-themes-treemacs-config))
 
   (use-package color-theme-sanityinc-tomorrow
     :ensure t
