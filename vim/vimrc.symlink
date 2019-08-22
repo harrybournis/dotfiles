@@ -46,7 +46,7 @@ Plug 'mileszs/ack.vim'                                 " Wrapper for searching w
 " Plug 'derekwyatt/vim-scala'
 " Plug 'klen/python-mode'                                "Python syntax highlighting, completion, refactor, linting etc.
 Plug 'tommcdo/vim-lion'                                "Align text
-Plug 'matze/vim-move'                                  "move selection up/down"
+Plug 'matze/vim-move'                                  "move selection up/down
 
 "snipmate snippets
 Plug 'tomtom/tlib_vim'
@@ -67,7 +67,7 @@ syntax on
 set relativenumber "relative line numbers
 set number         "also display normal line numbers
 filetype plugin on
-set grepprg=ack    "Use ack instead of grep"
+set grepprg=ack    "Use ack instead of grep
 let mapleader = " "
 
 " Syntastic

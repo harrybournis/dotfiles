@@ -1284,6 +1284,8 @@ visualize undo
     (add-hook 'ruby-mode-hook 'smartparens-strict-mode)
     (add-hook 'python-mode-hook 'smartparens-strict-mode)
     (add-hook 'sh-mode-hook 'smartparens-strict-mode)
+    (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+    (add-hook 'clojurescript-mode-hook 'smartparens-strict-mode)
 
     (use-package evil-smartparens
       :ensure t
@@ -2306,15 +2308,29 @@ Org-babel support for prolog.
     :ensure t)
 #+END_SRC
 *** Clojure/ClojureScript
-**** DISABLED clojure-mode
+**** clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :ensure t
-    :pin melpa-stable
-    :hook
-    (clojure-mode-hook . #'smartparens-strict-mode)
-    (clojurescript-mode-hook . #'smartparens-strict-mode))
+    :pin melpa-stable)
 #+END_SRC
+**** cider
+CIDER extends Emacs with support for interactive programming in Clojure.
+
+#+begin_src emacs-lisp
+  (use-package cider
+    :ensure t
+    :pin melpa-stable)
+#+end_src
+**** flycheck-clojure
+#+begin_src emacs-lisp
+  (use-package flycheck-clojure
+    :ensure t
+    :pin melpa-stable
+    :after flycheck
+    :config
+    (flycheck-clojure-setup))
+#+end_src
 **** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
   (use-package ob-clojurescript
