@@ -689,9 +689,9 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "gp"  'git-gutter:previous-hunk
                         "gb"  'magit-blame-echo
                         "rr"  'projectile-rails-goto-routes
-                        "rc"  'projectile-rails-find-controller
-                        "rs"  'projectile-rails-find-spec
-                        "rm"  'projectile-rails-find-model
+                        "rc"  'projectile-rails-find-current-controller
+                        "rt"  'projectile-rails-find-current-spec
+                        "rm"  'projectile-rails-find-current-model
                         "t"   'hbournis/insert-timestamp))
 #+END_SRC
 *** org-mode
