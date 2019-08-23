@@ -427,6 +427,7 @@ mode only when it is needed.
         (package-menu package)
         (pdf pdf-view)
         vc-annotate
+        deadgrep
         )
       "The list of modes which will be evilified by `evil-collection-init'.
       Elements are either target mode symbols or lists which `car' is the
@@ -1889,6 +1890,13 @@ Go to next/previous buffer in a project-aware context
 #+begin_src emacs-lisp
   (use-package csv-mode
     :ensure t)
+#+end_src
+*** deadgrep
+#+begin_src emacs-lisp
+  (use-package deadgrep
+    :ensure t
+    :config
+    (global-set-key (kbd "<f5>") #'deadgrep))
 #+end_src
 ** Programming Language Specific
 *** HTML/CSS
