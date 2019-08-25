@@ -3128,6 +3128,18 @@ Just a simple function for when I want the current time stamp inside an org file
             ((eq mode 'typescript-mode) (call-interactively 'tide-jump-to-definition))
             (t (call-interactively 'dumb-jump-go)))))
 #+end_src
+** ssh
+*** ssh to osmc
+#+begin_src emacs-lisp
+(defun hbournis/ssh-ranger-omsc ()
+  "open ranger through ssh to local osmc"
+  (interactive)
+  (ranger "/ssh:osmc:~"))
+#+end_src
+** read-only .log files
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.log\\'" . read-only-mode))
+#+end_src
 * Shortcuts
 global shortcuts
 
