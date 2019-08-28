@@ -1629,7 +1629,7 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
           ranger-max-preview-size 10
           ranger-dont-show-binary t
           ranger-cleanup-on-disable t
-          ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi"))
+          ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi" "log"))
     (ranger-override-dired-mode t)
     ;; Remap C-h to its normal functionality
     (define-key ranger-mode-map "\C-h k" 'describe-key)
@@ -1690,7 +1690,7 @@ system in order to work.
             treemacs-sorting                    'alphabetic-desc
             treemacs-tag-follow-cleanup         t
             treemacs-tag-follow-delay           1.5
-            treemacs-width                      40)
+            treemacs-width                      35)
 
       (treemacs-follow-mode t)
       (treemacs-filewatch-mode t)
