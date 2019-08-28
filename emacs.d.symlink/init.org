@@ -3143,11 +3143,21 @@ Just a simple function for when I want the current time stamp inside an org file
 (defun hbournis/ssh-ranger-omsc ()
   "open ranger through ssh to local osmc"
   (interactive)
-  (ranger "/ssh:osmc:~"))
+  (ranger "/scp:osmc:~"))
 #+end_src
 ** read-only .log files
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.log\\'" . read-only-mode))
+#+end_src
+** Tail current ranger file
+Run itail on the currently highlighted file in ranger.
+
+#+begin_src emacs-lisp
+  (defun hbournis/tail-file-at-point ()
+    "Run itail on the current ranger file."
+    (interactive)
+    (let ((file-path (ranger-copy-absolute-file-paths)))
+      (itail file-path)))
 #+end_src
 * Shortcuts
 global shortcuts
