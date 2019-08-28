@@ -213,6 +213,8 @@ Variables are set here that are used in the configuration below
 
   ;; save all backups to a single folder to avoid clutter
   (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
+  ;; disable backups for tramp
+  (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
 
   ;; Automatically refresh buffers that changed on disk
   (global-auto-revert-mode t)
