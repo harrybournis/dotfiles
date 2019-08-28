@@ -1900,6 +1900,13 @@ Go to next/previous buffer in a project-aware context
     :config
     (global-set-key (kbd "<f5>") #'deadgrep))
 #+end_src
+*** itail
+see logs easily
+
+#+begin_src emacs-lisp
+  (use-package itail
+    :ensure t)
+#+end_src
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
