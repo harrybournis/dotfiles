@@ -26,6 +26,7 @@
 - [[https://github.com/julienXX/terminal-notifier][Terminal Notifier]] for notifications on Mac
 - [[https://github.com/BurntSushi/ripgrep][rigprep]] for [[https://github.com/alphapapa/magit-todos][magit-todos]]
 
+
 * Packages Setup
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
@@ -81,6 +82,14 @@ Determine whether the system is mac or linux
   (defconst IS-LINUX   (eq system-type 'gnu/linux))
   (defconst IS-WINDOWS (eq system-type 'windows-nt))
 #+END_SRC
+** Load local config file
+Load local.el gitignored file if it exists
+
+#+begin_src emacs-lisp
+  (let ((local-file "local.el"))
+    (if (file-exists-p (concat user-emacs-directory local-file))
+        (load (concat user-emacs-directory local-file))))
+#+end_src
 * Variables
 Variables are set here that are used in the configuration below
 
