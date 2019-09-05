@@ -334,6 +334,10 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 * Packages
 ** Common
+*** Custom Modeline
+#+begin_src emacs-lisp
+  (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
+#+end_src
 *** evil-mode
 :PROPERTIES:
 :VISIBILITY: folded
@@ -1633,7 +1637,7 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
     (setq ranger-override-dired 'ranger
           ranger-show-hidden t
           ranger-modify-header t
-          ranger-preview-file t
+          ranger-preview-file nil
           ranger-show-literal t
           ranger-max-preview-size 10
           ranger-dont-show-binary t
@@ -2589,7 +2593,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+END_SRC
 
 *** Modeline
-**** powerline
+**** DISABLED powerline
 [[https://github.com/milkypostman/powerline][Github]]
 [[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
 
@@ -2703,6 +2707,14 @@ Favorite dark themes:
   (load-dark-theme)
 #+END_SRC
 
+*** Theme defaults override
+#+begin_src emacs-lisp
+  (set-face-attribute 'mode-line-inactive nil
+                      :box nil)
+
+  (set-face-attribute 'hl-line nil
+                      :background "#282a2e")
+#+end_src
 * Custom Functions
 ** Toggle Window Split
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
