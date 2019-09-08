@@ -334,10 +334,6 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 * Packages
 ** Common
-*** Custom Modeline
-#+begin_src emacs-lisp
-  (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
-#+end_src
 *** evil-mode
 :PROPERTIES:
 :VISIBILITY: folded
@@ -2518,7 +2514,14 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (set-face-attribute 'fringe nil
                                 :background "#1d1f21")
             (set-face-attribute 'org-property-value nil
-                                :foreground "white"))))
+                                :foreground "white")
+            (set-face-attribute 'mode-line-inactive nil
+                                :box nil
+                                :background "#1d1f21")
+            (set-face-attribute 'hl-line nil
+                                :background "#282a2e")
+            ))
+    )
 
   (use-package flatui-theme
     :ensure t
@@ -2540,6 +2543,15 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (set-face-attribute 'eyebrowse-mode-line-active nil
                                 :foreground "#16a085")
 
+            (set-face-attribute 'eyebrowse-mode-line-inactive nil
+                                :foreground "#95a5a6")
+
+            (set-face-attribute 'eyebrowse-mode-line-separator nil
+                                :foreground "#95a5a6")
+
+            (set-face-attribute 'eyebrowse-mode-line-delimiters nil
+                                :foreground "#95a5a6")
+
             (set-face-attribute 'org-agenda-date-weekend nil
                                 :weight 'normal)
 
@@ -2556,15 +2568,15 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                                 :foreground "#27AE60")
 
             (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                                :background "#1ABC9C"
+                                :background "#F1C40F"
                                 :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                                :background "#2ECC71"
+                                :background "#F1C40F"
                                 :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-3 nil
-                                :background "#3498DB"
+                                :background "#F1C40F"
                                 :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-4 nil
@@ -2585,7 +2597,16 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (setq evil-visual-state-cursor   '("orange" box))
             (setq evil-insert-state-cursor   '("#9b59b6" box))
             (setq evil-replace-state-cursor  '("red" box))
-            (setq evil-operator-state-cursor '("red" box)))))
+            (setq evil-operator-state-cursor '("red" box))
+            (set-face-attribute 'mode-line nil
+                                :background "#dfe4ea"
+                                :box nil)
+            (set-face-attribute 'mode-line-inactive nil
+                                :box nil
+                                :background "#ecf0f1")
+            (set-face-attribute 'magit-diff-context nil
+                                :background "grey20")
+            )))
 
   ;; Add the default theme in the load path
   (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
@@ -2637,6 +2658,10 @@ Favorite dark themes:
     :config
     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
 #+END_SRC
+**** Custom Modeline
+#+begin_src emacs-lisp
+  (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
+#+end_src
 *** Theme Functions
 #+BEGIN_SRC emacs-lisp
   (defun switch-theme (theme)
@@ -2707,14 +2732,6 @@ Favorite dark themes:
   (load-dark-theme)
 #+END_SRC
 
-*** Theme defaults override
-#+begin_src emacs-lisp
-  (set-face-attribute 'mode-line-inactive nil
-                      :box nil)
-
-  (set-face-attribute 'hl-line nil
-                      :background "#282a2e")
-#+end_src
 * Custom Functions
 ** Toggle Window Split
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
