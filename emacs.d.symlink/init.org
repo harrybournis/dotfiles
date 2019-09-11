@@ -645,12 +645,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "W2"        'eyebrowse-switch-to-window-config-2
                       "W3"        'eyebrowse-switch-to-window-config-3
                       "W4"        'eyebrowse-switch-to-window-config-4
-                      "SPC"       (lambda () (interactive) (find-file hbournis/org-main-file))
-                      "a"         (lambda () (interactive) (find-file hbournis/org-mobile-file))
+                      "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
+                      "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
                       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
                       "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
-                      "i"         (lambda () (interactive) (find-file hbournis/org-inbox-file))
-                      "z"         (lambda () (interactive) (find-file hbournis/org-work-file)))
+                      "i"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-inbox-file))
+                      "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
     (extra-tools-leader "`"   'hbournis/open-terminal
@@ -670,16 +670,12 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "jj"  'tide-fix
                         "jk"  'tide-jump-to-definition
                         "i"   'org-toggle-inline-images
-                        "tf"  'mocha-test-file
-                        "tt"  'mocha-test-at-point
-                        "tp"  'mocha-test-project
+                        "tf"  'hbournis/generic-run-test-file
+                        "tt"  'hbournis/generic-run-test-at-point
+                        "ta"  'hbournis/generic-run-test-all
                         "m"   'hbournis/toggle-modeline
                         "rf"  'rubocopfmt
                         "rb"  'ruby-toggle-block
-                        "rtf" 'rspec-verify
-                        "rta" 'rspec-verify-all
-                        "rtt" 'rspec-verify-single
-                        "rtl" 'rspec-run-last-failed
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
@@ -3212,6 +3208,51 @@ Run itail on the currently highlighted file in ranger.
     (cond ((not (getenv "WORK"))
            (find-file file))
           ((and (getenv "WORK") (eq file hbournis/org-work-file)) (find-file file))))
+#+end_src
+** Call appropriate run test function according to major mode
+#+begin_src emacs-lisp
+  (setq hbournis/run-test-at-point-function-ruby 'rspec-verify-single
+        hbournis/run-test-at-point-function-js 'mocha-test-at-point
+        hbournis/run-test-at-point-function-clojure 'cider-test-run-test
+        hbournis/run-test-file-function-ruby 'rspec-verify
+        hbournis/run-test-file-function-js 'mocha-test-file
+        hbournis/run-test-file-function-clojure 'cider-test-run-ns-tests
+        hbournis/run-test-all-function-ruby 'rspec-verify-all
+        hbournis/run-test-all-function-js 'mocha-test-project
+        hbournis/run-test-all-function-clojure 'cider-test-run-project-tests)
+
+  (defun hbournis/generic-run-test-at-point ()
+    "Call the appropriate run test at point function depending on major mode."
+    (interactive)
+    (cond
+     ((eq major-mode 'ruby-mode)
+      (call-interactively hbournis/run-test-at-point-function-ruby))
+     ((eq major-mode 'clojure-mode)
+      (call-interactively hbournis/run-test-at-point-function-clojure))
+     ((member major-mode '(js-mode typescript-mode))
+      (call-interactively hbournis/run-test-at-point-function-js))))
+
+  (defun hbournis/generic-run-test-file ()
+    "Call the appropriate run test at point function depending on major mode."
+    (interactive)
+    (cond
+     ((eq major-mode 'ruby-mode)
+      (call-interactively hbournis/run-test-file-function-ruby))
+     ((eq major-mode 'clojure-mode)
+      (call-interactively hbournis/run-test-file-function-clojure))
+     ((member major-mode '(js-mode typescript-mode))
+      (call-interactively hbournis/run-test-file-function-js))))
+
+  (defun hbournis/generic-run-test-all ()
+    "Call the appropriate run test at point function depending on major mode."
+    (interactive)
+    (cond
+     ((eq major-mode 'ruby-mode)
+      (call-interactively hbournis/run-test-all-function-ruby))
+     ((eq major-mode 'clojure-mode)
+      (call-interactively hbournis/run-test-all-function-clojure))
+     ((member major-mode '(js-mode typescript-mode))
+      (call-interactively hbournis/run-test-all-function-js))))
 #+end_src
 * Shortcuts
 global shortcuts
