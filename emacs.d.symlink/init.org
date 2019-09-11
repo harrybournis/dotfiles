@@ -2338,24 +2338,22 @@ Org-babel support for prolog.
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :ensure t
-    :pin melpa-stable)
+    :hook
+    (clojure-mode . display-line-numbers-mode))
 #+END_SRC
 **** cider
 CIDER extends Emacs with support for interactive programming in Clojure.
 
 #+begin_src emacs-lisp
   (use-package cider
-    :ensure t
-    :pin melpa-stable)
+    :ensure t)
 #+end_src
 **** flycheck-clojure
 #+begin_src emacs-lisp
   (use-package flycheck-clojure
     :ensure t
-    :pin melpa-stable
-    :after flycheck
     :config
-    (flycheck-clojure-setup))
+    (eval-after-load 'flycheck '(flycheck-clojure-setup)))
 #+end_src
 **** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
