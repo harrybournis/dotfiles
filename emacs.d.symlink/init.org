@@ -30,13 +30,15 @@
 * Packages Setup
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
- (if (and (getenv "WORK") (file-exists-p (concat user-emacs-directory ".api-keys")))
-     (progn
-       (load (concat user-emacs-directory ".api-keys"))
-       (setq url-proxy-services
-             `(("no_proxy" . "^\\(localhost\\|10.*\\)")
-               ("http"     . ,api-keys-work-proxy)
-               ("https"    . ,api-keys-work-proxy)))))
+  (setq proxy-enabled-p nil)
+
+  (if (and proxy-enabled-p (file-exists-p (concat user-emacs-directory ".api-keys")))
+      (progn
+        (load (concat user-emacs-directory ".api-keys"))
+        (setq url-proxy-services
+              `(("no_proxy" . "^\\(localhost\\|10.*\\)")
+                ("http"     . ,api-keys-work-proxy)
+                ("https"    . ,api-keys-work-proxy)))))
 #+END_SRC
 ** Repositories
 
@@ -789,7 +791,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
 
   ;; Only load org-gcal if the .api-keys file is present. Prompt user to rename the
   ;; .api-keys-sample file to .api-keys and fill in their info.
-  (if (and (file-exists-p (concat user-emacs-directory ".api-keys")) (not (getenv "WORK")))
+  (if (file-exists-p (concat user-emacs-directory ".api-keys"))
       (progn
         (load (concat user-emacs-directory ".api-keys"))
 
@@ -3179,6 +3181,9 @@ Just a simple function for when I want the current time stamp inside an org file
             (t (call-interactively 'dumb-jump-go)))))
 #+end_src
 ** ssh
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 *** ssh to osmc
 #+begin_src emacs-lisp
 (defun hbournis/ssh-ranger-omsc ()
@@ -3199,6 +3204,14 @@ Run itail on the currently highlighted file in ranger.
     (interactive)
     (let ((file-path (ranger-copy-absolute-file-paths)))
       (itail file-path)))
+#+end_src
+** Open org-file if not at work
+#+begin_src emacs-lisp
+  (defun hbournis/open-org-file (file)
+    "Open org file conditionally. Avoid opening them by mistake."
+    (cond ((not (getenv "WORK"))
+           (find-file file))
+          ((and (getenv "WORK") (eq file hbournis/org-work-file)) (find-file file))))
 #+end_src
 * Shortcuts
 global shortcuts
