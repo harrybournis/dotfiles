@@ -204,7 +204,7 @@ regexp in `sml/prefix-regexp'."
 
                     ;; is this buffer read-only?
                     '(:eval (when buffer-read-only
-                              (concat (propertize "READ-ONLY "
+                              (concat (propertize " READ-ONLY "
                                                   'face 'org-todo
                                                   'help-echo "Buffer is read-only"))))
 
