@@ -673,8 +673,6 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "tt"  'hbournis/generic-run-test-at-point
                         "ta"  'hbournis/generic-run-test-all
                         "m"   'hbournis/toggle-modeline
-                        "rf"  'rubocopfmt
-                        "rb"  'ruby-toggle-block
                         "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
@@ -692,11 +690,14 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "[\"" 'wrap-with-double-quotes
                         "[`"  'wrap-with-back-quotes
                         "c"   'org-capture
+                        "l"   'cider-ns-refresh
                         "gt"  'git-timemachine-toggle
                         "gr"  'git-gutter:revert-hunk
                         "gn"  'git-gutter:next-hunk
                         "gp"  'git-gutter:previous-hunk
                         "gb"  'magit-blame-echo
+                        "rf"  'rubocopfmt
+                        "rb"  'ruby-toggle-block
                         "rr"  'projectile-rails-goto-routes
                         "rc"  'projectile-rails-find-current-controller
                         "rt"  'projectile-rails-find-current-spec
@@ -2343,7 +2344,9 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 
 #+begin_src emacs-lisp
   (use-package cider
-    :ensure t)
+    :ensure t
+    :config
+    (setq cider-repl-history-file "~/.emacs.d/cider-history"))
 #+end_src
 **** flycheck-clojure
 #+begin_src emacs-lisp

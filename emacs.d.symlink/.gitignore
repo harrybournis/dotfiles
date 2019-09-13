@@ -28,3 +28,4 @@ transient/
 abbrev_defs
 tramp
 local.el
+cider-history
