@@ -1,3 +1,9 @@
+# zsh completions
+fpath=(/usr/local/share/zsh-completions $fpath)
+
+# zsh-autosuggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 

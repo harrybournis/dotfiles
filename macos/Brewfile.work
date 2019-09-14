@@ -6,6 +6,7 @@ tap "homebrew/services"
 # Zsh
 brew "zsh"
 brew "zsh-completions"
+brew "zsh-autosuggestions"
 
 # brew
 brew "diff-so-fancy"
@@ -13,6 +14,7 @@ brew "ruby", link: false
 brew "git-recent"
 brew "rbenv"
 brew "rbenv-default-gems"
+brew "nvm"
 brew "ack"
 brew "the_silver_searcher"
 brew "gnupg"
