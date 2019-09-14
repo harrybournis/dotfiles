@@ -7,6 +7,7 @@ tap "homebrew/cask-fonts"
 # Zsh
 brew "zsh"
 brew "zsh-completions"
+brew "zsh-autosuggestions"
 
 # brew
 brew "openjpeg"
@@ -22,7 +23,7 @@ brew "gnupg"
 brew "trash"
 brew "r"
 brew "node"
-brew "nodenv"
+brew "nvm"
 brew "youtube-dl"
 brew "tree"
 brew "ghostscript"

@@ -2,11 +2,8 @@ alias reload!='. ~/.zshrc'
 
 alias c='clear'
 alias lsa='ls -a'
-
-alias c='clear'
-# alias ls="exa --group-directories-first"
-alias lsa="ls -a"
 alias lsh='ls -a | grep "^\."'
+alias c='clear'
 alias oepn='open'
 alias brwe="brew"
 alias sublime='open -a /Applications/"Sublime Text.app"'
@@ -17,7 +14,8 @@ alias vimrc="vim ~/.vimrc"
 alias zshrc="vim ~/.zshrc"
 alias hosts="sudo vim /etc/hosts"
 alias gpo="git push origin"
-alias gpom="git push origin master"
+alias s="git status"
+alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias dot="cd ~/.dotfiles"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"

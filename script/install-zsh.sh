@@ -4,16 +4,10 @@ install_zsh () {
     # Test to see if zshell is installed. If it is:
     # *Does not take into account if the default zsh in mac exists
     if [ -f /usr/local/bin/zsh -o -f /usr/bin/zsh ]; then
-        # Install Oh My Zsh if it isn't already present
-        if [[ ! -d ~/.oh-my-zsh/ ]]; then
-            sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-        fi
-
-        # Install zsh-suggestions
-        if [[ -d ~/.oh-my-zsh/ ]]; then
-            if [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] ; then
-                sh -c "$(git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions)"
-            fi
+        # Install Zim if it isn't already present
+        if [[ ! -d ~/.zim/ ]]; then
+            git clone --recursive https://github.com/zimfw/zimfw.git ${ZDOTDIR:-${HOME}}/.zim
+            source ${ZDOTDIR:-${HOME}}/.zlogin
         fi
 
         # Set the default shell to zsh if it isn't currently set to zsh
