@@ -2893,6 +2893,27 @@ For each pair character, generate a function called ~wrap-with-<pair name>~. [[h
               (double-quote . "\"")
               (back-quote . "`")))
 #+END_SRC
+** show-paren-mode highlight when ON the character
+By default, show-paren-mode highlights the parenthesis pair when the cursor is
+after the parenthesis, making it really confusing. This makes it work when the
+cursor is on a parenthesis.
+
+[[https://emacs.stackexchange.com/a/52026][Source]]
+
+#+begin_src emacs-lisp
+(defun show-paren--locate-near-paren-ad ()
+  "Locate an unescaped paren \"near\" point to show.
+If one is found, return the cons (DIR . OUTSIDE), where DIR is 1
+for an open paren, -1 for a close paren, and OUTSIDE is the buffer
+position of the outside of the paren.  Otherwise return nil."
+  (let* ((before (show-paren--categorize-paren (point))))
+    (when (or
+       (eq (car before) 1)
+       (eq (car before) -1))
+      before)))
+
+(advice-add 'show-paren--locate-near-paren :override #'show-paren--locate-near-paren-ad)
+#+end_src
 ** Transform org date to simple year-month-day string
 #+BEGIN_SRC emacs-lisp
   (defun hbournis/org-date-to-simple-string (date)
