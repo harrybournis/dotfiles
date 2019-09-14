@@ -1883,7 +1883,7 @@ Go to next/previous buffer in a project-aware context
     :ensure t
     :config
     (setq nswbuff-buffer-list-function #'nswbuff-projectile-buffer-list
-          nswbuff-display-intermediate-buffers t
+          nswbuff-clear-delay 0
           nswbuff-exclude-buffer-regexps '("^ .*" "^\\*.*\\*")))
 
 #+end_src
