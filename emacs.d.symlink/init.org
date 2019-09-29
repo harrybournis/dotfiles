@@ -2339,7 +2339,17 @@ Org-babel support for prolog.
   (use-package clojure-mode
     :ensure t
     :hook
-    (clojure-mode . display-line-numbers-mode))
+    (clojure-mode . display-line-numbers-mode)
+    :config
+    ;; Start cider in test env in order to run tests
+    ;; Source: https://stackoverflow.com/questions/18304271/how-do-i-choose-switch-leiningen-profiles-with-emacs-nrepl
+    (defun cider-jack-in-test-env ()
+      (interactive)
+      (let ((lein-params "with-profile +test repl :headless"))
+        (message "lein-params set to: %s" lein-params)
+        (set-variable 'cider-lein-parameters lein-params)
+        (cider-jack-in '()))))
+
 #+END_SRC
 **** cider
 CIDER extends Emacs with support for interactive programming in Clojure.
