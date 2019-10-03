@@ -790,6 +790,9 @@ defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
 # Randomize port on launch
 # defaults write org.m0k.transmission RandomPort -bool true
 
+# Enable key repeat in vs codium
+defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false
+
 ###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
