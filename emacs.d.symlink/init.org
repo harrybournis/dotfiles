@@ -3244,7 +3244,7 @@ Run itail on the currently highlighted file in ranger.
       (call-interactively hbournis/run-test-at-point-function-ruby))
      ((eq major-mode 'clojure-mode)
       (call-interactively hbournis/run-test-at-point-function-clojure))
-     ((member major-mode '(js-mode typescript-mode))
+     ((member major-mode '(web-mode js-mode typescript-mode))
       (call-interactively hbournis/run-test-at-point-function-js))))
 
   (defun hbournis/generic-run-test-file ()
@@ -3255,7 +3255,7 @@ Run itail on the currently highlighted file in ranger.
       (call-interactively hbournis/run-test-file-function-ruby))
      ((eq major-mode 'clojure-mode)
       (call-interactively hbournis/run-test-file-function-clojure))
-     ((member major-mode '(js-mode typescript-mode))
+     ((member major-mode '(web-mode js-mode typescript-mode))
       (call-interactively hbournis/run-test-file-function-js))))
 
   (defun hbournis/generic-run-test-all ()
@@ -3266,7 +3266,7 @@ Run itail on the currently highlighted file in ranger.
       (call-interactively hbournis/run-test-all-function-ruby))
      ((eq major-mode 'clojure-mode)
       (call-interactively hbournis/run-test-all-function-clojure))
-     ((member major-mode '(js-mode typescript-mode))
+     ((member major-mode '(web-mode js-mode typescript-mode))
       (call-interactively hbournis/run-test-all-function-js))))
 #+end_src
 * Shortcuts
