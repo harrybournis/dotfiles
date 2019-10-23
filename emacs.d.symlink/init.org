@@ -107,8 +107,8 @@ Variables are set here that are used in the configuration below
         hbournis/recurring-file            "~/org/recurring.org"
         hbournis/org-agenda-files         `(,hbournis/org-main-file
                                             ,hbournis/org-mobile-file
-                                            ,hbournis/org-gcal-file
-                                            ,hbournis/org-gcal-file-apergia-var
+                                            ;; ,hbournis/org-gcal-file
+                                            ;; ,hbournis/org-gcal-file-apergia-var
                                             ,hbournis/org-album-file
                                             ,hbournis/org-inbox-file
                                             ,hbournis/recurring-file
@@ -779,7 +779,7 @@ Display org properties in the agenda buffer
   (use-package org-agenda-property
     :ensure t)
 #+END_SRC
-**** org-gcal
+**** DISABLED org-gcal
 Google calendar integration with org mode. Sync both ways. There is currently a
 bug where events created in Emacs get duplicated in Google Calendar.
 
@@ -1616,10 +1616,10 @@ Calendar framework
       :ensure t
       :pin melpa-stable)
 
-    (use-package calfw-gcal
-      :ensure t
-      :config
-      (require 'calfw-gcal))
+    ;; (use-package calfw-gcal
+    ;;   :ensure t
+    ;;   :config
+    ;;   (require 'calfw-gcal))
 
     :config
     (require 'calfw-org))
