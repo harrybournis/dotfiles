@@ -2335,6 +2335,11 @@ Org-babel support for prolog.
     :ensure t)
 #+END_SRC
 *** Clojure/ClojureScript
+**** flycheck-clj-kondo
+#+begin_src emacs-lisp
+  (use-package flycheck-clj-kondo
+    :ensure t)
+#+end_src
 **** clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
@@ -2342,6 +2347,8 @@ Org-babel support for prolog.
     :hook
     (clojure-mode . display-line-numbers-mode)
     :config
+    (require 'flycheck-clj-kondo)
+
     ;; Start cider in test env in order to run tests
     ;; Source: https://stackoverflow.com/questions/18304271/how-do-i-choose-switch-leiningen-profiles-with-emacs-nrepl
     (defun cider-jack-in-test-env ()
