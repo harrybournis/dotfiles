@@ -37,6 +37,7 @@ brew "cmatrix"
 brew "ripgrep"
 brew "editorconfig"
 brew "syncthing"
+brew "borkdude/brew/clj-kondo"
 
 # Cask
 cask "google-chrome"
