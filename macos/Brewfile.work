@@ -37,6 +37,7 @@ brew "postgresql@9.6"
 brew "memcached"
 brew "mysql"
 brew "nvm"
+brew "tmux"
 
 # Cask
 cask "google-chrome"
