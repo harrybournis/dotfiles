@@ -38,6 +38,7 @@ brew "ripgrep"
 brew "editorconfig"
 brew "syncthing"
 brew "borkdude/brew/clj-kondo"
+brew "tmux"
 
 # Cask
 cask "google-chrome"
