@@ -910,7 +910,10 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                  :immediate-finish t)
                                 ("b" "Book" entry (file+headline hbournis/org-book-file
                                                                  ,(format "%s" (format-time-string "%Y")))
-                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)))
+                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
+                                ("n" "Work Note" entry (file+datetree
+                                                        hbournis/org-work-file)
+                                 "** %U - %^{Note}")))
 #+END_SRC
 **** Org Agenda
 #+BEGIN_SRC emacs-lisp
@@ -926,7 +929,7 @@ bug where events created in Emacs get duplicated in Google Calendar.
         )
 
   ;; org agenda label variables
-  (setq agenda-label-work-tag "WORK TASKS"
+  (setq agenda-label-work-tag "Check & Refile"
         agenda-label-inbox "Inbox"
         agenda-label-calendar "10 days"
         agenda-label-priority-a "High-Priority"
@@ -937,15 +940,15 @@ bug where events created in Emacs get duplicated in Google Calendar.
   (setq org-agenda-custom-commands '(("c" "Startup Agenda"
                                       (
                                        (tags "-work+.*"
-                                                ((org-agenda-files `(,hbournis/org-inbox-file))
-                                                 (org-agenda-overriding-header agenda-label-inbox)))
+                                             ((org-agenda-files `(,hbournis/org-inbox-file))
+                                              (org-agenda-overriding-header agenda-label-inbox)))
                                        (tags-todo "work"
-                                             ((org-agenda-overriding-header agenda-label-work-tag)))
+                                                  ((org-agenda-overriding-header agenda-label-work-tag)))
                                        (agenda ""
                                                ((org-agenda-overriding-header agenda-label-calendar)))
                                        (tags "PRIORITY=\"A\""
                                              ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
-                                                                            org-agenda-files))
+                                                                           org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-a)))
                                        (tags "PRIORITY=\"B\""
@@ -959,11 +962,30 @@ bug where events created in Emacs get duplicated in Google Calendar.
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))
                                        (tags-todo "-work+PRIORITY=\"D\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
-                                                                           org-agenda-files))
+                                                  ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
+                                                                                org-agenda-files))
+                                                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                                   (org-agenda-sorting-strategy '(todo-state-up))
+                                                   (org-agenda-overriding-header agenda-label-priority-d)))))
+                                     ("w" "Work Agenda"
+                                      (
+                                       (tags-todo "capture_notes"
+                                                  ((org-agenda-files `(,hbournis/org-work-file))
+                                                   (org-agenda-overriding-header agenda-label-work-tag)))
+                                       (agenda ""
+                                               ((org-agenda-overriding-header agenda-label-calendar)))
+                                       (tags "-capture_notes+PRIORITY=\"A\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-sorting-strategy '(todo-state-up))
-                                              (org-agenda-overriding-header agenda-label-priority-d)))))))
+                                              (org-agenda-overriding-header agenda-label-priority-a)))
+                                       (tags "-capture_notes+PRIORITY=\"B\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-b)))
+                                       (tags "-capture_notes+PRIORITY=\"C\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-c)))))))
 #+END_SRC
 *** magit
 #+BEGIN_SRC emacs-lisp
