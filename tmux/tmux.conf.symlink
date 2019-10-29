@@ -5,6 +5,9 @@ set-option -g prefix C-Space
 bind | split-window -h
 bind - split-window -v
 
+# set mouse to scroll
+set -g mouse on
+
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
