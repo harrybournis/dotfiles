@@ -3260,48 +3260,49 @@ Run itail on the currently highlighted file in ranger.
 #+end_src
 ** Call appropriate run test function according to major mode
 #+begin_src emacs-lisp
-  (setq hbournis/run-test-at-point-function-ruby 'rspec-verify-single
-        hbournis/run-test-at-point-function-js 'mocha-test-at-point
-        hbournis/run-test-at-point-function-clojure 'cider-test-run-test
-        hbournis/run-test-file-function-ruby 'rspec-verify
-        hbournis/run-test-file-function-js 'mocha-test-file
-        hbournis/run-test-file-function-clojure 'cider-test-run-ns-tests
-        hbournis/run-test-all-function-ruby 'rspec-verify-all
-        hbournis/run-test-all-function-js 'mocha-test-project
-        hbournis/run-test-all-function-clojure 'cider-test-run-project-tests)
+  (setq hbournis/test-at-point-map
+        #s(hash-table size 5 test eq data (
+                                           ruby-mode       rspec-verify-single
+                                           js-mode         mocha-test-at-point
+                                           typescript-mode mocha-test-at-point
+                                           web-mode        mocha-test-at-point
+                                           clojure-mode    cider-test-run-test)))
+
+  (setq hbournis/test-file-map
+        #s(hash-table size 5 test eq data (
+                                           ruby-mode       rspec-verify
+                                           js-mode         mocha-test-file
+                                           typescript-mode mocha-test-file
+                                           web-mode        mocha-test-file
+                                           clojure-mode    cider-test-run-ns-tests)))
+
+  (setq hbournis/test-all-map
+        #s(hash-table size 5 test eq data (
+                                           ruby-mode       rspec-verify-all
+                                           js-mode         mocha-test-project
+                                           typescript-mode mocha-test-project
+                                           web-mode        mocha-test-project
+                                           clojure-mode    cider-test-run-project-tests)))
+
+  (defun hbournis/call-interactively-func-truthy-output (fun &rest rest)
+    "Evaluate FUN, if true call interactively its output."
+    (if-let ((result (apply fun rest)))
+        (call-interactively result)))
 
   (defun hbournis/generic-run-test-at-point ()
     "Call the appropriate run test at point function depending on major mode."
     (interactive)
-    (cond
-     ((eq major-mode 'ruby-mode)
-      (call-interactively hbournis/run-test-at-point-function-ruby))
-     ((eq major-mode 'clojure-mode)
-      (call-interactively hbournis/run-test-at-point-function-clojure))
-     ((member major-mode '(web-mode js-mode typescript-mode))
-      (call-interactively hbournis/run-test-at-point-function-js))))
+    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-at-point-map))
 
   (defun hbournis/generic-run-test-file ()
     "Call the appropriate run test at point function depending on major mode."
     (interactive)
-    (cond
-     ((eq major-mode 'ruby-mode)
-      (call-interactively hbournis/run-test-file-function-ruby))
-     ((eq major-mode 'clojure-mode)
-      (call-interactively hbournis/run-test-file-function-clojure))
-     ((member major-mode '(web-mode js-mode typescript-mode))
-      (call-interactively hbournis/run-test-file-function-js))))
+    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-file-map))
 
   (defun hbournis/generic-run-test-all ()
     "Call the appropriate run test at point function depending on major mode."
     (interactive)
-    (cond
-     ((eq major-mode 'ruby-mode)
-      (call-interactively hbournis/run-test-all-function-ruby))
-     ((eq major-mode 'clojure-mode)
-      (call-interactively hbournis/run-test-all-function-clojure))
-     ((member major-mode '(web-mode js-mode typescript-mode))
-      (call-interactively hbournis/run-test-all-function-js))))
+    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-all-map))
 #+end_src
 * Shortcuts
 global shortcuts
