@@ -2393,7 +2393,14 @@ CIDER extends Emacs with support for interactive programming in Clojure.
   (use-package flycheck-clojure
     :ensure t
     :config
-    (eval-after-load 'flycheck '(flycheck-clojure-setup)))
+    (use-package flycheck-pos-tip
+      :ensure t
+      :config
+      (with-eval-after-load 'flycheck
+        (flycheck-pos-tip-mode)))
+    (eval-after-load 'flycheck '(flycheck-clojure-setup))
+    (eval-after-load 'flycheck
+      '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages)))
 #+end_src
 **** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
