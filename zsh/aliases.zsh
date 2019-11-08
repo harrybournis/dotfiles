@@ -19,8 +19,6 @@ alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias dot="cd ~/.dotfiles"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"
-alias sp="bundle exec rspec"
-alias railskill="cat tmp/pids/server.pid | xargs -n1 -J pid kill -9 pid"
 alias e="emacsclient -t"
 
 # tmux
@@ -30,3 +28,7 @@ alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
+
+# ruby
+alias railskill="cat tmp/pids/server.pid | xargs -n1 -J pid kill -9 pid"
+alias rspec="bundle exec rspec"
