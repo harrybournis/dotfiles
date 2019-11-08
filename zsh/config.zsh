@@ -1,5 +1,6 @@
 export LSCOLORS="exfxcxdxbxegedabagacad"
 export CLICOLOR=true
+export MAILCHECK=0
 
 # fix for emacs shell otherwise it prints strange characters
 if [[ ! $TERM = dumb ]]; then
