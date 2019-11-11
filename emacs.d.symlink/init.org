@@ -3304,6 +3304,32 @@ Run itail on the currently highlighted file in ranger.
     (interactive)
     (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-all-map))
 #+end_src
+** TDD mode
+#+begin_src emacs-lisp
+  (defun hbournis/ruby-test-file-p (&optional file)
+    "Returns true if file is a ruby spec file"
+    (interactive)
+    (let ((filename (or file (buffer-file-name)))
+          (ruby-test-suffix "spec.rb"))
+      (string-suffix-p ruby-test-suffix filename)))
+
+  (defun hbournis/tdd-split ()
+    "Split screen for TDD"
+    (interactive)
+    (let ((current-file (buffer-file-name))
+          (spec-name (rspec-spec-file-for (buffer-file-name)))
+          (file-name (rspec-target-file-for (buffer-file-name))))
+      (delete-other-windows)
+      (if (hbournis/ruby-test-file-p current-file)
+          (projectile-rails-find-current-spec))
+      (split-window-horizontally)
+      (projectile-rails-find-current-spec)
+      (hbournis/generic-run-test-file)
+      (other-window 1)
+      (split-window-below-and-switch)
+      (find-file file-name)
+      (other-window 1)))
+#+end_src
 * Shortcuts
 global shortcuts
 
