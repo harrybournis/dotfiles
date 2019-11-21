@@ -1159,6 +1159,10 @@ Completion
     (use-package wgrep
       :ensure t)
 
+    ;; sort results better
+    (use-package flx
+      :ensure t)
+
     (ivy-mode 1)
     ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
     (setq ivy-use-virtual-buffers t)
