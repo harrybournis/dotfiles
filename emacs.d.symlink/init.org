@@ -621,7 +621,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "d"         'delete-window
                       "|"         'toggle-window-split
                       "p"         'projectile-find-file
-                      "s"         'counsel-projectile-ag
+                      "s"         'counsel-projectile-rg
                       "="         'toggle-light-dark-theme
                       "t"         'org-todo
                       "ns"        'hbournis/create-scratch-buffer
@@ -1167,7 +1167,11 @@ Completion
     ;; (setq ivy-initial-inputs-alist nil)
     ;; configure regexp engine.
     (setq ivy-re-builders-alist
-          '((counsel-ag . ivy--regex-plus)
+          '((counsel-projectile-find-file . ivy--regex-plus)
+            (ivy-switch-buffer . ivy--regex-plus)
+            (counsel-projectile-rg . ivy--regex-plus)
+            (counsel-rg . ivy--regex-plus)
+            (counsel-ag . ivy--regex-plus)
             (t   . ivy--regex-fuzzy)))
     ;; Set ivy for completion in projectile
     (setq projectile-completion-system 'ivy)
