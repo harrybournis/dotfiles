@@ -8,6 +8,7 @@ alias oepn='open'
 alias brwe="brew"
 alias sublime='open -a /Applications/"Sublime Text.app"'
 alias youtube-dl-mp3="youtube-dl --extract-audio --audio-format mp3 "
+alias youtube-dl-m4a="youtube-dl --extract-audio --audio-format m4a "
 alias ip_local="ipconfig getifaddr en0"
 alias ip_ext="dig +short myip.opendns.com @resolver1.opendns.com"
 alias vimrc="vim ~/.vimrc"
