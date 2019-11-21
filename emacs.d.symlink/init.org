@@ -1820,7 +1820,9 @@ system in order to work.
 *** restclient.el
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
-    :ensure t)
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode)))
 #+END_SRC
 *** yasnippet
 [[https://github.com/AndreaCrotti/yasnippet-snippets][Snippets]]
