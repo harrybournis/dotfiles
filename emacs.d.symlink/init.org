@@ -669,6 +669,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "rf"  'rubocopfmt
                         "rb"  'ruby-toggle-block
                         "rr"  'projectile-rails-goto-routes
+                        "rt"  'projectile-rails-find-current-spec
                         ;; "t"   'hbournis/insert-timestamp)
                         ))
 #+END_SRC
