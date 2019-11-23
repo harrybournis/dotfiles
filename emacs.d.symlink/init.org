@@ -1980,6 +1980,10 @@ Use C-j to expand.
     (add-to-list 'auto-mode-alist '("\\.hamlc\\'" . haml-mode)))
 #+end_src
 *** JavaScript
+Some guides:
+- https://patrickskiba.com/emacs/2019/09/07/emacs-for-react-dev.html
+- https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html
+
 **** company-tern
 JavaScript auto-completion
 
@@ -2061,6 +2065,7 @@ Better syntax highlighting for jsx files
     ;; formats the buffer before saving
     (add-hook 'before-save-hook 'tide-format-before-save)
 
+    (add-hook 'js2-mode-hook #'setup-tide-mode)
     (add-hook 'typescript-mode-hook #'setup-tide-mode)
     ;; jsx
     (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
@@ -2071,7 +2076,7 @@ Better syntax highlighting for jsx files
     ;; enable typescript-tslint checker
     (flycheck-add-mode 'typescript-tslint 'web-mode))
 #+END_SRC
-**** ng2-mode (angular)
+**** DISABLED ng2-mode (angular)
 #+BEGIN_SRC emacs-lisp
   (use-package ng2-mode
     :ensure t)
