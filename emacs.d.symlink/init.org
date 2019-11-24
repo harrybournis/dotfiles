@@ -1949,6 +1949,10 @@ Use C-j to expand.
           web-mode-enable-comment-keywords t
           web-mode-enable-current-element-highlight t
           web-mode-enable-auto-indentation nil)
+
+    (set-face-attribute 'web-mode-function-name-face nil
+                        :foreground "#de935f")
+
     (flycheck-add-mode 'javascript-eslint 'web-mode)
     (flycheck-add-mode 'typescript-tslint 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -2559,8 +2563,6 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                                 :foreground nil
                                 :box nil
                                 :weight 'bold)
-            (set-face-attribute 'web-mode-function-name-face nil
-                                :foreground "#de935f")
             ))
     )
 
