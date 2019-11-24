@@ -1241,26 +1241,31 @@ Autocompletion
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :commands lsp
+    :hook (ruby-mode . lsp-deferred)
+    :commands (lsp lsp-deferred)
     :config
-    (setq lsp-prefer-flymake nil))
+    (setq lsp-prefer-flymake nil)
+    (use-package lsp-ui
+      :ensure t
+      :commands lsp-ui-mode
+      :config
+      (setq lsp-ui-doc-enable nil
+            lsp-ui-imenu-enable nil
+            lsp-ui-peek-enable nil
+            lsp-ui-sideline-enable nil
+            lsp-line-ignore-duplicate t))
 
-  (use-package lsp-ui
-    :ensure t
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-enable nil
-          lsp-ui-imenu-enable nil
-          lsp-ui-peek-enable nil
-          lsp-ui-sideline-enable nil
-          lsp-line-ignore-duplicate t))
+    (use-package company-lsp
+      :ensure t
+      :commands company-lsp
+      :config
+      (require 'company-lsp)
+      (push 'company-lsp company-backends))
 
-  (use-package company-lsp
-    :ensure t
-    :commands company-lsp
-    :config
-    (require 'company-lsp)
-    (push 'company-lsp company-backends))
+    (use-package lsp-treemacs
+      :ensure t
+      :commands lsp-treemacs-errors-list))
+
 #+end_src
 *** editorconfig
 #+BEGIN_SRC emacs-lisp
