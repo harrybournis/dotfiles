@@ -638,9 +638,6 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
     (extra-tools-leader "`"   'hbournis/open-terminal
-                        "v"   'org-cliplink
-                        "p"   'hbournis/insert-url-as-org-link
-                        "l"   'hbournis/org-make-word-link-from-clipboard
                         "g"   'magit-status
                         "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
                         "\\"  'sp-unwrap-sexp
@@ -659,8 +656,11 @@ Improvement on evil-leader. Specify mutliple leaders.
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
     (extra-tools-alternate-leader
                         "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
-                        "c"   'hbournis-position-to-kill-ring
-                        "l"   'cider-ns-refresh
+                        "lv"  'org-cliplink
+                        "lp"  'hbournis/insert-url-as-org-link
+                        "ll"  'hbournis/org-make-word-link-from-clipboard
+                        "lc"  'hbournis-position-to-kill-ring
+                        "c"   'org-capture
                         "gt"  'git-timemachine-toggle
                         "gr"  'git-gutter:revert-hunk
                         "gn"  'git-gutter:next-hunk
