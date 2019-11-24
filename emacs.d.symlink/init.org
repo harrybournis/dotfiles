@@ -2556,6 +2556,8 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                                 :foreground nil
                                 :box nil
                                 :weight 'bold)
+            (set-face-attribute 'web-mode-function-name-face nil
+                                :foreground "#de935f")
             ))
     )
 
