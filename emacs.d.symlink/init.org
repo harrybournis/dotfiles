@@ -647,6 +647,9 @@ Improvement on evil-leader. Specify mutliple leaders.
                         "fp"  'flycheck-previous-error
                         "fl"  'flycheck-list-errors
                         "i"   'org-toggle-inline-images
+                        "l"   'cider-ns-refresh
+                        "d"   'hbournis/generic-open-doc
+                        "c"   'hbournis/generic-show-repl
                         "tf"  'hbournis/generic-run-test-file
                         "tt"  'hbournis/generic-run-test-at-point
                         "ta"  'hbournis/generic-run-test-all
@@ -3272,6 +3275,15 @@ Run itail on the currently highlighted file in ranger.
                                            web-mode        mocha-test-project
                                            clojure-mode    cider-test-run-project-tests)))
 
+  (setq hbournis/open-doc-map
+        #s(hash-table size 2 test eq data (
+                                           ruby-mode       robe-doc
+                                           clojure-mode    cider-doc)))
+
+  (setq hbournis/show-repl-map
+        #s(hash-table size 1 test eq data (
+                                           clojure-mode    cider-switch-to-repl-buffer)))
+
   (defun hbournis/call-interactively-func-truthy-output (fun &rest rest)
     "Evaluate FUN, if true call interactively its output."
     (if-let ((result (apply fun rest)))
@@ -3283,14 +3295,24 @@ Run itail on the currently highlighted file in ranger.
     (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-at-point-map))
 
   (defun hbournis/generic-run-test-file ()
-    "Call the appropriate run test at point function depending on major mode."
+    "Call the appropriate run test file function depending on major mode."
     (interactive)
     (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-file-map))
 
   (defun hbournis/generic-run-test-all ()
-    "Call the appropriate run test at point function depending on major mode."
+    "Call the appropriate run all tests function depending on major mode."
     (interactive)
     (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-all-map))
+
+  (defun hbournis/generic-open-doc ()
+    "Show the function documentation depending on major mode."
+    (interactive)
+    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/open-doc-map))
+
+  (defun hbournis/generic-show-repl ()
+    "Show the repl depending on major mode."
+    (interactive)
+    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/show-repl-map))
 #+end_src
 ** TDD mode
 #+begin_src emacs-lisp
