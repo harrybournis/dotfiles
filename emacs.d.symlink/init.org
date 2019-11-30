@@ -3347,6 +3347,17 @@ Run itail on the currently highlighted file in ranger.
       (find-file file-name)
       (other-window 1)))
 #+end_src
+** Kill all buffers except those starting with asterisk
+#+begin_src emacs-lisp
+  (defun hbournis/kill-buffer-unless-asterisk (buffer)
+    "Returns true if the buffer should be killed."
+    (unless (string-prefix-p "*" (buffer-name buffer))
+      (kill-buffer buffer)))
+
+  (defun hbournis/kill-all-buffers ()
+    "Kill all buffers if unless they start with asterisk."
+    (mapcar 'hbournis/kill-buffer-unless-asterisk (buffer-list)))
+#+end_src
 * Shortcuts
 global shortcuts
 
