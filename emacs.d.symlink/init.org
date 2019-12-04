@@ -3363,9 +3363,11 @@ Run itail on the currently highlighted file in ranger.
     (unless (string-prefix-p "*" (buffer-name buffer))
       (kill-buffer buffer)))
 
-  (defun hbournis/kill-all-buffers ()
+  (defun hbournis/kill-all-file-buffers ()
     "Kill all buffers if unless they start with asterisk."
-    (mapcar 'hbournis/kill-buffer-unless-asterisk (buffer-list)))
+    (interactive)
+    (mapcar 'hbournis/kill-buffer-unless-asterisk (buffer-list))
+    (message "Buffers killed."))
 #+end_src
 * Shortcuts
 global shortcuts
