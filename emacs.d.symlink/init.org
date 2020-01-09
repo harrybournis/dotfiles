@@ -476,7 +476,6 @@ Press % to move between opening and closing tag in any language
     :ensure t
     :after evil
     :config
-    (setq evilmi-shortcut "m")
     (global-evil-matchit-mode t))
 #+END_SRC
 **** evil-numbers
