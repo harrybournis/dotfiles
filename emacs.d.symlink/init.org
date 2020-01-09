@@ -3418,7 +3418,9 @@ the last opened window config.
                                             (revert-buffer :ignore-auto :noconfirm))))))
                                 (if (fboundp 'eyebrowse-switch-to-window-config-1)
                                     (eyebrowse-switch-to-window-config-1))
-                                (org-agenda nil "c")
+                                (if WORK?
+                                    (org-agenda nil "w")
+                                  (org-agenda nil "c"))
                                 (get-buffer "*Org Agenda*")
                                 ;; (run-at-time "20 sec" nil 'org-agenda nil "c")
                                 ))
