@@ -90,6 +90,7 @@ Determine whether the system is mac or linux
   (defconst IS-MAC     (eq system-type 'darwin))
   (defconst IS-LINUX   (eq system-type 'gnu/linux))
   (defconst IS-WINDOWS (eq system-type 'windows-nt))
+  (defconst WORK? (getenv "WORK"))
 #+END_SRC
 * Variables
 Variables are set here that are used in the configuration below
@@ -3270,9 +3271,9 @@ Run itail on the currently highlighted file in ranger.
 #+begin_src emacs-lisp
   (defun hbournis/open-org-file (file)
     "Open org file conditionally. Avoid opening them by mistake."
-    (cond ((not (getenv "WORK"))
+    (cond ((not WORK?)
            (find-file file))
-          ((and (getenv "WORK") (eq file hbournis/org-work-file)) (find-file file))))
+          ((and WORK? (eq file hbournis/org-work-file)) (find-file file))))
 #+end_src
 ** Call appropriate run test function according to major mode
 #+begin_src emacs-lisp
