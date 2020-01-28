@@ -1074,7 +1074,7 @@ Syntax checking
     (if IS-WINDOWS
         (setq flycheck-check-syntax-automatically '(save mode-enable))))
 #+END_SRC
-**** Use local eslint if available
+**** DISABLED Use local eslint if available
 [[https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable][Source]]
 
 #+BEGIN_SRC emacs-lisp
@@ -1957,6 +1957,17 @@ Use C-j to expand.
 #+BEGIN_SRC emacs-lisp
   (use-package web-mode
     :ensure t
+    :mode
+    (("\\.html?\\'" . web-mode)
+     ("\\.tsx\\'" . web-mode)
+     ("\\.jsx\\'" . web-mode)
+     ("\\.phtml\\'" . web-mode)
+     ("\\.tpl\\.php\\'" . web-mode)
+     ("\\.[agj]sp\\'" . web-mode)
+     ("\\.as[cp]x\\'" . web-mode)
+     ("\\.erb\\'" . web-mode)
+     ("\\.mustache\\'" . web-mode)
+     ("\\.djhtml\\'" . web-mode))
     :hook
     (web-mode . display-line-numbers-mode)
     (html-mode . display-line-numbers-mode)
@@ -1965,26 +1976,23 @@ Use C-j to expand.
           web-mode-enable-auto-pairing t
           web-mode-enable-comment-keywords t
           web-mode-enable-current-element-highlight t
-          web-mode-enable-auto-indentation nil)
+          web-mode-enable-auto-indentation nil
+
+          web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-block-padding 2
+          web-mode-comment-style 2)
 
     (set-face-attribute 'web-mode-function-name-face nil
                         :foreground "#de935f")
 
-    (flycheck-add-mode 'javascript-eslint 'web-mode)
-    (flycheck-add-mode 'typescript-tslint 'web-mode)
-    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode)))
+    (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 
-**** Improving the JSX syntax-hightlighting in web-mode
+**** DISABLED Improving the JSX syntax-hightlighting in web-mode
+I don't even remember what this is
+
 #+BEGIN_SRC emacs-lisp
 ;; for better jsx syntax-highlighting in web-mode
 ;; - courtesy of Patrick @halbtuerke
@@ -2011,9 +2019,8 @@ Some guides:
 **** js-mode
 #+begin_src emacs-lisp
   (setq js-indent-level 2)
-(setq web-mode-code-indent-offset 2)
 #+end_src
-**** company-tern
+**** DISABLED company-tern
 JavaScript auto-completion
 
 #+BEGIN_SRC emacs-lisp
@@ -2031,10 +2038,8 @@ Improved JavaScript editing mode
   (use-package js2-mode
     :ensure t
     :pin melpa-stable
-    :hook
-    (js-mode . display-line-numbers-mode)
-    :config
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+    :mode (("\\.js\\'" . js2-mode))
+    :hook (js2-mode . display-line-numbers-mode))
 #+END_SRC
 **** js2-highlight-vars
 #+BEGIN_SRC emacs-lisp
@@ -2059,17 +2064,13 @@ Better syntax highlighting for jsx files
   (use-package json-mode
     :ensure t)
 #+END_SRC
-**** json-navigator
-#+BEGIN_SRC emacs-lisp
-  (use-package json-navigator
-    :ensure t)
-#+END_SRC
 **** typescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package typescript-mode
     :ensure t
     :hook
     (typescript-mode . display-line-numbers-mode)
+    (typescript-mode . subword-mode)
     :config
     (setq typescript-indent-level 2))
 #+END_SRC
@@ -2088,22 +2089,23 @@ Better syntax highlighting for jsx files
       (setq flycheck-check-syntax-automatically '(save mode-enabled))
       (eldoc-mode +1)
       (tide-hl-identifier-mode +1)
-      (company-mode +1))
+      (company-mode +1)
+      (aggressive-indent-mode -1))
 
     ;; aligns annotation to the right hand side
     (setq company-tooltip-align-annotations t)
 
     ;; formats the buffer before saving
-    (add-hook 'before-save-hook 'tide-format-before-save)
+    ;; (add-hook 'before-save-hook 'tide-format-before-save)
 
-    (add-hook 'js2-mode-hook #'setup-tide-mode)
-    (add-hook 'web-mode-hook #'setup-tide-mode)
     (add-hook 'typescript-mode-hook #'setup-tide-mode)
-    ;; jsx
+    (add-hook 'typescript-mode-hook 'tide-hl-identifier-mode)
+
     (add-hook 'web-mode-hook
               (lambda ()
                 (when (string-equal "tsx" (file-name-extension buffer-file-name))
                   (setup-tide-mode))))
+
     ;; enable typescript-tslint checker
     (flycheck-add-mode 'typescript-tslint 'web-mode))
 #+END_SRC
@@ -2179,8 +2181,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :defer t
     :after yasnippet
     :hook
-    ((js2-mode . jasminejs-mode)
-     (jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
+    ((jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
 *** PureScript
 **** NOT_WINDOWS purescript-mode
