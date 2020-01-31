@@ -2298,6 +2298,13 @@ Enhancements to ruby-mode for RSpec files.
           rspec-spec-command "rspec --fail-fast")
     (eval-after-load 'rspec-mode '(rspec-install-snippets)))
 #+END_SRC
+**** MAC_ONLY minitest-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package minitest
+    :ensure t
+    :hook
+    (ruby-mode . minitest-mode))
+#+END_SRC
 **** MAC_ONLY bundler
 Interact with bundler with Emacs
 
