@@ -622,7 +622,7 @@ Improvement on evil-leader. Specify mutliple leaders.
                       "d"         'delete-window
                       "|"         'toggle-window-split
                       "p"         'projectile-find-file
-                      "s"         'counsel-projectile-rg
+                      "s"         'counsel-projectile-ag
                       "="         'toggle-light-dark-theme
                       "t"         'org-todo
                       "ns"        'hbournis/create-scratch-buffer
@@ -1680,7 +1680,10 @@ system in order to work.
 *** git-timemachine
 #+BEGIN_SRC emacs-lisp
   (use-package git-timemachine
-    :ensure t)
+    :ensure t
+    :config
+    (evil-define-minor-mode-key 'normal 'git-timemachine-mode
+      (kbd "<return>")  'git-timemachine-show-commit))
 #+END_SRC
 *** DISABLED neotree
 #+BEGIN_SRC emacs-lisp
@@ -2070,7 +2073,6 @@ Better syntax highlighting for jsx files
     :ensure t
     :hook
     (typescript-mode . display-line-numbers-mode)
-    (typescript-mode . subword-mode)
     :config
     (setq typescript-indent-level 2))
 #+END_SRC
@@ -2302,8 +2304,9 @@ Enhancements to ruby-mode for RSpec files.
 #+BEGIN_SRC emacs-lisp
   (use-package minitest
     :ensure t
-    :hook
-    (ruby-mode . minitest-mode))
+    :hook (ruby-mode . minitest-mode)
+    :config
+    (setq minitest-use-rails t))
 #+END_SRC
 **** MAC_ONLY bundler
 Interact with bundler with Emacs
