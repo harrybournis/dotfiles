@@ -2450,7 +2450,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     (latex-preview-pane-enable))
 #+END_SRC
 *** PlantUML
-**** NOT_WINDOWS plantuml-mode
+**** DISABLED plantuml-mode
 #+BEGIN_SRC emacs-lisp
   (use-package plantuml-mode
     :ensure t
@@ -2515,48 +2515,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
   (setq light-theme-overrides-var nil)
   (setq dark-theme-overrides-var nil)
 
-  ;; (use-package grandshell-theme
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq dark-theme-var 'grandshell)
-  ;;   (setq dark-theme-overrides-var
-  ;;         '((set-face-attribute 'org-checkbox nil
-  ;;                               :bold 'normal
-  ;;                               :box '(:line-width 1 :color "dim gray" :style nil)
-  ;;                               :foreground "gray"
-  ;;                               :background nil)
-
-  ;;           (set-face-attribute 'org-checkbox-statistics-todo nil
-  ;;                               :foreground "#ff6c6b")
-
-  ;;           (set-face-attribute 'font-lock-string-face nil
-  ;;                               :background "#404040"
-  ;;                               :foreground "#ffcd8b")
-
-  ;;           (set-face-background 'fringe "#050505")
-
-  ;;           (set-face-attribute 'org-headline-done nil
-  ;;                               :foreground "#767F87")
-
-  ;;           (set-face-attribute 'org-agenda-dimmed-todo-face nil
-  ;;                               :foreground nil)
-
-  ;;           (set-face-attribute 'org-property-value nil
-  ;;                               :foreground "white")
-
-  ;;           (set-face-attribute 'eyebrowse-mode-line-active nil
-  ;;                               :foreground "#c350ff")
-
-  ;;           (set-face-attribute 'org-agenda-date nil
-  ;;                               :foreground "#767F87")
-
-  ;;           (set-face-attribute 'org-agenda-date-today nil
-  ;;                               :foreground "white")
-
-  ;;           (setq org-todo-keyword-faces '(("TODO"        . "red")
-  ;;                                          ("DOING"       . "yellow")
-  ;;                                          ("WAITING"     . "#7453ef")
-  ;;                                          ("DONE"        . (:foreground "green" :weight bold)))))))
+  ;; Used for treemacs
   (use-package doom-themes
     :ensure t
     :config
@@ -2568,6 +2527,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config))
 
+  ;; Dark theme
   (use-package color-theme-sanityinc-tomorrow
     :ensure t
     :config
@@ -2602,6 +2562,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             ))
     )
 
+  ;; Light theme
   (use-package flatui-theme
     :ensure t
     :config
