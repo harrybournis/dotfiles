@@ -2210,7 +2210,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   ;; Set indentation to 4 for java
   (setq-default c-basic-offset 4)
 #+END_SRC
-**** NOT_WINDOWS eclim
+**** DISABLED eclim
 #+BEGIN_SRC emacs-lisp
   (use-package eclim
     :ensure t
