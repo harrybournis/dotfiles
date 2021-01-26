@@ -2,19 +2,19 @@ alias reload!='. ~/.zshrc'
 
 alias c='clear'
 alias lsa='ls -a'
-alias lsh='ls -a | grep "^\."'
+alias ls.='ls -a | grep "^\."'
 alias c='clear'
 alias oepn='open'
 alias brwe="brew"
 alias sublime='open -a /Applications/"Sublime Text.app"'
+alias yt='youtube-dl --merge-output-format mkv -o "%(title)s-%(id)s-$(date +%Y%m%d%s).%(ext)s"'
+alias yt-audio="youtube-dl -f 'bestaudio[ext=m4a]'"
 alias youtube-dl-mp3="youtube-dl --extract-audio --audio-format mp3 "
-alias youtube-dl-m4a="youtube-dl --extract-audio --audio-format m4a "
 alias ip_local="ipconfig getifaddr en0"
 alias ip_ext="dig +short myip.opendns.com @resolver1.opendns.com"
 alias vimrc="vim ~/.vimrc"
 alias zshrc="vim ~/.zshrc"
 alias hosts="sudo vim /etc/hosts"
-alias gpo="git push origin"
 alias s="git status"
 alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
@@ -33,3 +33,6 @@ alias tkss='tmux kill-session -t'
 # ruby
 alias railskill="cat tmp/pids/server.pid | xargs -n1 -J pid kill -9 pid"
 alias rspec="bundle exec rspec"
+
+# in docker
+alias docker-stats="docker ps -q | xargs docker stats --no-stream"
