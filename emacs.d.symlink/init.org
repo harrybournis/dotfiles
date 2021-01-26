@@ -66,21 +66,20 @@ the elpa repositories from where the packages are fetched.
 ** use-package & bind-key
 
 #+BEGIN_SRC emacs-lisp
-    ;; avoid problems with files newer than their byte-compiled counterparts
-    ;; it's better a lower startup than load an outdated and maybe bugged package
-    (setq load-prefer-newer t)
-    ;; initialize the packages and create the packages list if not exists
-    (package-initialize)
-    (when (not package-archive-contents)
-      (package-refresh-contents))
+  ;; avoid problems with files newer than their byte-compiled counterparts
+  ;; it's better a lower startup than load an outdated and maybe bugged package
+  (setq load-prefer-newer t)
 
-    ;; install use-package if not exists
-    (unless (package-installed-p 'use-package)
-      (package-install 'use-package))
+  (when (not package-archive-contents)
+    (package-refresh-contents))
 
-    (eval-when-compile
-      (require 'use-package))
-    (require 'bind-key)                ;; if you use any :bind variant
+  ;; install use-package if not exists
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (eval-when-compile
+    (require 'use-package))
+  (require 'bind-key)                ;; if you use any :bind variant
 #+END_SRC
 
 ** IS-MAC/IS-LINUX
