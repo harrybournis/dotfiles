@@ -1244,6 +1244,13 @@ Autocompletion
     :bind
     (("C-;" . company-complete)))
 #+END_SRC
+*** DISABLED good-scroll
+#+begin_src emacs-lisp
+  (use-package good-scroll
+    :ensure t
+    :config
+    (good-scroll-mode 1))
+#+end_src
 *** lsp-mode
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -2336,8 +2343,9 @@ Interact with bundler with Emacs
     (global-robe-mode))
 #+end_src
 *** Haskell
-**** NOT_WINDOWS intero
-Complete development mode for Haskell
+**** DISABLED intero
+[[https://github.com/chrisdone/intero][Deprecated]]
+replace with: https://github.com/jyp/dante
 
 #+BEGIN_SRC emacs-lisp
   (use-package intero
