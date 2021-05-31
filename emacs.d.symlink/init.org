@@ -964,10 +964,13 @@ bug where events created in Emacs get duplicated in Google Calendar.
     :config
     (setq magit-blame-styles
           '((margin
-            (margin-format " %C %a" " %s")
-            (margin-width . 42)
-            (margin-face . magit-blame-margin)
-            (margin-body-face magit-blame-dimmed))))
+             (margin-format " %C %a" " %s")
+             (margin-width . 42)
+             (margin-face . magit-blame-margin)
+             (margin-body-face magit-blame-dimmed))))
+
+    (transient-append-suffix 'magit-push "-u"
+      '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
     (use-package magit-todos
       :ensure t
