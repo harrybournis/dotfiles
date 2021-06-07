@@ -434,6 +434,7 @@ mode only when it is needed.
         image
         image+
         magit
+        magit-todos
         neotree
         info
         man
@@ -976,10 +977,9 @@ bug where events created in Emacs get duplicated in Google Calendar.
       :ensure t
       :init
       :config
-      (setq magit-todos-exclude-globs '("/node_modules" "/.git" "/vendor"))
-      ;; (magit-todos-mode)
-      ;; override default keybindings to avoid clash with evil mode
-      (define-key magit-todos-section-map "j" nil)))
+      (setq magit-todos-exclude-globs
+            '("/node_modules" "/.git" "/vendor" "/frontend" "/client" "/config"))
+      (magit-todos-mode)))
 #+END_SRC
 *** smerge-mode
 Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge-mode][Source]]
