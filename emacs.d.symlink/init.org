@@ -3260,11 +3260,12 @@ Run itail on the currently highlighted file in ranger.
            (find-file file))
           ((and WORK? (eq file hbournis/org-work-file)) (find-file file))))
 #+end_src
-** Call appropriate run test function according to major mode
+** Test function according to file_extension
 #+begin_src emacs-lisp
   (setq hbournis/test-at-point-map
         #s(hash-table size 5 test eq data (
-                                           ruby-mode       rspec-verify-single
+                                           rspec-mode      rspec-verify-single
+                                           minitest-mode   minitest-verify-single
                                            js-mode         mocha-test-at-point
                                            typescript-mode mocha-test-at-point
                                            web-mode        mocha-test-at-point
@@ -3272,7 +3273,8 @@ Run itail on the currently highlighted file in ranger.
 
   (setq hbournis/test-file-map
         #s(hash-table size 5 test eq data (
-                                           ruby-mode       rspec-verify
+                                           rspec-mode      rspec-verify
+                                           minitest-mode   minitest-verify
                                            js-mode         mocha-test-file
                                            typescript-mode mocha-test-file
                                            web-mode        mocha-test-file
@@ -3280,7 +3282,8 @@ Run itail on the currently highlighted file in ranger.
 
   (setq hbournis/test-all-map
         #s(hash-table size 5 test eq data (
-                                           ruby-mode       rspec-verify-all
+                                           rspec-mode      rspec-verify-all
+                                           minitest-mode   minitest-verify-all
                                            js-mode         mocha-test-project
                                            typescript-mode mocha-test-project
                                            web-mode        mocha-test-project
@@ -3288,42 +3291,50 @@ Run itail on the currently highlighted file in ranger.
 
   (setq hbournis/open-doc-map
         #s(hash-table size 2 test eq data (
-                                           ruby-mode       robe-doc
+                                           rspec-mode      robe-doc
+                                           minitest-mode   robe-doc
                                            clojure-mode    cider-doc)))
 
   (setq hbournis/show-repl-map
         #s(hash-table size 1 test eq data (
                                            clojure-mode    cider-switch-to-repl-buffer)))
 
-  (defun hbournis/call-interactively-func-truthy-output (fun &rest rest)
-    "Evaluate FUN, if true call interactively its output."
-    (if-let ((result (apply fun rest)))
+  (defun hbournis/get-generic-lookup-mode ()
+    (let ((is-ruby (eq major-mode 'ruby-mode))
+          (filename (buffer-file-name)))
+      (if is-ruby
+          (cond ((string-match-p ".*_spec\\.rb" filename) 'rspec-mode)
+                ((string-match-p ".*_test\\.rb" filename) 'minitest-mode))
+        major-mode)))
+
+  (defun hbournis/call-interactively-generic-func (map)
+    (if-let ((result (gethash (hbournis/get-generic-lookup-mode) map)))
         (call-interactively result)))
 
   (defun hbournis/generic-run-test-at-point ()
     "Call the appropriate run test at point function depending on major mode."
     (interactive)
-    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-at-point-map))
+    (hbournis/call-interactively-generic-func hbournis/test-at-point-map))
 
   (defun hbournis/generic-run-test-file ()
     "Call the appropriate run test file function depending on major mode."
     (interactive)
-    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-file-map))
+    (hbournis/call-interactively-generic-func hbournis/test-file-map))
 
   (defun hbournis/generic-run-test-all ()
     "Call the appropriate run all tests function depending on major mode."
     (interactive)
-    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/test-all-map))
+    (hbournis/call-interactively-generic-func hbournis/test-all-map))
 
   (defun hbournis/generic-open-doc ()
     "Show the function documentation depending on major mode."
     (interactive)
-    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/open-doc-map))
+    (hbournis/call-interactively-generic-func hbournis/open-doc-map))
 
   (defun hbournis/generic-show-repl ()
     "Show the repl depending on major mode."
     (interactive)
-    (hbournis/call-interactively-func-truthy-output 'gethash major-mode hbournis/show-repl-map))
+    (hbournis/call-interactively-generic-func hbournis/show-repl-map))
 #+end_src
 ** TDD mode
 #+begin_src emacs-lisp
