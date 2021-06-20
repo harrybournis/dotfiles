@@ -970,6 +970,9 @@ bug where events created in Emacs get duplicated in Google Calendar.
              (margin-face . magit-blame-margin)
              (margin-body-face magit-blame-dimmed))))
 
+    (evil-define-minor-mode-key 'normal 'magit-blame-mode
+      (kbd "<return>")  'magit-show-commit)
+
     (transient-append-suffix 'magit-push "-u"
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
@@ -1970,6 +1973,7 @@ Use C-j to expand.
     :mode
     (("\\.html?\\'" . web-mode)
      ("\\.tsx\\'" . web-mode)
+     ("\\.vue\\'" . web-mode)
      ("\\.jsx\\'" . web-mode)
      ("\\.phtml\\'" . web-mode)
      ("\\.tpl\\.php\\'" . web-mode)
