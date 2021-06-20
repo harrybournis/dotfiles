@@ -52,6 +52,7 @@ Plug 'matze/vim-move'                                  "move selection up/down
 Plug 'tomtom/tlib_vim'
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
+Plug 'jceb/vim-orgmode'
 
 call plug#end()
 
