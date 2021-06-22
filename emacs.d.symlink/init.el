@@ -23,6 +23,8 @@
 ;; (setq gc-cons-threshold 50000000)
 ;; (setq gc-cons-threshold 4000000)
 
+(setq read-process-output-max (* 1024 1024)) ; 1mb (needed for lsp mode)
+
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.

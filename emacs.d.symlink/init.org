@@ -1240,7 +1240,10 @@ Autocompletion
     (after-init . global-company-mode)
     :config
     ;; Disable autocompletion in org files
-    (setq company-global-modes '(not org-mode))
+    (setq company-global-modes '(not org-mode)
+          company-idle-delay 0.0 ;; default is 0.2
+          company-minimum-prefix-length 1)
+
     ;; Change keybindings for navigating results
     (with-eval-after-load 'company
       (define-key company-active-map (kbd "M-n") nil)
@@ -1264,7 +1267,13 @@ Autocompletion
     :hook (ruby-mode . lsp-deferred)
     :commands (lsp lsp-deferred)
     :config
-    (setq lsp-prefer-flymake nil)
+    (setq lsp-prefer-flymake nil
+          lsp-modeline-diagnostics-enable t
+          lsp-idle-delay 0.500 ; performance
+          lsp-solargraph-log-level "debug"
+          ;; lsp-log-io nil  ; if set to true can cause a performance hit
+          )
+
     (use-package lsp-ui
       :ensure t
       :commands lsp-ui-mode
@@ -1275,12 +1284,9 @@ Autocompletion
             lsp-ui-sideline-enable nil
             lsp-line-ignore-duplicate t))
 
-    (use-package company-lsp
+    (use-package lsp-ivy
       :ensure t
-      :commands company-lsp
-      :config
-      (require 'company-lsp)
-      (push 'company-lsp company-backends))
+      :commands lsp-ivy-workspace-symbol)
 
     (use-package lsp-treemacs
       :ensure t
