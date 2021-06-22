@@ -601,82 +601,85 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     ;; In order for Space to work everywhere. "" nil is used to unbind it first.
     (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
-    (basic-nav-leader "" nil
-                      "f"         'list-buffers
-                      "F"         'ivy-switch-buffer-other-window
-                      "TAB"       'nswbuff-switch-to-next-buffer
-                      "ESC"       'keyboard-quit
-                      "<backtab>" 'nswbuff-switch-to-previous-buffer
-                      "x"         'execute-extended-command
-                      "k"         'windmove-up
-                      "j"         'windmove-down
-                      "l"         'windmove-right
-                      "h"         'windmove-left
-                      "K"         'split-window-below
-                      "J"         'split-window-below-and-switch
-                      "H"         'split-window-right
-                      "L"         'split-window-right-and-switch
-                      "0"         'delete-window
-                      "1"         'delete-other-windows
-                      "2"         'split-window-below-and-switch
-                      "3"         'split-window-right-and-switch
-                      "d"         'delete-window
-                      "|"         'toggle-window-split
-                      "p"         'projectile-find-file
-                      "s"         'counsel-projectile-ag
-                      "="         'toggle-light-dark-theme
-                      "t"         'org-todo
-                      "ns"        'hbournis/create-scratch-buffer
-                      "c"         'cfw:open-org-calendar
-                      "RET"       'hbournis/jump-to-definition
-                      "r"         (lambda () (interactive) (lsp) (lsp-find-references))
-                      "w"         'hydra-window-deluxe-custom/body
-                      "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
-                      "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
-                      "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
-                      "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
-                      "i"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-inbox-file))
-                      "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
+
+    (basic-nav-leader
+      "" nil
+      "f"         'list-buffers
+      "F"         'ivy-switch-buffer-other-window
+      "TAB"       'nswbuff-switch-to-next-buffer
+      "ESC"       'keyboard-quit
+      "<backtab>" 'nswbuff-switch-to-previous-buffer
+      "x"         'execute-extended-command
+      "k"         'windmove-up
+      "j"         'windmove-down
+      "l"         'windmove-right
+      "h"         'windmove-left
+      "K"         'split-window-below
+      "J"         'split-window-below-and-switch
+      "H"         'split-window-right
+      "L"         'split-window-right-and-switch
+      "0"         'delete-window
+      "1"         'delete-other-windows
+      "2"         'split-window-below-and-switch
+      "3"         'split-window-right-and-switch
+      "d"         'delete-window
+      "|"         'toggle-window-split
+      "p"         'projectile-find-file
+      "s"         'counsel-projectile-ag
+      "="         'toggle-light-dark-theme
+      "t"         'org-todo
+      "ns"        'hbournis/create-scratch-buffer
+      "c"         'cfw:open-org-calendar
+      "RET"       'hbournis/generic-find-definition
+      "r"         'lsp-find-references
+      "w"         'hydra-window-deluxe-custom/body
+      "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
+      "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
+      "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
+      "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
+      "i"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-inbox-file))
+      "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
 
     (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
-    (extra-tools-leader "`"   'hbournis/open-terminal
-                        "g"   'magit-status
-                        "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
-                        "\\"  'sp-unwrap-sexp
-                        "["   'wrap-with-parens
-                        "]"   'org-align-all-tags-right
-                        "fn"  'flycheck-next-error
-                        "fp"  'flycheck-previous-error
-                        "fl"  'flycheck-list-errors
-                        "i"   'org-toggle-inline-images
-                        "l"   'cider-ns-refresh
-                        "d"   'hbournis/generic-open-doc
-                        "c"   'hbournis/generic-show-repl
-                        "tf"  'hbournis/generic-run-test-file
-                        "tt"  'hbournis/generic-run-test-at-point
-                        "ta"  'hbournis/generic-run-test-all
-                        "m"   'hbournis/toggle-modeline
-                        "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
+    (extra-tools-leader
+      "`"   'hbournis/open-terminal
+      "g"   'magit-status
+      "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
+      "\\"  'sp-unwrap-sexp
+      "["   'wrap-with-parens
+      "]"   'org-align-all-tags-right
+      "fn"  'flycheck-next-error
+      "fp"  'flycheck-previous-error
+      "fl"  'flycheck-list-errors
+      "i"   'org-toggle-inline-images
+      "l"   'cider-ns-refresh
+      "d"   'hbournis/generic-open-doc
+      "c"   'hbournis/generic-show-repl
+      "tf"  'hbournis/generic-run-test-file
+      "tt"  'hbournis/generic-run-test-at-point
+      "ta"  'hbournis/generic-run-test-all
+      "m"   'hbournis/toggle-modeline
+      "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
     (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
     (extra-tools-alternate-leader
-                        "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
-                        "lv"  'org-cliplink
-                        "lp"  'hbournis/insert-url-as-org-link
-                        "ll"  'hbournis/org-make-word-link-from-clipboard
-                        "lc"  'hbournis-position-to-kill-ring
-                        "c"   'org-capture
-                        "gt"  'git-timemachine-toggle
-                        "gr"  'git-gutter:revert-hunk
-                        "gn"  'git-gutter:next-hunk
-                        "gp"  'git-gutter:previous-hunk
-                        "gb"  'magit-blame-echo
-                        "rf"  'rubocopfmt
-                        "rb"  'ruby-toggle-block
-                        "rr"  'projectile-rails-goto-routes
-                        "rt"  'projectile-rails-find-current-spec
-                        ;; "t"   'hbournis/insert-timestamp)
-                        ))
+      "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
+      "lv"  'org-cliplink
+      "lp"  'hbournis/insert-url-as-org-link
+      "ll"  'hbournis/org-make-word-link-from-clipboard
+      "lc"  'hbournis-position-to-kill-ring
+      "c"   'org-capture
+      "gt"  'git-timemachine-toggle
+      "gr"  'git-gutter:revert-hunk
+      "gn"  'git-gutter:next-hunk
+      "gp"  'git-gutter:previous-hunk
+      "gb"  'magit-blame-echo
+      "rf"  'rubocopfmt
+      "rb"  'ruby-toggle-block
+      "rr"  'projectile-rails-goto-routes
+      "rt"  'projectile-rails-find-current-spec
+      ;; "t"   'hbournis/insert-timestamp)
+      ))
 #+END_SRC
 *** org-mode
 :PROPERTIES:
@@ -3223,7 +3226,7 @@ Just a simple function for when I want the current time stamp inside an org file
         (dired-add-file new)
         (dired-move-to-filename))))
 #+END_SRC
-** jump to definition
+** DISABLED jump to definition
 #+begin_src emacs-lisp
   (defun hbournis/jump-to-definition ()
     "Jump to function definition according to current major mode"
@@ -3266,10 +3269,10 @@ Run itail on the currently highlighted file in ranger.
            (find-file file))
           ((and WORK? (eq file hbournis/org-work-file)) (find-file file))))
 #+end_src
-** Test function according to file_extension
+** Call Language-function according to file_extension
 #+begin_src emacs-lisp
   (setq hbournis/test-at-point-map
-        #s(hash-table size 5 test eq data (
+        #s(hash-table size 6 test eq data (
                                            rspec-mode      rspec-verify-single
                                            minitest-mode   minitest-verify-single
                                            js-mode         mocha-test-at-point
@@ -3278,7 +3281,7 @@ Run itail on the currently highlighted file in ranger.
                                            clojure-mode    cider-test-run-test)))
 
   (setq hbournis/test-file-map
-        #s(hash-table size 5 test eq data (
+        #s(hash-table size 6 test eq data (
                                            rspec-mode      rspec-verify
                                            minitest-mode   minitest-verify
                                            js-mode         mocha-test-file
@@ -3287,7 +3290,7 @@ Run itail on the currently highlighted file in ranger.
                                            clojure-mode    cider-test-run-ns-tests)))
 
   (setq hbournis/test-all-map
-        #s(hash-table size 5 test eq data (
+        #s(hash-table size 6 test eq data (
                                            rspec-mode      rspec-verify-all
                                            minitest-mode   minitest-verify-all
                                            js-mode         mocha-test-project
@@ -3295,8 +3298,13 @@ Run itail on the currently highlighted file in ranger.
                                            web-mode        mocha-test-project
                                            clojure-mode    cider-test-run-project-tests)))
 
-  (setq hbournis/open-doc-map
+  (setq hbournis/find-definition-map
         #s(hash-table size 2 test eq data (
+                                           ruby-mode       lsp-find-definition
+                                           typescript-mode tide-jump-to-definition)))
+
+  (setq hbournis/open-doc-map
+        #s(hash-table size 3 test eq data (
                                            rspec-mode      robe-doc
                                            minitest-mode   robe-doc
                                            clojure-mode    cider-doc)))
@@ -3310,7 +3318,8 @@ Run itail on the currently highlighted file in ranger.
           (filename (buffer-file-name)))
       (if is-ruby
           (cond ((string-match-p ".*_spec\\.rb" filename) 'rspec-mode)
-                ((string-match-p ".*_test\\.rb" filename) 'minitest-mode))
+                ((string-match-p ".*_test\\.rb" filename) 'minitest-mode)
+                (t 'ruby-mode))
         major-mode)))
 
   (defun hbournis/call-interactively-generic-func (map)
@@ -3331,6 +3340,11 @@ Run itail on the currently highlighted file in ranger.
     "Call the appropriate run all tests function depending on major mode."
     (interactive)
     (hbournis/call-interactively-generic-func hbournis/test-all-map))
+
+  (defun hbournis/generic-find-definition ()
+    "Call the appropriate run all tests function depending on major mode."
+    (interactive)
+    (hbournis/call-interactively-generic-func hbournis/find-definition-map))
 
   (defun hbournis/generic-open-doc ()
     "Show the function documentation depending on major mode."
