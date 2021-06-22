@@ -2286,8 +2286,13 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 *** Ruby
 **** ruby-mode
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'ruby-mode-hook 'display-line-numbers-mode)
-  (setq ruby-insert-encoding-magic-comment nil)
+  (use-package ruby-mode
+    :ensure t
+    :mode
+    (("\\.rbi?\\'" . ruby-mode))
+    :config
+    (add-hook 'ruby-mode-hook 'display-line-numbers-mode)
+    (setq ruby-insert-encoding-magic-comment nil))
 #+END_SRC
 **** MAC_ONLY inf-ruby
 #+BEGIN_SRC emacs-lisp
