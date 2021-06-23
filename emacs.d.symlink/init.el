@@ -19,9 +19,6 @@
 
 
 (setq gc-cons-threshold 100000000)
-;; (setq gc-cons-threshold 1600000)
-;; (setq gc-cons-threshold 50000000)
-;; (setq gc-cons-threshold 4000000)
 
 (setq read-process-output-max (* 1024 1024)) ; 1mb (needed for lsp mode)
 
@@ -37,34 +34,28 @@
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (eq system-type 'windows-nt))
 
-(defun for-wrong-platform-p (keyword)
-  "Return non-nil if the KEYWORD does not match the current platform.
-Return nil if the keyword is not one of the specified platform keywords"
-  (let ((thing nil)
-        (windows-only '("WINDOWS_ONLY"))
-        (mac-only '("MAC_ONLY" "UNIX_ONLY"))
-        (linux-only '("LINUX_ONLY" "UNIX_ONLY"))
-        (not-windows '("NOT_WINDOWS"))
-        (not-mac '("NOT_MAC" "NOT_UNIX"))
-        (not-linux '("NOT_LINUX" "NOT_UNIX"))
-        )
-    (if (member keyword (append windows-only mac-only linux-only))
-        (progn
-          (if IS-WINDOWS (setq thing windows-only))
-          (if IS-MAC (setq thing mac-only))
-          (if IS-LINUX (setq thing linux-only))
+(defun for-correct-platform-p (keyword)
+  "Return t if KEYWORD match the check for the current platform."
+  (pcase system-type
+         ('windows-nt (member keyword '("WINDOWS_ONLY" "NOT_MAC" "NOT_UNIX" "NOT_LINUX")))
+         ('darwin     (member keyword '("MAC_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_LINUX")))
+         ('gnu/linux  (member keyword '("LINUX_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_MAC")))))
 
-          (if (member keyword thing)
-              nil t))
-      (if (member keyword (append not-windows not-mac not-linux))
-          (progn
-            (if IS-WINDOWS (setq thing not-windows))
-            (if IS-MAC (setq thing not-mac))
-            (if IS-LINUX (setq thing not-linux))
+(defun block-info-valid-p (tfile)
+  "Return t if TFILE is not 'no'."
+  (not (string= "no" tfile)))
 
-            (if (member keyword thing)
-                t nil))
-          nil))))
+(defun emacs-lisp-code-block-p (lang)
+  "Return t if LANG is emacs-lisp."
+  (string= "emacs-lisp" lang))
+
+(defun todo-keyword-valid-p (todo-keyword)
+  "Return t if TODO-KEYWORD valid."
+  (pcase todo-keyword
+    (`nil t)
+    ((or "" "TODO" "WAITING") t)
+    ("DISABLED" nil)
+    ((pred for-correct-platform-p) t)))
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -90,27 +81,29 @@ Return nil if the keyword is not one of the specified platform keywords"
         ;; If I set it to ~/.emacs.d/init.org it does not recognize that it is the same
         ;; file because it is sylinked, and it closes it on each save.
         (org-babel-map-src-blocks "~/.dotfiles/emacs.d.symlink/init.org" ;; (concat my-user-emacs-directory "init.org")
-         (let* (
-                (org_block_info (org-babel-get-src-block-info 'light))
-                (tfile (cdr (assq :tangle (nth 2 org_block_info))))
-                (match_for_TODO_keyword)
-                )
-           ;; save-excursion
-           (catch 'exit
-             (org-back-to-heading t)
-             (when (looking-at org-outline-regexp)
-               (goto-char (1- (match-end 0))))
-             (when (looking-at (concat " +" org-todo-regexp "\\( +\\|[ \t]*$\\)"))
-               (setq match_for_TODO_keyword (match-string 1))))
-           (unless (or (string= "no" tfile)
-                       (string= "DISABLED" match_for_TODO_keyword)
-                       (not (string= "emacs-lisp" lang))
-                       (for-wrong-platform-p match_for_TODO_keyword))
-             (add-to-list 'body-list (concat "\n\n;; #####################################################################################\n"
-                                             ";; • " (org-get-heading) "\n\n")
-                          )
-             (add-to-list 'body-list body)
-             )))))
+          (let* (
+                 (org_block_info (org-babel-get-src-block-info 'light))
+                 (tfile (cdr (assq :tangle (nth 2 org_block_info))))
+                 (match_for_TODO_keyword)
+                 )
+            ;; save-excursion
+            (catch 'exit
+              (org-back-to-heading t)
+              (when (looking-at org-outline-regexp)
+                (goto-char (1- (match-end 0))))
+              (when (looking-at (concat " +" org-todo-regexp "\\( +\\|[ \t]*$\\)"))
+                (setq match_for_TODO_keyword (match-string 1))))
+            (if (and (block-info-valid-p tfile)
+                     (emacs-lisp-code-block-p lang)
+                     (todo-keyword-valid-p match_for_TODO_keyword)
+                     )
+                (add-to-list 'body-list (concat "\n\n;; #####################################################################################\n"
+                                                ";; • "
+                                                (org-get-heading)
+                                                "\n\n"
+                                                body)
+                             )
+              )))))
 
     (with-temp-file output-file
       (insert ";; ============================================================\n")
