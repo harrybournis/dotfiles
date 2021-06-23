@@ -631,7 +631,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "ns"        'hbournis/create-scratch-buffer
       "c"         'cfw:open-org-calendar
       "RET"       'hbournis/generic-find-definition
-      "r"         'lsp-find-references
+      "r"         'hbournis/lsp-treemacs-references
       "w"         'hydra-window-deluxe-custom/body
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
@@ -1271,10 +1271,10 @@ Autocompletion
     :commands (lsp lsp-deferred)
     :config
     (setq lsp-prefer-flymake nil
+          lsp-headerline-breadcrumb-enable nil
           lsp-modeline-diagnostics-enable t
           lsp-idle-delay 0.500 ; performance
-          lsp-solargraph-log-level "debug"
-          ;; lsp-log-io nil  ; if set to true can cause a performance hit
+          lsp-log-io nil  ; if set to true can cause a performance hit
           )
 
     (use-package lsp-ui
@@ -1293,8 +1293,11 @@ Autocompletion
 
     (use-package lsp-treemacs
       :ensure t
-      :commands lsp-treemacs-errors-list))
-
+      :commands (lsp-treemacs-errors-list lsp-treemacs-references)
+      :config
+      (defun hbournis/lsp-treemacs-references ()
+        (interactive)
+        (hbournis/call-with-prefix 'lsp-treemacs-references))))
 #+end_src
 *** editorconfig
 #+BEGIN_SRC emacs-lisp
@@ -1939,7 +1942,7 @@ Go to next/previous buffer in a project-aware context
     :ensure t
     :config
     (global-aggressive-indent-mode t)
-    (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode js2-mode web-mode typescript-mode)))
+    (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode js2-mode web-mode typescript-mode sql-mode)))
 #+end_src
 *** csv-mode
 #+begin_src emacs-lisp
@@ -2799,6 +2802,13 @@ Favorite dark themes:
 #+END_SRC
 
 * Custom Functions
+** Call with prefix
+#+begin_src emacs-lisp
+  (defun hbournis/call-with-prefix (func &optional prefix)
+    (interactive)
+    (let ((current-prefix-arg (or prefix '(1))))
+      (call-interactively func)))
+#+end_src
 ** Toggle Window Split
 Toggle between horizontal and vertical split. [[https://www.emacswiki.org/emacs/ToggleWindowSplit][Source]]
 
