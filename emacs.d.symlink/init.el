@@ -30,16 +30,12 @@
 
 (setq my-user-emacs-directory "~/.emacs.d/")
 
-(defconst IS-MAC     (eq system-type 'darwin))
-(defconst IS-LINUX   (eq system-type 'gnu/linux))
-(defconst IS-WINDOWS (eq system-type 'windows-nt))
-
 (defun for-correct-platform-p (keyword)
   "Return t if KEYWORD match the check for the current platform."
   (pcase system-type
-         ('windows-nt (member keyword '("WINDOWS_ONLY" "NOT_MAC" "NOT_UNIX" "NOT_LINUX")))
-         ('darwin     (member keyword '("MAC_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_LINUX")))
-         ('gnu/linux  (member keyword '("LINUX_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_MAC")))))
+    ('windows-nt (member keyword '("WINDOWS_ONLY" "NOT_MAC" "NOT_UNIX" "NOT_LINUX")))
+    ('darwin     (member keyword '("MAC_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_LINUX")))
+    ('gnu/linux  (member keyword '("LINUX_ONLY" "UNIX_ONLY" "NOT_WINDOWS" "NOT_MAC")))))
 
 (defun block-info-valid-p (tfile)
   "Return t if TFILE is not 'no'."
@@ -51,11 +47,14 @@
 
 (defun todo-keyword-valid-p (todo-keyword)
   "Return t if TODO-KEYWORD valid."
-  (pcase todo-keyword
-    (`nil t)
-    ((or "" "TODO" "WAITING") t)
-    ("DISABLED" nil)
-    ((pred for-correct-platform-p) t)))
+  (let ((work? (if (getenv "WORK") t nil)))
+    (pcase todo-keyword
+      (`nil t)
+      ("DISABLED" nil)
+      ("WORK_ONLY" work?)
+      ("NOT_WORK" (not work?))
+      ((or "" "TODO" "WAITING") t)
+      ((pred for-correct-platform-p) t))))
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
