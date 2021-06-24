@@ -2,4 +2,4 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq config/proxy-url "<your proxy address>")
+(setq config/proxy-url nil)

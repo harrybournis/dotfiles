@@ -39,7 +39,8 @@ Load local.el gitignored file if it exists
 #+begin_src emacs-lisp
   (let ((local-file (concat user-emacs-directory ".config")))
     (if (file-exists-p local-file)
-        (load local-file)))
+        (load local-file)
+      (load (concat user-emacs-directory ".config-sample"))))
 #+end_src
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
@@ -2038,7 +2039,7 @@ Better syntax highlighting for jsx files
     :config
     (setq typescript-indent-level 2))
 #+END_SRC
-**** tide (typescript)
+**** DISABLED tide (typescript)
 #+BEGIN_SRC emacs-lisp
   (use-package tide
     :ensure t
@@ -2148,13 +2149,13 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     ((jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
 *** PureScript
-**** NOT_WINDOWS purescript-mode
+**** NOT_WORK purescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
     :ensure t
     :hook (purescript-mode . display-line-numbers-mode))
 #+END_SRC
-**** NOT_WINDOWS psc-ide
+**** NOT_WORK psc-ide
 #+BEGIN_SRC emacs-lisp
   (use-package psc-ide
     :ensure t
@@ -2352,7 +2353,7 @@ Org-babel support for prolog.
     :ensure t)
 #+END_SRC
 *** Clojure/ClojureScript
-**** clojure-mode
+**** NOT_WORK clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :ensure t
@@ -2371,7 +2372,7 @@ Org-babel support for prolog.
         (cider-jack-in '()))))
 
 #+END_SRC
-**** cider
+**** NOT_WORK cider
 CIDER extends Emacs with support for interactive programming in Clojure.
 
 #+begin_src emacs-lisp
@@ -2380,7 +2381,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :config
     (setq cider-repl-history-file "~/.emacs.d/cider-history"))
 #+end_src
-**** flycheck-clojure
+**** NOT_WORK flycheck-clojure
 #+begin_src emacs-lisp
   (use-package flycheck-clojure
     :ensure t
@@ -2618,7 +2619,6 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
   ;; Add the default theme in the load path
   (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
-
 #+END_SRC
 
 *** Modeline

@@ -11,9 +11,9 @@ export KEYTIMEOUT=1
 ###
 ### Local env variables
 ###
-if [[ -a ~/.localenv ]]
+if [[ -a ~/.localenv.zsh ]]
 then
-    source ~/.localenv
+    source ~/.localenv.zsh
 fi
 
 ###
