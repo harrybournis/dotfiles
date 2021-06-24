@@ -597,7 +597,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
-      "c"         'cfw:open-org-calendar
+      "c"         'hbournis/copy-filename-to-clipboard
       "RET"       'hbournis/generic-find-definition
       "r"         'hbournis/lsp-treemacs-references
       "w"         'hydra-window-deluxe-custom/body
@@ -642,6 +642,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "gn"  'git-gutter:next-hunk
       "gp"  'git-gutter:previous-hunk
       "gb"  'magit-blame-echo
+      "gh"  'magit-log-buffer-file
+      "gm"  (lambda () (interactive) (magit-find-file-other-window "master" (format "%s" buffer-file-name)))
       "rf"  'rubocopfmt
       "rb"  'ruby-toggle-block
       "rr"  'projectile-rails-goto-routes
@@ -2796,6 +2798,18 @@ width at the moment I want to align them, and not at startup.
     (setq org-tags-column (+ 5 (- (window-total-width))))
     (org-align-all-tags))
 #+END_SRC
+** Copy to clipboard
+#+begin_src emacs-lisp
+  (defun hbournis/copy-to-clipboard (string)
+    (kill-new string)
+    (message (concat "Copied to clipboard: " string)))
+#+end_src
+** Copy file name to clipboard
+#+begin_src emacs-lisp
+  (defun hbournis/copy-filename-to-clipboard ()
+    (interactive)
+    (hbournis/copy-to-clipboard (format "%s" buffer-file-name)))
+#+end_src
 ** Check if cliboard data is a URL
 Helper function for ~hbournis/insert-url-as-org-link~ and
 ~hbournis/org-make-word-link-from-clipboard.~ Returns true if url is a valid
