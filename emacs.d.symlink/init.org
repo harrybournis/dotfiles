@@ -385,6 +385,7 @@ mode only when it is needed.
         calendar
         custom
         cus-theme
+        deadgrep
         debbugs
         debug
         diff-mode
@@ -409,7 +410,7 @@ mode only when it is needed.
         (package-menu package)
         (pdf pdf-view)
         vc-annotate
-        deadgrep
+        xref
         )
       "The list of modes which will be evilified by `evil-collection-init'.
       Elements are either target mode symbols or lists which `car' is the
@@ -3269,7 +3270,9 @@ Run itail on the currently highlighted file in ranger.
   (setq hbournis/find-definition-map
         #s(hash-table size 2 test eq data (
                                            ruby-mode       lsp-find-definition
-                                           typescript-mode tide-jump-to-definition)))
+                                           typescript-mode dumb-jump-go
+                                           java-mode       dumb-jump-go
+                                           web-mode        dumb-jump-go)))
 
   (setq hbournis/open-doc-map
         #s(hash-table size 3 test eq data (
