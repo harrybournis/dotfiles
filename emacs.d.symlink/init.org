@@ -64,6 +64,7 @@ the elpa repositories from where the packages are fetched.
 ** Security
 #+BEGIN_SRC emacs-lisp
   (setq network-security-level 'high)
+  (setq gnutls-algorithm-priority "normal:-vers-tls1.3")
 #+END_SRC
 ** use-package & bind-key
 
