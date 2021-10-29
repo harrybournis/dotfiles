@@ -1220,7 +1220,7 @@ Autocompletion
       :ensure t
       :commands lsp-ui-mode
       :config
-      (setq lsp-ui-doc-enable nil
+      (setq lsp-ui-doc-enable t
             lsp-ui-imenu-enable nil
             lsp-ui-peek-enable nil
             lsp-ui-sideline-enable nil
@@ -2206,7 +2206,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown"))
+    :init (setq markdown-command "pandoc"))
 #+END_SRC
 *** YAML
 **** yaml-mode
@@ -2759,6 +2759,13 @@ Favorite dark themes:
   (load-dark-theme)
 #+END_SRC
 
+*** whiteroom-mode
+https://github.com/joostkremers/writeroom-mode
+
+#+begin_src emacs-lisp
+  (use-package writeroom-mode
+    :ensure t)
+#+end_src
 * Custom Functions
 ** Call with prefix
 #+begin_src emacs-lisp
@@ -3211,16 +3218,6 @@ Just a simple function for when I want the current time stamp inside an org file
         (dired-add-file new)
         (dired-move-to-filename))))
 #+END_SRC
-** DISABLED jump to definition
-#+begin_src emacs-lisp
-  (defun hbournis/jump-to-definition ()
-    "Jump to function definition according to current major mode"
-    (interactive)
-    (let ((mode major-mode))
-      (cond ((eq mode 'ruby-mode) (call-interactively 'robe-jump))
-            ((eq mode 'typescript-mode) (call-interactively 'tide-jump-to-definition))
-            (t (call-interactively 'dumb-jump-go)))))
-#+end_src
 ** ssh
 :PROPERTIES:
 :VISIBILITY: folded
