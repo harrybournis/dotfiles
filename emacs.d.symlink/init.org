@@ -56,7 +56,6 @@ the elpa repositories from where the packages are fetched.
 
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("gnu"          . "https://elpa.gnu.org/packages/")
-                           ("org"          . "https://orgmode.org/elpa/")
                            ("melpa"        . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/"))
         package-user-dir (concat (file-name-directory (or load-file-name buffer-file-name)) "elpa"))
@@ -660,7 +659,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t
-    :pin org
+    :pin gnu
     :config
     (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode)))
 #+END_SRC
