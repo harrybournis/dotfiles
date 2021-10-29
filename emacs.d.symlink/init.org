@@ -878,12 +878,7 @@ Display org properties in the agenda buffer
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))
-                                       (tags-todo "-work+PRIORITY=\"D\""
-                                                  ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
-                                                                                org-agenda-files))
-                                                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                                   (org-agenda-sorting-strategy '(todo-state-up))
-                                                   (org-agenda-overriding-header agenda-label-priority-d)))))
+                                       ))
                                      ("w" "Work Agenda"
                                       (
                                        (tags-todo "capture_notes"
@@ -1211,6 +1206,7 @@ Autocompletion
   (use-package lsp-mode
     :ensure t
     :hook (ruby-mode . lsp-deferred)
+    :hook (go-mode . lsp-deferred)
     :commands (lsp lsp-deferred)
     :config
     (setq lsp-prefer-flymake nil
@@ -1281,6 +1277,7 @@ visualize undo
     (add-hook 'sh-mode-hook 'smartparens-strict-mode)
     (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
     (add-hook 'clojurescript-mode-hook 'smartparens-strict-mode)
+    (add-hook 'go-mode-hook 'smartparens-strict-mode)
 
     (show-smartparens-global-mode t)
 
@@ -2438,6 +2435,25 @@ CIDER extends Emacs with support for interactive programming in Clojure.
       :config
       (flycheck-plantuml-setup)))
 #+END_SRC
+*** go
+**** go mode
+#+begin_src emacs-lisp
+  (use-package go-mode
+    :ensure t
+    :hook
+    (go-mode . display-line-numbers-mode)
+    :config
+    (add-hook 'go-mode-hook
+              (lambda ()
+                (add-hook 'before-save-hook
+                          #'gofmt-before-save
+                          nil t))))
+#+end_src
+**** go-guru
+#+begin_src emacs-lisp
+  (use-package go-guru
+    :ensure t)
+#+end_src
 * Font and Theme
 ** Fonts
 SourceCodePro is my default font.
