@@ -103,6 +103,9 @@ let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 " vim-plist
 let g:plist_display_format = 'xml' " show plist files in json format. Saving will preserve original.
 
+" snipmate
+let g:snipMate = { 'snippet_version' : 1 }
+
 "---------Theme Stuff---------"
 "<--------------------------->"
 set t_Co=256 "enable 256 colours
