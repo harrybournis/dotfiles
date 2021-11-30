@@ -1212,7 +1212,7 @@ Autocompletion
     (setq lsp-prefer-flymake nil
           lsp-headerline-breadcrumb-enable nil
           lsp-modeline-diagnostics-enable t
-          lsp-idle-delay 0.500 ; performance
+          lsp-idle-delay 0.800 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
           )
 
@@ -1220,7 +1220,7 @@ Autocompletion
       :ensure t
       :commands lsp-ui-mode
       :config
-      (setq lsp-ui-doc-enable t
+      (setq lsp-ui-doc-enable nil
             lsp-ui-imenu-enable nil
             lsp-ui-peek-enable nil
             lsp-ui-sideline-enable nil
