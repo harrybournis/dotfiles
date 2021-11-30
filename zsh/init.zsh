@@ -21,9 +21,9 @@ load_nvm () {
     [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
 }
 
-for cmd in "${NODE_GLOBALS[@]}"; do
-    eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
-done
+# for cmd in "${NODE_GLOBALS[@]}"; do
+#     eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
+# done
 
 # init nvm
 # export NVM_DIR="$HOME/.nvm"
