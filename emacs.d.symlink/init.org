@@ -334,7 +334,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     :ensure t
     :pin melpa-stable
     :init
-    (setq evil-want-integration nil)
+    (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     :config
     (evil-mode t)
@@ -3438,6 +3438,7 @@ the last opened window config.
                                     (org-agenda nil "w")
                                   (org-agenda nil "c"))
                                 (get-buffer "*Org Agenda*")
+                                (beginning-of-buffer)
                                 ;; (run-at-time "20 sec" nil 'org-agenda nil "c")
                                 ))
   (delete-other-windows)
