@@ -1271,13 +1271,14 @@ visualize undo
     (add-hook 'typescript-mode-hook 'smartparens-mode)
     (add-hook 'web-mode-hook 'smartparens-mode)
     (add-hook 'js-mode-hook 'smartparens-strict-mode)
-    (add-hook 'html-mode-hook 'smartparens-strict-mode)
+    ;; (add-hook 'html-mode-hook 'smartparens-strict-mode)
     (add-hook 'ruby-mode-hook 'smartparens-strict-mode)
     (add-hook 'python-mode-hook 'smartparens-strict-mode)
     (add-hook 'sh-mode-hook 'smartparens-strict-mode)
     (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
     (add-hook 'clojurescript-mode-hook 'smartparens-strict-mode)
     (add-hook 'go-mode-hook 'smartparens-strict-mode)
+    (add-hook 'svelte-mode-hook 'smartparens-mode)
 
     (show-smartparens-global-mode t)
 
@@ -1859,10 +1860,18 @@ system in order to work.
       (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
       (elfeed-org))
 
-    (use-package elfeed-goodies
+    ;; (use-package elfeed-goodies
+    ;;   :ensure t
+    ;;   :config
+    ;;   (elfeed-goodies/setup))
+
+    (use-package elfeed-dashboard
       :ensure t
       :config
-      (elfeed-goodies/setup)))
+      (setq elfeed-dashboard-file "~/org/elfeed-dashboard.org")
+      ;; update feed counts on elfeed-quit
+      (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
+      (add-to-list 'evil-emacs-state-modes 'elfeed-dashboard-mode)))
 #+END_SRC
 *** nswbuff
 Go to next/previous buffer in a project-aware context
@@ -1997,7 +2006,7 @@ JavaScript auto-completion
     :config
     (add-to-list 'company-backends 'company-tern))
 #+END_SRC
-**** js2-mode
+**** DISABLED js2-mode
 Improved JavaScript editing mode
 
 #+BEGIN_SRC emacs-lisp
@@ -2007,7 +2016,7 @@ Improved JavaScript editing mode
     :mode (("\\.js\\'" . js2-mode))
     :hook (js2-mode . display-line-numbers-mode))
 #+END_SRC
-**** js2-highlight-vars
+**** DISABLED js2-highlight-vars
 #+BEGIN_SRC emacs-lisp
   (use-package js2-highlight-vars
     :ensure t
@@ -2148,14 +2157,21 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :hook
     ((jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
+**** svelte
+#+begin_src emacs-lisp
+  (use-package svelte-mode
+    :ensure t
+    :hook (svelte-mode . lsp-deferred)
+    :mode (("\\.svelte\\'" . svelte-mode)))
+#+end_src
 *** PureScript
-**** NOT_WORK purescript-mode
+**** DISABLED purescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
     :ensure t
     :hook (purescript-mode . display-line-numbers-mode))
 #+END_SRC
-**** NOT_WORK psc-ide
+**** DISABLED psc-ide
 #+BEGIN_SRC emacs-lisp
   (use-package psc-ide
     :ensure t
@@ -2319,7 +2335,7 @@ replace with: https://github.com/jyp/dante
     (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
 *** R & Julia
-**** NOT_WINDOWS ESS (Emacs Spearks Statistics)
+**** DISABLED ESS (Emacs Spearks Statistics)
 [[http://ess.r-project.org/][ESS]] provides modes for R and Julia. When I tried to install it from master it
 was broken, so melpa-stable should be preferred.
 
@@ -2329,13 +2345,13 @@ was broken, so melpa-stable should be preferred.
       :pin melpa-stable)
 #+END_SRC
 *** Prolog
-**** NOT_WINDOWS Prolog-mode
+**** DISABLED Prolog-mode
 #+BEGIN_SRC emacs-lisp
 (setq prolog-system 'swi)
 (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 #+END_SRC
-**** NOT_WINDOWS Ediprolog
+**** DISABLED Ediprolog
 "[[https://github.com/triska/ediprolog][ediprolog]] lets you interact with SWI-Prolog in all Emacs buffers. You can
 consult Prolog programs and evaluate embedded queries."
 
@@ -2345,7 +2361,7 @@ consult Prolog programs and evaluate embedded queries."
     :config
     (global-set-key [f10] 'ediprolog-dwim))
 #+END_SRC
-**** NOT_WINDOWS ob-prolog
+**** DISABLED ob-prolog
 Org-babel support for prolog.
 
 #+BEGIN_SRC emacs-lisp
@@ -2436,7 +2452,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
       (flycheck-plantuml-setup)))
 #+END_SRC
 *** go
-**** go mode
+**** NOT_WORK go mode
 #+begin_src emacs-lisp
   (use-package go-mode
     :ensure t
@@ -2449,7 +2465,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
                           #'gofmt-before-save
                           nil t))))
 #+end_src
-**** go-guru
+**** NOT_WORK go-guru
 #+begin_src emacs-lisp
   (use-package go-guru
     :ensure t)
