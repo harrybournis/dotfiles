@@ -725,9 +725,44 @@ Display org properties in the agenda buffer
   (use-package org-agenda-property
     :ensure t)
 #+END_SRC
+***** org-reveal
+[[https://github.com/yjwen/org-reveal][Presentations]]
+
+Download reveal.js from [[https://revealjs.com/installation/#basic-setup][here]]. Set the org-reveal-root to the extracted folder (the root).
+
+For code, swith to light theme before exporting, so that htmlize will use it on the code blocks.
+
+You can also create speaker notes with a BEGIN_NOTES and END_NOTES
+block. pressing "s" while on the presentation will create new browser window for notes
+
+Some defaults:
+#+begin_src
+#+REVEAL_INIT_OPTIONS: margin: 0.1, minScale:0.2, maxScale:2.5, transition:'concave'
+#+REVEAL_THEME: solarized
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Org-Reveal Introduction.">
+#+REVEAL_POSTAMBLE: <p> Created by yjwen. </p>
+#+REVEAL_PLUGINS: (notes)
+#+REVEAL_TITLE_SLIDE: <h1 class="title">%t</h1><h2 class="author">%a</h2><h3 class="email">%e</h3>
+#+REVEAL_DEFAULT_FRAG_STYLE: roll-in
+#+OPTIONS: toc:nil
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :ensure t
+    :config
+    (setq org-reveal-root "file:///Users/<user>/Downloads/reveal.js-master")
+
+    ;; Used for using emacs theme to highligh code
+    (use-package htmlize
+      :ensure t)
+    )
+#+END_SRC
 **** Org Settings
 #+BEGIN_SRC emacs-lisp
   (require 'ob-R)
+  (require 'ob-sql)
+
   (ignore-errors
     (require 'org-tempo))
 
