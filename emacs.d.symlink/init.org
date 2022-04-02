@@ -745,6 +745,7 @@ Some defaults:
 #+REVEAL_TITLE_SLIDE: <h1 class="title">%t</h1><h2 class="author">%a</h2><h3 class="email">%e</h3>
 #+REVEAL_DEFAULT_FRAG_STYLE: roll-in
 #+OPTIONS: toc:nil
+#+OPTIONS: num:nil
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
