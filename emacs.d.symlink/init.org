@@ -794,6 +794,7 @@ Some defaults:
                                                  (prolog . t)
                                                  (clojurescript . t)
                                                  (plantuml . t)
+                                                 (sql . t)
                                                  ))))
         org-export-backends (quote (ascii
                                     html
@@ -1581,7 +1582,7 @@ shows the color of hex color codes as their background
     ;; (add-hook 'org-mode-hook 'rainbow-mode-hook)
     )
 #+END_SRC
-*** MAC_ONLY emojify
+*** DISABLED emojify
 Show emojis
 
 #+BEGIN_SRC emacs-lisp
