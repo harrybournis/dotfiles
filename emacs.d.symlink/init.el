@@ -109,19 +109,7 @@
       (insert ";; Don't edit this file, edit config.org' instead ...\n")
       (insert ";; ============================================================\n\n")
       (insert (apply 'concat (reverse body-list))))
-    (message "—————• Wrote %s" output-file)
-    ))
-
-
-;; following lines are executed only when my-tangle-config-org-hook-func()
-;; was not invoked when saving config.org which is the normal case:
-(let ((orgfile (concat my-user-emacs-directory "init.org"))
-      (elfile (concat my-user-emacs-directory "init-tangled.el"))
-      (gc-cons-threshold most-positive-fixnum))
-  (when (or (not (file-exists-p elfile))
-            (file-newer-than-file-p orgfile elfile))
-    (my-tangle-config-org))
-  (load-file elfile))
+    (message "—————• Wrote %s" output-file)))
 
 ;; when config.org is saved, re-generate config.el:
 (defun my-tangle-config-org-hook-func ()
@@ -129,4 +117,23 @@
     (let ((orgfile (concat my-user-emacs-directory "init.org"))
           (elfile (concat my-user-emacs-directory "init-tangled.el")))
       (my-tangle-config-org))))
+
 (add-hook 'after-save-hook 'my-tangle-config-org-hook-func)
+
+
+(let ((orgfile (concat my-user-emacs-directory "init.org"))
+      (elfile (concat my-user-emacs-directory "init-tangled.el"))
+      (local-pre-file (concat user-emacs-directory "local-pre.el"))
+      (local-post-file (concat user-emacs-directory "local-post.el"))
+      (gc-cons-threshold most-positive-fixnum))
+  ;; following lines are executed only when my-tangle-config-org-hook-func()
+  ;; was not invoked when saving config.org which is the normal case:
+  (when (or (not (file-exists-p elfile))
+            (file-newer-than-file-p orgfile elfile))
+    (my-tangle-config-org))
+
+  (if (file-exists-p local-pre-file) (load local-pre-file))
+  (load-file elfile)
+  (if (file-exists-p local-post-file) (load local-post-file)))
+
+;;; init.el ends here

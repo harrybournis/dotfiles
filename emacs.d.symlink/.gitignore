@@ -27,5 +27,5 @@ transient/
 .lsp-session-v1
 abbrev_defs
 tramp
-local.el
+local*.el
 cider-history
