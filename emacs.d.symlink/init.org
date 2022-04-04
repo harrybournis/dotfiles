@@ -54,6 +54,8 @@ Load local.el gitignored file if it exists
 
 the elpa repositories from where the packages are fetched.
 
+If gnu is down use mirror: https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/
+
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("gnu"          . "https://elpa.gnu.org/packages/")
                            ("melpa"        . "https://melpa.org/packages/")
