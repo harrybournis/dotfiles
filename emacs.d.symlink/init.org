@@ -3460,7 +3460,39 @@ GET :url/api/
     "Kill all buffers if unless they start with asterisk."
     (interactive)
     (mapcar 'hbournis/kill-buffer-unless-asterisk (buffer-list))
-    (message "Buffers killed."))
+    (message "File Buffers killed."))
+#+end_src
+** DISABLED magit recent branches mine
+#+begin_src emacs-lisp
+  (defun hbournis/magit-insert-recent-branches nil
+    "Insert recent branches to magit."
+    (let* ((git-command "git recents")
+           (recents (-filter 's-present? (split-string (shell-command-to-string git-command) "\n")))
+           (local-branches (magit-refs--format-local-branches))
+           (recent-local-branches (-filter
+                                   (lambda (e) (--find (string-equal e (-first-item it)) local-branches))
+                                   recents)))
+
+      (magit-insert-section (rb "rb")
+        (magit-insert-heading "Recent branches")
+        (dolist (it-branch recent-local-branches)
+          (let ((output (magit-rev-format "%h %s" it-branch)))
+            (string-match "^\\([^ ]+\\) \\(.*\\)" output)
+            (magit-bind-match-strings (commit summary) output
+              (when (and t (equal summary ""))
+                (setq summary "(no commit message)"))
+              (magit-insert-section (branch it-branch t)
+                (insert (propertize commit
+                                    'font-lock-face 'magit-hash) ?\s)
+                (insert (propertize it-branch
+                                    'font-lock-face 'magit-branch-local) ?\s)
+                (insert (funcall magit-log-format-message-function
+                                 it-branch summary) ?\n))
+              )))
+        (insert  ?\n))
+      ))
+
+    (magit-add-section-hook 'magit-status-sections-hook 'exp-feat/magit-insert-recent-branches 'magit-insert-unpulled-from-upstream)
 #+end_src
 * Shortcuts
 global shortcuts
