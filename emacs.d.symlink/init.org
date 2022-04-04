@@ -1749,10 +1749,10 @@ system in order to work.
     :config
     (require 'hydra-examples)
 
-    (defhydra hydra-zoom (global-map "<f2>")
+    (defhydra zoom (global-map "<f2>")
       "zoom"
-      ("g" text-scale-increase "in")
-      ("l" text-scale-decrease "out"))
+      ("j" hbournis/increment-font-size "in")
+      ("k" hbournis/decrement-font-size  "out"))
 
     (defhydra hydra-global-org (:color blue)
       "Org"
@@ -2508,30 +2508,33 @@ Emacs expects you to write them.
   ;; Turn off antialiasing for BigBlue Terminal Font
   ;; (setq mac-allow-anti-aliasing nil)
 
-  ;; Something to do with resolution
-  (if (member hbournis/default-font (font-family-list))
+  (defun hbournis/update-font ()
+    "Re-set the font and font size according to the platform."
+    (if (member hbournis/default-font (font-family-list))
+        (cond (IS-MAC
+               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/mac-font-size)))
+              (IS-LINUX
+               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/alternate-font-size)))
+              (IS-WINDOWS
+               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/windows-font-size) :weight 'semi-bold)))
+
+      (cond (IS-WINDOWS
+             (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/windows-font-size)))
+            (t (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/mac-font-size)))))
+
+    ;; Set a font with great support for Unicode Symbols to fallback in
+    ;; those case where certain Unicode glyphs are missing in the current
+    ;; font.
+    (when (member hbournis/unicode-font (font-family-list))
       (cond (IS-MAC
-             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/mac-font-size)))
+             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
             (IS-LINUX
-             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/alternate-font-size)))
+             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
             (IS-WINDOWS
-             (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/windows-font-size) :weight 'semi-bold)))
-
-    (cond (IS-WINDOWS
-           (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/windows-font-size)))
-          (t (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/mac-font-size)))))
-
-  ;; Set a font with great support for Unicode Symbols to fallback in
-  ;; those case where certain Unicode glyphs are missing in the current
-  ;; font.
-  (when (member hbournis/unicode-font (font-family-list))
-    (cond (IS-MAC
-           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
-          (IS-LINUX
-           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
-          (IS-WINDOWS
-           (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/windows-font-size) nil 'prepend)))
+             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/windows-font-size) nil 'prepend))))
     )
+
+  (hbournis/update-font)
 #+END_SRC
 ** Themes
 *** Color Scheme
@@ -3475,6 +3478,28 @@ GET :url/api/
       ))
 
     (magit-add-section-hook 'magit-status-sections-hook 'exp-feat/magit-insert-recent-branches 'magit-insert-unpulled-from-upstream)
+#+end_src
+** Increase/decrease font size
+#+begin_src emacs-lisp
+  (defun hbournis/transform-font-size (transform-function &optional amount)
+    "Increment font size by."
+    (let ((amount (if amount amount 1)))
+      (mapcar (lambda (variable)
+                (let ((current_value (string-to-number (symbol-value variable))))
+                  (set variable (number-to-string (apply transform-function `(,current_value ,amount))))
+                  (hbournis/update-font)
+                  (symbol-value variable)))
+              '(hbournis/mac-font-size hbournis/windows-font-size hbournis/alternate-font-size))))
+
+  (defun hbournis/increment-font-size (&optional amount)
+    "Increment font size by AMOUNT."
+    (interactive)
+    (hbournis/transform-font-size '+ amount))
+
+  (defun hbournis/decrement-font-size (&optional amount)
+    "Increment font size by AMOUNT."
+    (interactive)
+    (hbournis/transform-font-size '- amount))
 #+end_src
 * Shortcuts
 global shortcuts
