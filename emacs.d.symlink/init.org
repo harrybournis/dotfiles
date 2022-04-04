@@ -1727,7 +1727,7 @@ system in order to work.
             treemacs-show-hidden-files          t
             treemacs-silent-filewatch           nil
             treemacs-silent-refresh             nil
-            treemacs-sorting                    'alphabetic-desc
+            treemacs-sorting                    'alphabetic-case-insensitive-asc
             treemacs-tag-follow-cleanup         t
             treemacs-tag-follow-delay           1.5
             treemacs-width                      35)
@@ -1742,7 +1742,7 @@ system in order to work.
          (treemacs-git-mode 'simple))))
     :bind
     (:map global-map
-     ([f8] . treemacs)))
+          ([f8] . treemacs)))
 
   (use-package treemacs-evil
     :after treemacs evil
