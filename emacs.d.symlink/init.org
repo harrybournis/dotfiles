@@ -1298,10 +1298,10 @@ visualize undo
   (use-package undo-tree
     :diminish undo-tree-mode
     :config
-    (progn
-      (global-undo-tree-mode)
-      (setq undo-tree-visualizer-timestamps t)
-      (setq undo-tree-visualizer-diff t)))
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t
+          undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-tree-history"))
+          undo-tree-visualizer-diff t))
 #+END_SRC
 
 *** smartparens
@@ -2267,7 +2267,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "pandoc"))
+    :init (setq markdown-command "multimarkdown"))
 #+END_SRC
 *** YAML
 **** yaml-mode
