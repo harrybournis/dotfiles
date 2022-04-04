@@ -752,7 +752,8 @@ Some defaults:
   (use-package ox-reveal
     :ensure t
     :config
-    (setq org-reveal-root "file:///Users/<user>/Downloads/reveal.js-master")
+    ;; Set the root
+    ;; (setq org-reveal-root "file:///Users/<user>/reveal.js-master")
 
     ;; Used for using emacs theme to highligh code
     (use-package htmlize
