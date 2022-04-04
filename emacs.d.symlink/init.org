@@ -3402,6 +3402,27 @@ Run itail on the currently highlighted file in ranger.
     (interactive)
     (hbournis/call-interactively-generic-func hbournis/show-repl-map))
 #+end_src
+** init rest-client
+#+begin_src emacs-lisp
+(defun hbournis/init-rest-client ()
+  "Adds the basics to use emacs rest client."
+  (interactive)
+  (insert
+   ":url = http://localhost:8080
+
+:headers = <<
+Cache-Control: no-cache
+Authorization: Bearer
+Content-Type: application/json
+#
+
+# GET
+GET :url/api/
+:headers
+{
+}
+"))
+#+end_src
 ** TDD mode
 #+begin_src emacs-lisp
   (defun hbournis/ruby-test-file-p (&optional file)
