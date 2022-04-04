@@ -3,4 +3,4 @@ if ENV['INSIDE_EMACS']
   Pry.config.pager = false
 end
 
-Pry.config.history.file = "~/.irb_history"
+Pry.config.history_file = "~/.irb_history"
