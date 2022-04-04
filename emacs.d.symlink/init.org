@@ -165,6 +165,11 @@ Variables are set here that are used in the configuration below
                 c-default-style "linux"
                 c-basic-offset 2)
 
+  ;; Scroll horizontally using mouse, touchpad and trackbar
+  (setq mouse-wheel-tilt-scroll t)
+  (setq display-line-numbers-type 'relative)
+  (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
+
   ;; set column number mode to true
   (column-number-mode t)
 
@@ -211,23 +216,6 @@ Variables are set here that are used in the configuration below
   (unless IS-WINDOWS
     (when (fboundp 'winner-mode)
       (winner-mode 1)))
-#+END_SRC
-*** Emacs 26.1 Settings
-#+BEGIN_SRC emacs-lisp
-  ;; Scroll horizontally using mouse, touchpad and trackbar
-  (setq mouse-wheel-tilt-scroll t)
-
-  ;; Native line numbers
-  ;; Can be enabled via variable, as a minor mode, or global mode
-  ;; Variable
-  ;; (setq display-line-numbers 'relative)
-
-  ;; Mode
-  (setq display-line-numbers-type 'relative)
-  ;; (global-display-line-numbers-mode)
-
-  ;; Enable line numbers for emacs-lisp mode
-  (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 ** Encryption
 
