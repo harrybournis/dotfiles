@@ -960,13 +960,15 @@ Some defaults:
     (transient-append-suffix 'magit-push "-u"
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
-    (use-package magit-todos
-      :ensure t
-      :init
-      :config
-      (setq magit-todos-exclude-globs
-            '("/node_modules" "/.git" "/vendor" "/frontend" "/client" "/config"))
-      (magit-todos-mode)))
+    (setq magit-git-executable "/usr/local/bin/git")
+    ;; (use-package magit-todos
+    ;;   :ensure t
+    ;;   :init
+    ;;   :config
+    ;;   (setq magit-todos-exclude-globs
+    ;;         '("/node_modules" "/.git" "/vendor" "/frontend" "/client" "/config"))
+    ;;   (magit-todos-mode))
+    )
 #+END_SRC
 *** smerge-mode
 Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge-mode][Source]]
