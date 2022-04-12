@@ -201,7 +201,6 @@ regexp in `sml/prefix-regexp'."
                   ;; Left
                   (format-mode-line
                    (list
-
                     ;; is this buffer read-only?
                     '(:eval (when buffer-read-only
                               (concat (propertize " READ-ONLY "
@@ -213,13 +212,11 @@ regexp in `sml/prefix-regexp'."
                     ;; (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
                     ;; ")"
 
-
-                    ;; (sml/buffer-name)
                     '(:eval (propertize (concat (sml/perform-projectile-replacement (sml/get-directory))
                                                 (sml/do-shorten-directory (sml/buffer-name) 40)
                                                 " ")
                                         'face 'font-lock-constant-face
-                                        'help-echo (abbreviate-file-name buffer-file-name)))
+                                        'help-echo (if buffer-file-name (abbreviate-file-name buffer-file-name) nil)))
 
                     ;; the buffer name; the file name as a tool tip
                     ;; '(:eval (propertize (concat (abbreviate-file-name buffer-file-name) " ") 'face 'font-lock-constant-face
