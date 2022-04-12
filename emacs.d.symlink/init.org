@@ -786,12 +786,12 @@ Some defaults:
                                     latex
                                     md
                                     odt))
-        org-modules '(org-bbdb
-                      org-docview
-                      org-info
-                      org-w3m
+        org-modules '(ol-bbdb
+                      ol-docview
+                      ol-info
+                      ol-w3m
+                      ol-bibtex
                       org-protocol
-                      org-bibtex
                       org-collector
                       org-tempo)
 
@@ -827,7 +827,7 @@ Some defaults:
   (defun transform-square-brackets-to-round-ones(string-to-transform)
     "Transforms [ into ( and ] into ), other chars left unchanged."
     (concat
-     (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform)))
+     (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
 
   ;; Keep inherited tags on archived headings.
   ;; source: https://orgmode.org/worg/org-hacks.html
@@ -2267,7 +2267,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     ;; binding the ENTER key to `newline-and-indent'.  To get this
     ;; behavior, add the key definition to `yaml-mode-hook':
     (add-hook 'yaml-mode-hook
-              '(lambda ()
+              #'(lambda ()
                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 #+END_SRC
 *** Ruby
