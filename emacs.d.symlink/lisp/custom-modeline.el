@@ -232,11 +232,14 @@ regexp in `sml/prefix-regexp'."
 
                     mode-line-misc-info
 
-                    " | "
+                    " |"
+
+                    (tab-bar-format-tabs)
 
                     ;; the current major mode for the buffer.
-                    '(:eval (propertize "%m" 'face 'font-lock-variable-name-face
-                                        'help-echo buffer-file-coding-system))
+                    '(:eval (let ((mode (propertize "%m" 'face 'font-lock-variable-name-face
+                                                    'help-echo buffer-file-coding-system)))
+                              (if mode (concat " | " mode) nil)))
 
                     '(:eval (mood-line-segment-vc))
                     ;; (string-trim (lsp-mode-line))
