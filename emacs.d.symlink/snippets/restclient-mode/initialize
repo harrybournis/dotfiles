@@ -1,0 +1,17 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: rest-init
+# key: init
+# --
+:url = http://localhost:8080
+
+:headers = <<
+Cache-Control: no-cache
+Authorization: Bearer
+Content-Type: application/json
+#
+
+# GET
+GET :url/api/
+:headers
+{
+}
