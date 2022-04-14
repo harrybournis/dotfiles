@@ -2574,40 +2574,27 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config))
 
-  ;; Dark theme
-  (use-package color-theme-sanityinc-tomorrow
-    :ensure t
-    :config
-    (setq dark-theme-var 'sanityinc-tomorrow-night)
-    (setq dark-theme-overrides-var
-          '((set-face-attribute 'org-level-1 nil
-                                :foreground "#5c9ead")
-            (set-face-attribute 'org-level-4 nil
-                                :foreground "#f0a202")
-            (set-face-attribute 'org-level-2 nil
-                                :foreground "#bbbdf6")
-            (set-face-attribute 'org-level-3 nil
-                                :foreground "#f3b3a6")
-            (set-face-attribute 'org-level-5 nil
-                                :foreground "#cae7b9")
-            (set-face-attribute 'org-level-6 nil
-                                :foreground "#3ab795")
-            (set-face-attribute 'fringe nil
-                                :background "#1d1f21")
-            (set-face-attribute 'org-property-value nil
-                                :foreground "white")
-            (set-face-attribute 'mode-line-inactive nil
-                                :box nil
-                                :background "#1d1f21")
-            (set-face-attribute 'hl-line nil
-                                :background "#282a2e")
-            (set-face-attribute 'org-checkbox nil
-                                :background nil
-                                :foreground nil
-                                :box nil
-                                :weight 'bold)
-            ))
-    )
+  (setq dark-theme-var 'modus-vivendi)
+  (setq dark-theme-overrides-var
+        '((set-face-attribute 'org-level-1 nil
+                              :foreground "#5c9ead")
+          (set-face-attribute 'org-level-4 nil
+                              :foreground "#f0a202")
+          (set-face-attribute 'org-level-2 nil
+                              :foreground "#bbbdf6")
+          (set-face-attribute 'org-level-3 nil
+                              :foreground "#f3b3a6")
+          (set-face-attribute 'org-level-5 nil
+                              :foreground "#cae7b9")
+          (set-face-attribute 'org-level-6 nil
+                              :foreground "#3ab795")
+          (set-face-attribute 'fringe nil
+                              :background "#1d1f21")
+          (set-face-attribute 'mode-line-inactive nil
+                              :box nil
+                              :background "#1d1f21")
+          (set-face-attribute 'mode-line nil
+                              :box nil)))
 
   ;; Light theme
   (use-package flatui-theme
