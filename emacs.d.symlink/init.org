@@ -717,6 +717,8 @@ For code, swith to light theme before exporting, so that htmlize will use it on 
 You can also create speaker notes with a BEGIN_NOTES and END_NOTES
 block. pressing "s" while on the presentation will create new browser window for notes
 
+Use "#+ATTR_REVEAL: :frag t" to reveal parts of the page incrementally.
+
 Some defaults:
 #+begin_src
 #+REVEAL_INIT_OPTIONS: margin: 0.1, minScale:0.2, maxScale:2.5, transition:'concave'
@@ -2590,7 +2592,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
           (set-face-attribute 'org-level-6 nil
                               :foreground "#3ab795")
           (set-face-attribute 'fringe nil
-                              :background "#1d1f21")
+                              :background "#000000")
+          (set-face-attribute 'line-number nil
+                              :background "#000000")
           (set-face-attribute 'mode-line-inactive nil
                               :box nil
                               :background "#1d1f21")
@@ -2615,17 +2619,15 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (set-face-attribute 'org-property-value nil
                                 :foreground "black")
 
-            (set-face-attribute 'eyebrowse-mode-line-active nil
-                                :foreground "#16a085")
+            (set-face-attribute 'tab-bar-tab nil
+                                :box nil
+                                :foreground "#16A085"
+                                :background "#dfe4ea")
 
-            (set-face-attribute 'eyebrowse-mode-line-inactive nil
-                                :foreground "#95a5a6")
-
-            (set-face-attribute 'eyebrowse-mode-line-separator nil
-                                :foreground "#95a5a6")
-
-            (set-face-attribute 'eyebrowse-mode-line-delimiters nil
-                                :foreground "#95a5a6")
+            (set-face-attribute 'tab-bar-tab-inactive nil
+                                :box nil
+                                :foreground "#BDC3C7"
+                                :background "#dfe4ea")
 
             (set-face-attribute 'org-agenda-date-weekend nil
                                 :weight 'normal)
@@ -2641,6 +2643,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
             (set-face-attribute 'magit-branch-remote nil
                                 :foreground "#27AE60")
+
+            (set-face-attribute 'line-number nil
+                                :background "#ecf0f1")
 
             (set-face-attribute 'ivy-minibuffer-match-face-1 nil
                                 :background "#F1C40F"
