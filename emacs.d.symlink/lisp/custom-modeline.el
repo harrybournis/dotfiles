@@ -216,7 +216,8 @@ regexp in `sml/prefix-regexp'."
                                                 (sml/do-shorten-directory (sml/buffer-name) 40)
                                                 " ")
                                         'face 'font-lock-constant-face
-                                        'help-echo (if buffer-file-name (abbreviate-file-name buffer-file-name) nil)))
+                                        ;; 'help-echo (if buffer-file-name (abbreviate-file-name buffer-file-name) nil)
+                                        ))
 
                     ;; the buffer name; the file name as a tool tip
                     ;; '(:eval (propertize (concat (abbreviate-file-name buffer-file-name) " ") 'face 'font-lock-constant-face
@@ -234,9 +235,12 @@ regexp in `sml/prefix-regexp'."
                     (tab-bar-format-tabs)
 
                     ;; the current major mode for the buffer.
-                    '(:eval (let ((mode (propertize "%m" 'face 'font-lock-variable-name-face
-                                                    'help-echo buffer-file-coding-system)))
-                              (if mode (concat " | " mode) nil)))
+                    '(:eval (let ((mode (if (stringp mode-name) mode-name (-first-item mode-name))))
+                              (if mode
+                                  (concat " | " (propertize mode
+                                                            'face 'font-lock-variable-name-face
+                                                            'help-echo buffer-file-coding-system))
+                                nil)))
 
                     '(:eval (mood-line-segment-vc))
                     ;; (string-trim (lsp-mode-line))

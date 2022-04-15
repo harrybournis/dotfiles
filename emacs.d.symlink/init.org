@@ -1500,6 +1500,7 @@ Cons:
 #+begin_src emacs-lisp
   (setq tab-bar-new-button-show nil
         tab-bar-show nil
+        tab-bar-format '(tab-bar-format-tabs)
         tab-bar-close-button-show nil)
 
   (tab-bar-mode)
@@ -3177,16 +3178,6 @@ Just a simple function for when I want the current time stamp inside an org file
       (when (interactive-p)
         (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 #+END_SRC
-** Toggle between workspace 1 and 2
-#+BEGIN_SRC emacs-lisp
-  (defun hbournis/toggle-workspaces-1-2 ()
-    "Change between workspace 1 and 2 using the eyebrowse package"
-    (interactive)
-    (let ((current (eyebrowse--get 'current-slot)))
-      (cond ((eql current 1) (eyebrowse-switch-to-window-config-2))
-            ((eql current 2) (eyebrowse-switch-to-window-config-1))
-            (t (eyebrowse-switch-to-window-config-1)))))
-#+END_SRC
 ** toggle modeline
 
 #+BEGIN_SRC emacs-lisp
@@ -3521,8 +3512,9 @@ the last opened window config.
                                         (with-current-buffer buf
                                           (when (buffer-file-name)
                                             (revert-buffer :ignore-auto :noconfirm))))))
-                                (if (fboundp 'eyebrowse-switch-to-window-config-1)
-                                    (eyebrowse-switch-to-window-config-1))
+
+                                (hbournis/switch-to-or-create-tab "1")
+
                                 (if WORK?
                                     (org-agenda nil "w")
                                   (org-agenda nil "c"))
