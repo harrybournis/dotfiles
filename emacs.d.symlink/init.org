@@ -2593,11 +2593,23 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                               :foreground "#3ab795")
           (set-face-attribute 'fringe nil
                               :background "#000000")
+          (set-face-attribute 'git-gutter:added nil
+                              :background "#000000"
+                              :foreground "#338533")
+          (set-face-attribute 'git-gutter:modified nil
+                              :background "#000000"
+                              :foreground "#8B7233")
+          (set-face-attribute 'git-gutter:deleted nil
+                              :background "#000000"
+                              :foreground "#A54B6F")
+          (set-face-attribute 'git-gutter:separator nil
+                              :background "#000000"
+                              :foreground "#3372A5")
           (set-face-attribute 'line-number nil
                               :background "#000000")
           (set-face-attribute 'mode-line-inactive nil
                               :box nil
-                              :background "#1d1f21")
+                              :background "#000000")
           (set-face-attribute 'mode-line nil
                               :box nil)))
 
@@ -2622,12 +2634,12 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (set-face-attribute 'tab-bar-tab nil
                                 :box nil
                                 :foreground "#16A085"
-                                :background "#dfe4ea")
+                                :background nil)
 
             (set-face-attribute 'tab-bar-tab-inactive nil
                                 :box nil
                                 :foreground "#BDC3C7"
-                                :background "#dfe4ea")
+                                :background nil)
 
             (set-face-attribute 'org-agenda-date-weekend nil
                                 :weight 'normal)
