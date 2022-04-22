@@ -304,8 +304,9 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
   (use-package evil
     :ensure t
     :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
+    (setq evil-want-integration t
+          evil-want-keybinding nil
+          evil-undo-system 'undo-redo)
     :config
     (evil-mode t)
     ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
@@ -487,11 +488,12 @@ Keybindings to allow moving around when writing in Greek
   ;; Vim Editing
   (define-key evil-normal-state-map "ι" 'evil-insert)
   (define-key evil-normal-state-map "Ι" 'evil-insert-line)
-  (define-key evil-normal-state-map "θ" 'undo-tree-undo)
+  (define-key evil-normal-state-map "θ" 'evil-undo)
   (define-key evil-normal-state-map "ω" 'evil-visual-char)
   (define-key evil-normal-state-map "Ω" 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "C-ω") 'evil-visual-block)
   (define-key evil-normal-state-map (kbd "C-ο") 'evil-jump-backward)
+  (define-key evil-normal-state-map (kbd "C-ρ") 'evil-redo)
 
   (define-key evil-normal-state-map "α" 'evil-append)
   (define-key evil-normal-state-map "Α" 'evil-append-line)
@@ -1176,20 +1178,6 @@ Autocompletion
     :config
     (editorconfig-mode 1))
 #+END_SRC
-*** undo tree mode
-visualize undo
-
-#+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
-    :diminish undo-tree-mode
-    :pin gnu
-    :config
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t
-          undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-tree-history"))
-          undo-tree-visualizer-diff t))
-#+END_SRC
-
 *** smartparens
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
@@ -2268,6 +2256,9 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                               :foreground "#3372A5")
           (set-face-attribute 'line-number nil
                               :background "#000000")
+          (set-face-attribute 'vertical-border nil
+                              :background "#000000"
+                              :foreground "#000000")
           (set-face-attribute 'mode-line-inactive nil
                               :box nil
                               :background "#000000")
