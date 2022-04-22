@@ -237,9 +237,11 @@ regexp in `sml/prefix-regexp'."
                     ;; the current major mode for the buffer.
                     '(:eval (let ((mode (if (stringp mode-name) mode-name (-first-item mode-name))))
                               (if mode
-                                  (concat " | " (propertize mode
-                                                            'face 'font-lock-variable-name-face
-                                                            'help-echo buffer-file-coding-system))
+                                  (concat " | "
+                                          (propertize mode
+                                                      'face 'font-lock-variable-name-face
+                                                      'help-echo buffer-file-coding-system)
+                                          " ")
                                 nil)))
 
                     '(:eval (mood-line-segment-vc))

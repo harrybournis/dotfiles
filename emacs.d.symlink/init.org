@@ -550,6 +550,18 @@ Improvement on evil-leader. Specify mutliple leaders.
     (general-evil-setup t)
     (general-override-mode)
 
+    ;; Fix general not working in *Messages* buffer
+    ;; Source: https://github.com/noctuid/general.el/issues/493
+    (general-with 'evil
+      (general-add-hook 'post-command-hook
+                        (lambda (&rest _)
+                          (when (eq major-mode 'messages-buffer-mode)
+                            (evil-normalize-keymaps)
+                            t))
+                        nil
+                        nil
+                        #'identity))
+
     ;; In order for Space to work everywhere. "" nil is used to unbind it first.
     (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
 
@@ -3536,8 +3548,8 @@ the last opened window config.
                                   (org-agenda nil "c"))
                                 (get-buffer "*Org Agenda*")
                                 (beginning-of-buffer)
-                                ;; (run-at-time "20 sec" nil 'org-agenda nil "c")
-                                ))
+                                (get-buffer "*Org Agenda*")))
+
   (delete-other-windows)
 #+END_SRC
 * Start emacs server
