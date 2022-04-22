@@ -5,17 +5,6 @@
 #+TODO: TODO WAITING MAC_ONLY WINDOWS_ONLY LINUX_ONLY UNIX_ONLY NOT_WINDOWS NOT_MAC NOT_LINUX NOT_UNIX WORK_ONLY NOT_WORK DISABLED | DONE
 #+LANGUAGE:  en
 #+PROPERTY: header-args :tangle init.el :comments org
-#+OPTIONS: author:nil date:nil toc:nil title:nil e:nil
-#+LaTeX_HEADER: \pagenumbering{gobble}
-#+LaTeX_HEADER: \usepackage[T1]{fontenc}
-#+LaTeX_HEADER: \usepackage{fontspec}
-#+LaTeX_HEADER: \usepackage{mathpazo}
-#+LaTeX_HEADER: \usepackage{geometry}
-#+LaTeX_HEADER: \geometry{a4paper, margin=20mm}
-#+LaTeX_HEADER: \usepackage[cache=false]{minted}
-#+LaTeX_HEADER: \usemintedstyle{trac}
-#+LaTeX_HEADER: \setminted{breaklines}
-
 
 * Prerequisites
 - [[http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack][ag ("the silver searcher")]] for searching
