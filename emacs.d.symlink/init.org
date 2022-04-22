@@ -379,6 +379,7 @@ mode only when it is needed.
         man
         (package-menu package)
         (pdf pdf-view)
+        vdiff
         vc-annotate
         xref
         )
@@ -2166,6 +2167,12 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 #+begin_src emacs-lisp
   (use-package go-guru
     :ensure t)
+#+end_src
+** Trying
+*** vdiff
+#+begin_src emacs-lisp
+(use-package vdiff
+  :ensure t)
 #+end_src
 * Font and Theme
 ** Fonts
