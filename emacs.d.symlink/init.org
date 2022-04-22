@@ -1159,6 +1159,8 @@ Autocompletion
 
     (use-package lsp-treemacs
       :ensure t
+      :defer t
+      :after treemacs lsp
       :commands (lsp-treemacs-errors-list lsp-treemacs-references)
       :config
       (defun hbournis/lsp-treemacs-references ()
@@ -1179,6 +1181,7 @@ visualize undo
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
     :diminish undo-tree-mode
+    :pin gnu
     :config
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t
@@ -1638,7 +1641,8 @@ Go to next/previous buffer in a project-aware context
 *** csv-mode
 #+begin_src emacs-lisp
   (use-package csv-mode
-    :ensure t)
+    :ensure t
+    :pin gnu)
 #+end_src
 *** deadgrep
 #+begin_src emacs-lisp
