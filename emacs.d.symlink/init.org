@@ -314,7 +314,6 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
-    :pin melpa-stable
     :init
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
@@ -468,8 +467,7 @@ Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
 #+BEGIN_SRC emacs-lisp
   (use-package evil-string-inflection
     :ensure t
-    :after evil
-    :pin melpa-stable)
+    :after evil)
 #+END_SRC
 **** evil-ediff
 Make ediff evil
@@ -958,15 +956,7 @@ Some defaults:
     (transient-append-suffix 'magit-push "-u"
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
-    (setq magit-git-executable "/usr/local/bin/git")
-    ;; (use-package magit-todos
-    ;;   :ensure t
-    ;;   :init
-    ;;   :config
-    ;;   (setq magit-todos-exclude-globs
-    ;;         '("/node_modules" "/.git" "/vendor" "/frontend" "/client" "/config"))
-    ;;   (magit-todos-mode))
-    )
+    (setq magit-git-executable "/usr/local/bin/git"))
 #+END_SRC
 *** smerge-mode
 Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge-mode][Source]]
@@ -1021,29 +1011,6 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     (set-face-attribute 'smerge-upper nil
                         :background "#402626"))
 #+END_SRC
-*** DISABLED nlinum
-Better performance in line numbers?
-
-#+BEGIN_SRC emacs-lisp
-  (use-package nlinum
-    :ensure t
-    :config
-    ;; (global-nlinum-mode)
-    )
-#+END_SRC
-*** DISABLED nlinum-relative
-Relative line numbers
-
-#+BEGIN_SRC emacs-lisp
-  (use-package nlinum-relative
-    :ensure t
-    :hook (purescript-mode . nlinum-relative-mode)
-    :config
-    ;; (nlinum-relative-setup-evil)
-    (setq nlinum-relative-redisplay-delay 0)
-    ;; (global-nlinum-relative-mode)
-    )
-#+END_SRC
 *** flycheck
 Syntax checking
 
@@ -1085,68 +1052,6 @@ Spell checking. Needs the aspell program installed.
     :config
     (setq ispell-program-name "aspell"))
 #+END_SRC
-*** DISABLED helm
-Completion
-
-#+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :defer t
-    :demand t ;; override defer otherwise define-key are not working
-    :pin melpa-stable
-    :diminish ;;helm-mode
-    :init
-    (require 'helm-config)
-    :config
-    (use-package helm-ag
-      :ensure t
-      :pin melpa-stable
-      :bind
-      (("C-c hag"  . helm-ag)
-       ("C-c hat"  . helm-ag-this-file)))
-
-    (use-package helm-swoop
-      :ensure t
-      :pin melpa-stable
-      :bind
-      (("C-c hs" . helm-swoop)))
-
-    (use-package helm-descbinds
-      :ensure t
-      :pin melpa-stable
-      :bind
-      (("C-h b" . helm-descbinds)))
-
-    (setq helm-idle-delay 0.0                 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01          ; this actually updates things reeeelatively quickly.
-          helm-move-to-line-cycle-in-source t ; cycle after reaching end or beginning
-          helm-scroll-amount 8                ; scroll 8 lines on M-<next>/M-<prior>
-          helm-autoresize-max-height 20
-          helm-autoresize-min-height 0
-          helm-autoresize-mode t              ; autoresize to fit candidates
-          helm-ff-file-name-history-use-recentf t
-          helm-M-x-requires-pattern nil
-          helm-ff-skip-boring-files t
-          helm-candidate-number-limit 100
-          helm-split-window-in-side-p t
-          ;; Fuzzy matching
-          helm-mode-M-x-fuzzy-match t
-          helm-recentf-fuzzy-match t
-          helm-completion-in-region-fuzzy-match t
-          helm-mode-fuzzy-match t)
-    (define-key global-map [remap find-file] 'helm-find-files)
-    (define-key global-map [remap occur] 'helm-occur)
-    (define-key global-map [remap list-buffers] 'helm-buffers-list)
-    (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
-    (helm-mode t)
-    :bind
-    (("M-x"     . helm-M-x)
-     ("C-x C-f" . helm-find-files)
-     ("C-x f"   . helm-recentf)
-     ("C-x C-b" . helm-buffers-list)
-     ("M-y"     . helm-show-kill-ring)
-     ("C-x C-r" . helm-mini)))
-#+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
@@ -1185,7 +1090,6 @@ Completion
     (global-set-key (kbd "C-s") 'swiper)
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-    (global-set-key (kbd "C-x f") 'counsel-recentf)
 
     (ivy-mode 1))
 #+END_SRC
@@ -1235,13 +1139,6 @@ Autocompletion
     :bind
     (("C-;" . company-complete)))
 #+END_SRC
-*** DISABLED good-scroll
-#+begin_src emacs-lisp
-  (use-package good-scroll
-    :ensure t
-    :config
-    (good-scroll-mode 1))
-#+end_src
 *** lsp-mode
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -1329,52 +1226,11 @@ visualize undo
       :config
       (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)))
 #+END_SRC
-*** recentf
-open recently closed files
-
-#+BEGIN_SRC emacs-lisp
-  (use-package recentf
-    :ensure t
-    :config
-    (setq recentf-saved-items 100
-          recentf-max-menu-items 15
-          recentf-save-file "~/.emacs.d/etc/recentf"
-          recentf-exclude '("commit_msg" "commit_editmsg"))
-    ;; periodically save list
-    ;; (run-at-time nil (* 5 60) 'recentf-save-list)
-    )
-#+END_SRC
 *** windmove
 
 #+BEGIN_SRC emacs-lisp
   (use-package windmove
     :ensure t)
-#+END_SRC
-
-*** DISABLED ace-window
-move between windows by pressing a key. Disabled in favor of windmove mapped to
-<leader> hjkl.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :ensure t
-    :config
-    (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 2.0)
-    (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")
-    (setq aw-keys   '(?a ?s ?d ?f ?j ?k ?l)
-          aw-dispatch-always t
-          aw-dispatch-alist
-          '((?x aw-delete-window     "ace - delete window")
-            (?c aw-swap-window       "ace - swap window")
-            (?n aw-flip-window)
-            (?h aw-split-window-vert "ace - split vert window")
-            (?v aw-split-window-horz "ace - split horz window")
-            (?m delete-other-windows "ace - maximize window")
-            (?g delete-other-windows)
-            (?b balance-windows)
-            (?u winner-undo)
-            (?r winner-redo)))
-    (ace-window-display-mode t))
 #+END_SRC
 
 *** desktop
@@ -1403,113 +1259,7 @@ Save emacs session
                     register-alist)))
     (desktop-save-mode t))
 #+END_SRC
-*** Workgroups/Perspectives/Layouts
-**** DISABLED workgroups2
-Pros:
-+ Saves/Restores state on shutdown
-+ Does what i want
-Cons:
-- Slow startup
-- Opens everything from all workgroups
-- Does not show current workgroup in powerline
-- Breaks powerline and evil mode for some buffers
-
-Would use it if it did not load everything at once and worked with powerline
-#+BEGIN_SRC emacs-lisp
-  (use-package workgroups2
-    :ensure t
-    :config
-    ;; Change prefix key (before activating WG)
-    (setq wg-prefix-key (kbd "C-c z"))
-
-    ;; Change workgroups session file
-    (setq wg-use-default-session-file t)
-    (setq wg-default-session-file "~/Dropbox/emacs/.emacs_workgroups")
-    (setq wg-load-last-workgroup nil)
-    (setq wg-open-this-wg nil)
-
-    ;; Set your own keyboard shortcuts to reload/save/switch WGs:
-    ;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
-    (global-set-key (kbd "<pause>")     'wg-reload-session)
-    (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
-    (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
-    (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
-
-    ;; Mode Line changes
-    ;; Display workgroups in Mode Line?
-    (setq wg-mode-line-display-on t)          ; Default: (not (featurep 'powerline))
-    (setq wg-flag-modified t)                 ; Display modified flags as well
-    (setq wg-mode-line-decor-left-brace "["
-          wg-mode-line-decor-right-brace "]"  ; how to surround it
-          wg-mode-line-decor-divider ":")
-    (workgroups-mode 1))
-#+END_SRC
-**** DISABLED perspective-el
-Pros:
-+ Easy to use, understandable
-+ Works well with powerline, shoes all available perspectives
-+ Lightweight
-Cons:
-- Does not persist perspectives on shutdown
-- If installed with use-package it does not work (why?), must use package installer
-- Will [[https://github.com/nex3/perspective-el/issues/64][potentially break with Emacs 26]]
-
-Would choose it, if it persisted/restored perspectives
-#+BEGIN_SRC emacs-lisp
-  (use-package perspective
-    :ensure t
-    :config
-    (persp-mode))
-#+END_SRC
-**** DISABLED persp-mode
-Pros:
-+ Lightweight like perspective
-+ Works with powerline
-+ Saves/restores previous perspectives
-+ can select perspective none
-Cons:
-- Can't save terminal windows (unlike workgroups2) [[https://github.com/Bad-ptr/persp-mode.el/issues/76][Issue]] (managed to save them,
-  but requires custom code see bellow, also opening in Dropbox/org directory)
-- Stops showing org-agenda on startup for some reason [[https://github.com/Bad-ptr/persp-mode.el/issues/91][Issue]]
-- Shows the album.org file on startup even though i never opened it
-- Seems too buggy
-
-#+BEGIN_SRC emacs-lisp
-  (use-package persp-mode
-    :ensure t
-    :defer 10
-    :config
-    (setq persp-auto-save-fname "~/Dropbox/emacs/persp-confs")
-    (persp-def-buffer-save/load
-     :mode 'shell-mode
-     :mode-restore-function #'(lambda (_mode) (ansi-term explicit-shell-file-name)) ; or #'identity if you do not want to start shell process
-     :tag-symbol 'def-shell
-     :save-vars '(major-mode default-directory))
-    (persp-mode 1))
-#+END_SRC
-**** DISABLED eyebrowse
-Pros:
-+ Fast, light
-+ Depends on desktop for persistence
-+ nice modeline indicator
-+ shows all available werkgroups
-+ Fails gracefully on terminal, showing scratch buffer instead
-+ org agenda works at startup
-Cons:
-- not restoring terminals
-- Can't share save file, must share entire desktop save file
-- Does not start on the 1st workgroup, starts on the last used, which causes it
-  to be overriden by org agenda
-
-#+BEGIN_SRC emacs-lisp
-  (use-package eyebrowse
-    :ensure t
-    :config
-    (add-to-list 'window-persistent-parameters '(window-side . writable))
-    (add-to-list 'window-persistent-parameters '(window-slot . writable))
-    (eyebrowse-mode t))
-#+END_SRC
-**** tab-bar-mode
+*** tab-bar-mode
 #+begin_src emacs-lisp
   (setq tab-bar-new-button-show nil
         tab-bar-show nil
@@ -1571,20 +1321,6 @@ guesses the correct indentation
     :config
     (dtrt-indent-mode t))
 #+END_SRC
-*** DISABLED beacon-mode
-highlights cursor after a jump. Disabled in favor of ~global-hl-line-mode~.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :config
-    (beacon-mode t))
-#+END_SRC
-*** lorem-ipsum
-#+BEGIN_SRC emacs-lisp
-  (use-package lorem-ipsum
-    :ensure t)
-#+END_SRC
 *** rainbow-mode
 shows the color of hex color codes as their background
 
@@ -1600,23 +1336,6 @@ shows the color of hex color codes as their background
     ;; (add-hook 'org-mode-hook 'rainbow-mode-hook)
     )
 #+END_SRC
-*** DISABLED emojify
-Show emojis
-
-#+BEGIN_SRC emacs-lisp
-  (use-package emojify
-    :ensure t
-    :hook
-    (org-agenda-mode . emojify-mode)
-    :config
-    (setq agenda-label-work-tag  (concat ":bangbang: " agenda-label-work-tag)
-          agenda-label-inbox (concat ":envelope-with-arrow: " agenda-label-inbox)
-          agenda-label-calendar (concat ":calendar-spiral: " agenda-label-calendar)
-          agenda-label-priority-a (concat ":exclamation: " agenda-label-priority-a)
-          agenda-label-priority-b (concat ":warning: " agenda-label-priority-b)
-          agenda-label-priority-c (concat ":beer: " agenda-label-priority-c)
-          agenda-label-priority-d (concat ":coffee: " agenda-label-priority-d)))
-#+end_src
 *** diminish
 hide specific modes from the modeline
 
@@ -1651,11 +1370,6 @@ Calendar framework
     (use-package calfw-org
       :ensure t
       :pin melpa-stable)
-
-    ;; (use-package calfw-gcal
-    ;;   :ensure t
-    ;;   :config
-    ;;   (require 'calfw-gcal))
 
     :config
     (require 'calfw-org))
@@ -1701,14 +1415,6 @@ system in order to work.
     :config
     (evil-define-minor-mode-key 'normal 'git-timemachine-mode
       (kbd "<return>")  'git-timemachine-show-commit))
-#+END_SRC
-*** DISABLED neotree
-#+BEGIN_SRC emacs-lisp
-  (use-package neotree
-    :ensure t
-    :pin melpa-stable
-    :config
-    (global-set-key [f8] 'neotree-toggle))
 #+END_SRC
 *** treemacs
 #+BEGIN_SRC emacs-lisp
@@ -1799,7 +1505,7 @@ system in order to work.
   _h_ ←   _H_ X←   _v_ertical       _b_uffer
   _j_ ↓   _J_ X↓   _x_ horizontal   _f_ind
   _k_ ↑   _K_ X↑   _z_ undo         _d_elete
-  _l_ →   _L_ X→   _Z_ redo         _s_wap
+  _l_ →   _L_ X→   _Z_ redo
   "
       ("h" windmove-left )
       ("j" windmove-down )
@@ -1821,11 +1527,6 @@ system in order to work.
              (split-window-below)
              (windmove-down))
        )
-      ("s" (lambda ()
-             (interactive)
-             (ace-window 4)
-             (add-hook 'ace-window-end-once-hook
-                       'hydra-window/body)))
       ("d" delete-window)
       ("z" (progn
              (winner-undo)
@@ -1885,15 +1586,13 @@ system in order to work.
 
     (yas-global-mode 1))
 #+END_SRC
-*** olivetti
-#+BEGIN_SRC emacs-lisp
-  (use-package olivetti
-    :ensure t
-    :pin melpa-stable
-    :config
-    (setq-default olivetti-body-width 80)
-    (setq-default olivetti-hide-mode-line t))
-#+END_SRC
+*** whiteroom-mode
+https://github.com/joostkremers/writeroom-mode
+
+#+begin_src emacs-lisp
+  (use-package writeroom-mode
+    :ensure t)
+#+end_src
 *** MAC_ONLY elfeed
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
@@ -2211,7 +1910,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :hook
     ((jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
-**** svelte
+**** NOT_WORK svelte
 #+begin_src emacs-lisp
   (use-package svelte-mode
     :ensure t
@@ -2242,28 +1941,6 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   ;; Set indentation to 4 for java
   (setq-default c-basic-offset 4)
-#+END_SRC
-**** DISABLED eclim
-#+BEGIN_SRC emacs-lisp
-  (use-package eclim
-    :ensure t
-    :hook
-    (java-mode . eclim-mode)
-    (java-mode . display-line-numbers-mode)
-    :config
-    ;; Set to nil to start eclim outside of emacs
-    (setq eclimd-autostart nil)
-    (setq help-at-pt-display-when-idle t)
-    (setq help-at-pt-timer-delay 0.1)
-    (help-at-pt-set-timer)
-
-    (setq eclim-eclipse-dirs '("/Applications/EclipseJEE.app/Contents/Eclipse"))
-    (setq eclim-executable  "/Applications/EclipseJEE.app/Contents/Eclipse/plugins/org.eclim_2.7.2/bin/eclim")
-
-    (use-package company-emacs-eclim
-      :ensure t
-      :config
-      (company-emacs-eclim-setup)))
 #+END_SRC
 *** Markdown
 **** markdown-mode
@@ -2366,16 +2043,6 @@ Interact with bundler with Emacs
     ;; Use Gemfile's Rubocop if it exists, otherwise use global
     (setq rubocopfmt-use-bundler-when-possible nil))
 #+END_SRC
-**** MAC_ONLY robe
-#+begin_src emacs-lisp
-  (use-package robe
-    :ensure t
-    :diminish
-    :config
-    (eval-after-load 'company
-      '(push 'company-robe company-backends))
-    (global-robe-mode))
-#+end_src
 *** Haskell
 **** DISABLED intero
 [[https://github.com/chrisdone/intero][Deprecated]]
@@ -2476,7 +2143,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :ensure t)
 #+END_SRC
 *** Latex
-**** NOT_WINDOWS Auctex
+**** NOT_WORK Auctex
 #+BEGIN_SRC emacs-lisp
   (use-package tex
     :ensure auctex)
@@ -2487,23 +2154,6 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :ensure t
     :config
     (latex-preview-pane-enable))
-#+END_SRC
-*** PlantUML
-**** DISABLED plantuml-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package plantuml-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    (require 'ob-plantuml) ;; org blocks don't work without this
-    (setq org-plantuml-jar-path
-          ;; (expand-file-name "/usr/local/Cellar/plantuml/1.2018.5/libexec/plantuml.jar"))
-          (expand-file-name "/usr/local/bin/plantuml"))
-    (use-package flycheck-plantuml
-      :ensure t
-      :config
-      (flycheck-plantuml-setup)))
 #+END_SRC
 *** go
 **** NOT_WORK go mode
@@ -2716,50 +2366,6 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 #+END_SRC
 
 *** Modeline
-**** DISABLED powerline
-[[https://github.com/milkypostman/powerline][Github]]
-[[https://github.com/AnthonyDiGirolamo/airline-themes][Airline Themes]]
-
-Favorite dark themes:
-- simple
-- serene
-- dark
-- behelit
-
-#+BEGIN_SRC emacs-lisp
-  (use-package powerline
-    :ensure t
-    :config
-    (use-package airline-themes
-      :ensure t
-      :config
-      (setq light-theme-modeline-var 'airline-silver)
-      ;; (setq dark-theme-modeline-var 'airline-behelit)
-      (setq dark-theme-modeline-var 'airline-doom-molokai)
-      ))
-#+END_SRC
-**** DISABLED telephone-line
-[[https://github.com/dbordak/telephone-line][Github]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package telephone-line
-    :ensure t
-    :config
-    (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-          telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-          telephone-line-primary-right-separator 'telephone-line-cubed-right
-          telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-    (setq telephone-line-height 24
-          telephone-line-evil-use-short-tag t)
-    (telephone-line-evil-config))
-#+END_SRC
-**** DISABLED spaceline
-#+BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :ensure t
-    :config
-    (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
-#+END_SRC
 **** Custom Modeline
 #+begin_src emacs-lisp
   (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
@@ -2834,13 +2440,6 @@ Favorite dark themes:
   (load-dark-theme)
 #+END_SRC
 
-*** whiteroom-mode
-https://github.com/joostkremers/writeroom-mode
-
-#+begin_src emacs-lisp
-  (use-package writeroom-mode
-    :ensure t)
-#+end_src
 * Custom Functions
 ** Call with prefix
 #+begin_src emacs-lisp
