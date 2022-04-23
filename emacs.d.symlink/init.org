@@ -935,13 +935,6 @@ Some defaults:
   (use-package magit
     :ensure t
     :config
-    (setq magit-blame-styles
-          '((margin
-             (margin-format " %C %a" " %s")
-             (margin-width . 42)
-             (margin-face . magit-blame-margin)
-             (margin-body-face magit-blame-dimmed))))
-
     (evil-define-minor-mode-key 'normal 'magit-blame-mode
       (kbd "<return>")  'magit-show-commit)
 
@@ -1990,11 +1983,13 @@ Enhancements to ruby-mode for RSpec files.
 #+BEGIN_SRC emacs-lisp
   (use-package rspec-mode
     :ensure t
+    :general (:keymaps 'rspec-compilation-mode-map "r" 'rspec-rerun)
     :config
     (setq compilation-scroll-output t
           rspec-use-spring-when-possible nil
           rspec-allow-multiple-compilation-buffers t
           rspec-spec-command "rspec --fail-fast")
+
     (eval-after-load 'rspec-mode '(rspec-install-snippets)))
 #+END_SRC
 **** MAC_ONLY minitest-mode
