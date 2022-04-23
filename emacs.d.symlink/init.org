@@ -16,20 +16,13 @@
 - [[https://github.com/BurntSushi/ripgrep][rigprep]] for [[https://github.com/alphapapa/magit-todos][magit-todos]]
 
 * Packages Setup
-** Load .config file
-#+begin_src emacs-lisp
-  (let ((local-file (concat user-emacs-directory ".config")))
-    (if (file-exists-p local-file)
-        (load local-file)
-      (load (concat user-emacs-directory ".config-sample"))))
-#+end_src
 ** Proxy settings
 #+BEGIN_SRC emacs-lisp
-  (if config/proxy-url
+  (if (and (boundp 'config/proxy-url) config/proxy-url)
       (setq url-proxy-services
             `(("no_proxy" . "^\\(localhost\\|10.*\\)")
-              ("http"     . ,api-keys/proxy-url)
-              ("https"    . ,api-keys/proxy-url))))
+              ("http"     . ,config/proxy-url)
+              ("https"    . ,config/proxy-url))))
 #+END_SRC
 ** Repositories
 
