@@ -234,8 +234,7 @@ Variables are set here that are used in the configuration below
           (other-window 1)))
     (if IS-WINDOWS
         (eshell)
-      ;; (ansi-term explicit-shell-file-name)
-      (eshell)))
+      (ansi-term "zsh")))
 #+END_SRC
 *** Kill the buffer when term exits
 #+BEGIN_SRC emacs-lisp

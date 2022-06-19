@@ -240,7 +240,8 @@ regexp in `sml/prefix-regexp'."
                                   (concat " | "
                                           (propertize mode
                                                       'face 'font-lock-variable-name-face
-                                                      'help-echo buffer-file-coding-system))
+                                                      'help-echo buffer-file-coding-system)
+                                          " ")
                                 nil)))
 
                     '(:eval (mood-line-segment-vc))
