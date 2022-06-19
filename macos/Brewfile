@@ -6,8 +6,6 @@ tap "homebrew/cask-fonts"
 
 # Zsh
 brew "zsh"
-brew "zsh-completions"
-brew "zsh-autosuggestions"
 
 # brew
 brew "openjpeg"
