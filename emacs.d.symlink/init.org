@@ -739,6 +739,12 @@ Some defaults:
       :ensure t)
     )
 #+END_SRC
+***** org-kanban
+#+begin_src emacs-lisp
+  (use-package org-kanban
+    :ensure t
+    :hook (org-after-todo-state-change . org-update-all-dblocks))
+#+end_src
 **** Org Settings
 #+BEGIN_SRC emacs-lisp
   (require 'ob-R)
