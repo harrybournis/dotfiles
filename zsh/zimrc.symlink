@@ -22,6 +22,8 @@ zmodule utility
 zmodule archive
 # Initialize rbenv "If available, this module configures Ruby to use Homebrew's openssl@1.1 dir."
 zmodule ruby
+# Initialize asdf package manager
+zmodule asdf
 
 #
 # Prompt

@@ -8,6 +8,7 @@ tap "homebrew/cask-fonts"
 brew "zsh"
 
 # brew
+brew "asdf"
 brew "openjpeg"
 brew "diff-so-fancy"
 brew "ffmpeg"
