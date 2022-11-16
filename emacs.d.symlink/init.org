@@ -1623,6 +1623,19 @@ see logs easily
   (use-package itail
     :ensure t)
 #+end_src
+*** hledger
+#+begin_src emacs-lisp
+  (use-package hledger-mode
+    :ensure t
+    :mode
+    (("\\.journal\\'" . hledger-mode))
+    :config
+    ;; Provide the path to you journal file.
+    ;; The default location is too opinionated.
+    ;; (setq hledger-jfile "/Users/....hledger.journal")
+
+    (add-to-list 'company-backends 'hledger-company))
+#+end_src
 ** Programming Language Specific
 *** HTML/CSS
 **** emmet-mode
