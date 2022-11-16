@@ -1583,39 +1583,6 @@ https://github.com/joostkremers/writeroom-mode
   (use-package writeroom-mode
     :ensure t)
 #+end_src
-*** MAC_ONLY elfeed
-#+BEGIN_SRC emacs-lisp
-  (use-package elfeed
-    :ensure t
-    :defer t
-    :bind (:map elfeed-search-mode-map
-                ("q" . 'kill-this-buffer)
-                ("Q" . 'kill-this-buffer)
-                ("m" . elfeed-toggle-star)
-                ("M" . elfeed-toggle-star))
-    :config
-    (defalias 'elfeed-toggle-star
-      (elfeed-expose #'elfeed-search-toggle-all 'star))
-
-    (use-package elfeed-org
-      :ensure t
-      :config
-      (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
-      (elfeed-org))
-
-    ;; (use-package elfeed-goodies
-    ;;   :ensure t
-    ;;   :config
-    ;;   (elfeed-goodies/setup))
-
-    (use-package elfeed-dashboard
-      :ensure t
-      :config
-      (setq elfeed-dashboard-file "~/org/elfeed-dashboard.org")
-      ;; update feed counts on elfeed-quit
-      (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
-      (add-to-list 'evil-emacs-state-modes 'elfeed-dashboard-mode)))
-#+END_SRC
 *** nswbuff
 Go to next/previous buffer in a project-aware context
 
