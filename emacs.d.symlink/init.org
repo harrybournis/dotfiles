@@ -355,6 +355,7 @@ mode only when it is needed.
         dired
         doc-view
         edebug
+        ediff
         elfeed
         emms
         eval-sexp-fu
@@ -451,14 +452,6 @@ Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
   (use-package evil-string-inflection
     :ensure t
     :after evil)
-#+END_SRC
-**** evil-ediff
-Make ediff evil
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-ediff
-    :ensure t
-    :after evil
-    :defer t)
 #+END_SRC
 **** Greek Keybindings
 Keybindings to allow moving around when writing in Greek
