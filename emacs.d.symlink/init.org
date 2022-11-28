@@ -570,8 +570,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "ns"        'hbournis/create-scratch-buffer
       "c"         'hbournis/copy-filename-to-clipboard
       "RET"       'hbournis/generic-find-definition
-      "r"         'hbournis/lsp-treemacs-references
       "w"         'hydra-window-deluxe-custom/body
+      "r"         (lambda () (interactive) (hbournis/call-with-prefix 'lsp-treemacs-references))
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
@@ -584,9 +584,9 @@ Improvement on evil-leader. Specify mutliple leaders.
       "`"   'hbournis/open-terminal
       "g"   'magit-status
       "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
-      "\\"  'sp-unwrap-sexp
       "["   'wrap-with-parens
-      "]"   'org-align-all-tags-right
+      "]"   'sp-unwrap-sexp
+      "\\"  'org-align-all-tags-right
       "fn"  'flycheck-next-error
       "fp"  'flycheck-previous-error
       "fl"  'flycheck-list-errors
@@ -619,7 +619,6 @@ Improvement on evil-leader. Specify mutliple leaders.
       "rb"  'ruby-toggle-block
       "rr"  'projectile-rails-goto-routes
       "rt"  'projectile-rails-find-current-spec
-      ;; "t"   'hbournis/insert-timestamp)
       ))
 #+END_SRC
 *** org-mode
@@ -931,6 +930,9 @@ Some defaults:
 
     (transient-append-suffix 'magit-push "-u"
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
+
+
+    (setq magit-blame-echo-style 'headings)
 
     (setq magit-git-executable "/usr/local/bin/git"))
 #+END_SRC
@@ -1622,7 +1624,7 @@ see logs easily
   (use-package itail
     :ensure t)
 #+end_src
-*** hledger
+*** NOT_WORK hledger
 #+begin_src emacs-lisp
   (use-package hledger-mode
     :ensure t
@@ -2985,8 +2987,10 @@ Run itail on the currently highlighted file in ranger.
     "Increment font size by."
     (let ((amount (if amount amount 1)))
       (mapcar (lambda (variable)
-                (let ((current_value (string-to-number (symbol-value variable))))
-                  (set variable (number-to-string (apply transform-function `(,current_value ,amount))))
+                (let* ((current-value (string-to-number (symbol-value variable)))
+                       (new-value (apply transform-function `(,current-value ,amount))))
+                  (set variable (number-to-string new-value))
+                  (message "Font Size: %s" new-value)
                   (hbournis/update-font)
                   (symbol-value variable)))
               '(hbournis/mac-font-size hbournis/windows-font-size hbournis/alternate-font-size))))
