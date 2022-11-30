@@ -737,6 +737,13 @@ Some defaults:
     :ensure t
     :hook (org-after-todo-state-change . org-update-all-dblocks))
 #+end_src
+
+***** orgtbl-aggregate
+aggregate tables
+#+begin_src emacs-lisp
+  (use-package orgtbl-aggregate
+    :ensure t)
+#+end_src
 **** Org Settings
 #+BEGIN_SRC emacs-lisp
   (require 'ob-R)
@@ -3013,6 +3020,12 @@ Run itail on the currently highlighted file in ranger.
     (progn
       (tab-bar-new-tab)
       (tab-bar-rename-tab name))))
+#+end_src
+** Write file
+#+begin_src emacs-lisp
+  (defun hbournis/write-file (filename content)
+    "Write content to file."
+    (with-temp-file filename (insert content)))
 #+end_src
 * Shortcuts
 global shortcuts
