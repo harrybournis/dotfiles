@@ -20,7 +20,6 @@ alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias dot="cd ~/.dotfiles"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"
-alias e="emacsclient -t"
 alias fix-grey-file='SetFile -c "" -t ""'
 
 # tmux
@@ -38,3 +37,13 @@ alias rspec="bundle exec rspec"
 # in docker
 alias docker-stats="docker ps -q | xargs docker stats --no-stream"
 alias dockerc="docker-compose"
+
+if [ $INSIDE_EMACS ]; then
+    function emacsfindfile(){
+        emacsclient -e "(find-file \"${PWD}/${1:q}\")"
+    }
+
+    alias e="emacsfindfile"
+else
+    alias e="emacsclient -t"
+fi
