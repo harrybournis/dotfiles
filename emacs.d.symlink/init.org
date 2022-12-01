@@ -343,6 +343,7 @@ mode only when it is needed.
     :after evil
     :ensure t
     :init
+    ;; check options in variable evil-collection--supported-modes
     (defcustom evil-collection-mode-list
       `(eshell
         calendar
@@ -373,6 +374,7 @@ mode only when it is needed.
         man
         (package-menu package)
         (pdf pdf-view)
+        (term term ansi-term multi-term)
         vdiff
         vc-annotate
         xref
@@ -1636,7 +1638,7 @@ see logs easily
   (use-package hledger-mode
     :ensure t
     :mode
-    (("\\.journal\\'" . hledger-mode))
+    (("\\.hledger\\'" . hledger-mode))
     :config
     ;; Provide the path to you journal file.
     ;; The default location is too opinionated.

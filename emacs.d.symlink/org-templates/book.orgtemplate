@@ -2,16 +2,13 @@
 :PROPERTIES:
 :TITLE: %(progn book-title)
 :AUTHOR: %(progn book-author)
+:PAGES: %(ocv/prmt "Pages" 'pages)
 :RATING:
 :VISIBILITY: folded
 :END:
 :LOGBOOK:
  - Added on %U
 :END:
-** Suggested by:
-- %?
+** Suggested by
 ** Description
-
-
 ** Links
--
