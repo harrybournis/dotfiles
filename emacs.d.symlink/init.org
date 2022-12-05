@@ -123,6 +123,16 @@ Variables are set here that are used in the configuration below
   (dolist (mode '(tool-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1)))
 
+  (defun contextual-menubar (&optional frame)
+    "Display the menubar in FRAME (default: selected frame) if on a
+      graphical display, but hide it if in terminal."
+    (interactive)
+    (set-frame-parameter frame 'menu-bar-lines
+                         (if (display-graphic-p frame)
+                             1 0)))
+
+  (add-hook 'after-make-frame-functions 'contextual-menubar)
+
   ;; replace yes/no questions with y/n
   (fset 'yes-or-no-p 'y-or-n-p)
 

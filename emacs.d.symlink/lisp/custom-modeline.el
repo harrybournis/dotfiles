@@ -1,3 +1,5 @@
+;;; custom-modeline.el --- Custom
+;;; Commentary:
 ;; Adapted from https://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html and
 ;; https://gitlab.com/jessieh/mood-line
 
@@ -40,7 +42,7 @@ duplicated buffer names) from being displayed."
         (t (buffer-name))))
 
 (defun sml/get-directory ()
-  "Decide if we want directory shown. If so, return it."
+  "Decide if we want directory shown.  If so, return it."
   (abbreviate-file-name
    (cond
     ;; In email attachments, buffer-file-name is non-nil, but
@@ -84,7 +86,7 @@ the result."
 
 
 (defun mood-line-format (left right)
-  "Return a string of `window-width' length containing LEFT and RIGHT, aligned respectively."
+  "Return a string of `window-width' length containing LEFT and RIGHT,aligned respectively."
   (let ((reserve (length right)))
     (when (and (display-graphic-p) (eq 'right (get-scroll-bar-mode)))
       (setq reserve (- reserve 3)))
@@ -240,8 +242,7 @@ regexp in `sml/prefix-regexp'."
                                   (concat " | "
                                           (propertize mode
                                                       'face 'font-lock-variable-name-face
-                                                      'help-echo buffer-file-coding-system)
-                                          " ")
+                                                      'help-echo buffer-file-coding-system))
                                 nil)))
 
                     '(:eval (mood-line-segment-vc))
@@ -254,4 +255,4 @@ regexp in `sml/prefix-regexp'."
 (advice-add #'vc-refresh-state :after #'mood-line--update-vc-segment)
 
 (provide 'hbournis/modeline)
-;;; modeline.el ends here
+;;; custom-modeline.el ends here
