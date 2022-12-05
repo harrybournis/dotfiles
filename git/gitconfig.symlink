@@ -7,7 +7,7 @@
         logline = log --oneline
         forget  = rm -r --cached .
         tlog = log --topo-order --graph --decorate=auto --oneline --boundary --format=format:'%C(bold blue)%h%C(reset) %C(white)%s%C(reset) %C(auto)%d%C(reset) - %C(dim white) %an, %ar%C(reset)'
-        recents = "!git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 6 | awk -F' ' '{print $1}'"
+        recents = "!git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ' '{print $1}'"
 [color]
         diff = auto
         status = auto
