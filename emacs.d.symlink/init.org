@@ -276,6 +276,19 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 * Packages
 ** Common
+*** dash
+A modern [[https://github.com/magnars/dash.el][list]] API for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package dash
+    :ensure t)
+#+end_src
+*** s
+The long lost Emacs string manipulation [[https://github.com/magnars/s.el][library]].
+#+begin_src emacs-lisp
+  (use-package s
+    :ensure t)
+#+end_src
 *** evil-mode
 :PROPERTIES:
 :VISIBILITY: folded
@@ -903,17 +916,17 @@ aggregate tables
                                        (agenda ""
                                                ((org-agenda-overriding-header agenda-label-calendar)))
                                        (tags "PRIORITY=\"A\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-a)))
                                        (tags "PRIORITY=\"B\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-b)))
                                        (tags "PRIORITY=\"C\""
-                                             ((org-agenda-files (remove-if (apply-partially #'equal hbournis/org-inbox-file)
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
                                                                            org-agenda-files))
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))
@@ -1213,7 +1226,6 @@ Not working currently
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :ensure t
-    :pin melpa-stable
     :diminish
     :config
     (require 'smartparens-config)
@@ -1371,7 +1383,7 @@ Get environment variables from the shell
     :config
     (exec-path-from-shell-initialize))
 #+END_SRC
-*** calfw
+*** DISABLED calfw
 Calendar framework
 
 #+BEGIN_SRC emacs-lisp
@@ -1621,7 +1633,7 @@ Go to next/previous buffer in a project-aware context
     :ensure t
     :config
     (global-aggressive-indent-mode t)
-    (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode js2-mode web-mode typescript-mode sql-mode)))
+    (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode web-mode typescript-mode sql-mode)))
 #+end_src
 *** csv-mode
 #+begin_src emacs-lisp
@@ -1658,7 +1670,7 @@ see logs easily
 #+end_src
 ** Programming Language Specific
 *** HTML/CSS
-**** emmet-mode
+**** DISABLED emmet-mode
 Use C-j to expand.
 
 #+BEGIN_SRC emacs-lisp
@@ -1721,7 +1733,7 @@ I don't even remember what this is
       ad-do-it)
     ad-do-it))
 #+END_SRC
-**** haml-mode
+**** DISABLED haml-mode
 #+begin_src emacs-lisp
   (use-package haml-mode
     :ensure t
@@ -1755,7 +1767,7 @@ Some guides:
     :config
     (setq typescript-indent-level 2))
 #+END_SRC
-**** mocha
+**** DISABLED mocha
 Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-318919735][Source]]
 
 #+BEGIN_SRC emacs-lisp
@@ -2072,7 +2084,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     (latex-preview-pane-enable))
 #+END_SRC
 *** go
-**** NOT_WORK go mode
+**** DISABLED go mode
 #+begin_src emacs-lisp
   (use-package go-mode
     :ensure t
@@ -2085,7 +2097,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
                           #'gofmt-before-save
                           nil t))))
 #+end_src
-**** NOT_WORK go-guru
+**** DISABLED go-guru
 #+begin_src emacs-lisp
   (use-package go-guru
     :ensure t)
