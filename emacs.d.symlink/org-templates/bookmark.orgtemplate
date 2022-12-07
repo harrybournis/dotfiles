@@ -1,0 +1,6 @@
+* %(org-cliplink-capture) :%(hbournis/org-tag-from-host-from-clipboard):
+:PROPERTIES:
+:CREATED: %U
+:URL: %c
+:HOST: %(hbournis/extract-host-from-clipboard)
+:END:

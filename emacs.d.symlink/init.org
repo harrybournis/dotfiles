@@ -39,8 +39,9 @@ If gnu is down use mirror: https://raw.githubusercontent.com/d12frosted/elpa-mir
 
 ** Security
 #+BEGIN_SRC emacs-lisp
-  (setq network-security-level 'high)
-  (setq gnutls-algorithm-priority "normal:-vers-tls1.3")
+  (setq network-security-level 'high
+        gnutls-algorithm-priority "normal:-vers-tls1.3"
+        url-cookie-untrusted-urls '(".*"))
 #+END_SRC
 ** use-package & bind-key
 
@@ -74,27 +75,28 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq hbournis/org-main-file             "~/org/stuff.org"
-        hbournis/org-book-file             "~/org/books.org"
-        hbournis/org-mobile-file           "~/org/mobile_notes.org"
-        hbournis/org-album-file            "~/org/album.org"
-        hbournis/org-inbox-file            "~/org/Inbox.org"
-        hbournis/org-work-file             "~/Documents/work.org"
-        hbournis/org-journal-file          "~/org/journal.org.gpg"
-        hbournis/recurring-file            "~/org/recurring.org"
-        hbournis/org-agenda-files         `(,hbournis/org-main-file
-                                            ,hbournis/org-mobile-file
-                                            ,hbournis/org-album-file
-                                            ,hbournis/org-inbox-file
-                                            ,hbournis/recurring-file
-                                            ,hbournis/org-work-file)
-        hbournis/default-font              "SauceCodePro Nerd Font Mono"
-        hbournis/fallback-font             "Courier New"
-        hbournis/unicode-font              "Unifont"
-        hbournis/mac-font-size             "15"
-        hbournis/windows-font-size         "11"
-        hbournis/alternate-font-size       "11"
-        )
+  (setq hbournis/org-main-file          "~/org/stuff.org"
+        hbournis/org-book-file          "~/org/books.org"
+        hbournis/org-mobile-file        "~/org/mobile_notes.org"
+        hbournis/org-album-file         "~/org/album.org"
+        hbournis/org-inbox-file         "~/org/Inbox.org"
+        hbournis/org-work-file          "~/Documents/work.org"
+        hbournis/org-journal-file       "~/org/journal.org.gpg"
+        hbournis/recurring-file         "~/org/recurring.org"
+        hbournis/bookmarks-file         "~/org/bookmarks.org"
+        hbournis/private-bookmarks-file "~/org/private-bookmarks.org.gpg"
+        hbournis/org-agenda-files       `(,hbournis/org-main-file
+                                          ,hbournis/org-mobile-file
+                                          ,hbournis/org-album-file
+                                          ,hbournis/org-inbox-file
+                                          ,hbournis/recurring-file
+                                          ,hbournis/org-work-file)
+        hbournis/default-font           "SauceCodePro Nerd Font Mono"
+        hbournis/fallback-font          "Courier New"
+        hbournis/unicode-font           "Unifont"
+        hbournis/mac-font-size          "15"
+        hbournis/windows-font-size      "11"
+        hbournis/alternate-font-size    "11")
 #+END_SRC
 * Built-in Settings
 ** General
@@ -870,20 +872,43 @@ aggregate tables
             hbournis/org-work-file
           hbournis/org-inbox-file))
 
+  (defun hbournis/org-capture-link ()
+    "Validate that the link does not already exist in bookmarks."
+    (interactive)
+    (let ((clipboard (current-kill 0)))
+      (unless (s-starts-with? "http" clipboard)
+        (error "Clipboard does not contain a link."))
+      (if (--any?
+           (-contains?
+            `(,clipboard
+              ,(if (s-suffix? "/" clipboard)
+                   (s-chop-suffix "/" clipboard)
+                 (concat clipboard "/")))
+            it)
+           (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,hbournis/bookmarks-file)))
+          (error "Link already exists.")))
+
+    (defun hbournis/extract-host-from-clipboard ()
+      (s-chop-prefix "www." (url-host (url-generic-parse-url (current-kill 0)))))
+
+    (defun hbournis/org-tag-from-host-from-clipboard ()
+      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host-from-clipboard)))
+
+    (goto-char (point-min))
+    (re-search-forward "Web"))
+
   (setq org-capture-templates `(
-                                ("p" "Protocol" entry (file+headline hbournis/org-capture-file "Web Capture")
-                                 "* %^{Title|[[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]}\nSource: %u, [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE"
-                                 :prepend t
-                                 :immediate-finish t)
-                                ("L" "Protocol Link" entry (file+headline hbournis/org-capture-file "Web Capture")
-                                 "* %?[[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n"
-                                 :prepend t
-                                 :immediate-finish t)
-                                ("b" "Book" entry (file+headline hbournis/org-book-file
-                                                                 ,(format "%s" (format-time-string "%Y")))
+                                ("l" "Link" entry
+                                 (file+function hbournis/bookmarks-file hbournis/org-capture-link)
+                                 (file "~/.emacs.d/org-templates/bookmark.orgtemplate"))
+                                ("L" "Private Link" entry
+                                 (file+function hbournis/private-bookmarks-file hbournis/org-capture-link)
+                                 (file "~/.emacs.d/org-templates/bookmark.orgtemplate"))
+                                ("b" "Book" entry
+                                 (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
                                  (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
-                                ("w" "Work Note" entry (file+datetree
-                                                        hbournis/org-work-file)
+                                ("w" "Work Note" entry
+                                 (file+datetree hbournis/org-work-file)
                                  "** %U - %?")))
 #+END_SRC
 **** Org Agenda
