@@ -47,3 +47,8 @@ if [ $INSIDE_EMACS ]; then
 else
     alias e="emacsclient -t"
 fi
+
+noderepl() {
+    FILE_CONTENTS="$(< $1 )"
+    node -i -e "$FILE_CONTENTS"
+}
