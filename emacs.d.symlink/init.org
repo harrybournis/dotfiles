@@ -658,7 +658,27 @@ Improvement on evil-leader. Specify mutliple leaders.
     :ensure t
     :pin gnu
     :config
-    (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode)))
+    (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode))
+
+    ;; Copy link to clipboard on right click
+    (define-key org-mouse-map (kbd "<mouse-3>")
+      (lambda (event)
+        (interactive "e")
+        (goto-char (posn-point (event-start event)))
+        (let* ((context
+                (org-element-lineage (org-element-context) '(link) t))
+               (type (org-element-type context))
+               (value (org-element-property :value context)))
+          (cond
+           ((not type) (user-error "No link found"))
+           ((>= (point)
+                (save-excursion
+                  (goto-char (org-element-property :end context))
+                  (skip-chars-backward " \t")
+                  (point)))
+            (user-error "No link found"))
+           ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
+           (t (user-error "No link found")))))))
 #+END_SRC
 **** Org-related packages
 ***** UNIX_ONLY org-bullets
