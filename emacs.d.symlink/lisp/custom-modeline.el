@@ -129,20 +129,19 @@ the result."
                   (active t))
               (concat (cond ((memq state '(edited added))
                              (if active (setq face 'mood-line-status-info))
-                             (propertize "✚" 'face face))
+                             (propertize "+ " 'face face))
                             ((eq state 'needs-merge)
                              (if active (setq face 'mood-line-status-warning))
-                             (propertize "●" 'face face))
+                             (propertize "● " 'face face))
                             ((eq state 'needs-update)
                              (if active (setq face 'mood-line-status-warning))
-                             (propertize "⬆" 'face face))
+                             (propertize "⇧ " 'face face))
                             ((memq state '(removed conflict unregistered))
                              (if active (setq face 'mood-line-status-error))
-                             (propertize "✖" 'face face))
+                             (propertize "✖ " 'face face))
                             (t
                              (if active (setq face 'mood-line-status-grayed-out))
-                             (propertize "✔" 'face face)))
-                      " "
+                             (propertize "" 'face face)))
                       (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
                                   'face (if active face))
                       "  "))))))
@@ -203,40 +202,24 @@ regexp in `sml/prefix-regexp'."
                   ;; Left
                   (format-mode-line
                    (list
-                    ;; is this buffer read-only?
                     '(:eval (when buffer-read-only
                               (concat (propertize " READ-ONLY "
                                                   'face 'org-todo
                                                   'help-echo "Buffer is read-only"))))
-
-                    ;; relative position
-                    ;; "("
-                    ;; (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
-                    ;; ")"
 
                     '(:eval (propertize (concat (sml/perform-projectile-replacement (sml/get-directory))
                                                 (sml/do-shorten-directory (sml/buffer-name) 40)
                                                 " ")
                                         'face 'font-lock-constant-face
                                         ;; 'help-echo (if buffer-file-name (abbreviate-file-name buffer-file-name) nil)
-                                        ))
-
-                    ;; the buffer name; the file name as a tool tip
-                    ;; '(:eval (propertize (concat (abbreviate-file-name buffer-file-name) " ") 'face 'font-lock-constant-face
-                    ;;                     'help-echo (buffer-file-name)))
-                    ))
+                                        ))))
 
                   ;; Right
                   (format-mode-line
                    (list
-
                     mode-line-misc-info
-
                     " |"
-
                     (tab-bar-format-tabs)
-
-                    ;; the current major mode for the buffer.
                     '(:eval (let ((mode (if (stringp mode-name) mode-name (-first-item mode-name))))
                               (if mode
                                   (concat " | "
@@ -244,11 +227,7 @@ regexp in `sml/prefix-regexp'."
                                                       'face 'font-lock-variable-name-face
                                                       'help-echo buffer-file-coding-system))
                                 nil)))
-
-                    '(:eval (mood-line-segment-vc))
-                    ;; (string-trim (lsp-mode-line))
-                    )
-                   )))))
+                    '(:eval (mood-line-segment-vc))))))))
 
 (add-hook 'find-file-hook #'mood-line--update-vc-segment)
 (add-hook 'after-save-hook #'mood-line--update-vc-segment)
