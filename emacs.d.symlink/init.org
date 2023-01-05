@@ -658,6 +658,9 @@ Improvement on evil-leader. Specify mutliple leaders.
     :ensure t
     :pin gnu
     :config
+    ;; Element cache makes it slow for some reason
+    (setq org-element-cache-persistent nil)
+
     (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode))
 
     ;; Copy link to clipboard on right click
@@ -2950,6 +2953,7 @@ Run itail on the currently highlighted file in ranger.
   (setq hbournis/test-all-map
         #s(hash-table size 6 test eq data (
                                            rspec-mode      rspec-verify-all
+                                           ruby-mode       rspec-verify-all
                                            minitest-mode   minitest-verify-all
                                            js-mode         mocha-test-project
                                            typescript-mode mocha-test-project
