@@ -892,12 +892,10 @@ aggregate tables
             hbournis/org-work-file
           hbournis/org-inbox-file))
 
-  (defun hbournis/org-capture-link ()
-    "Validate that the link does not already exist in bookmarks."
-    (interactive)
-    (let ((clipboard (current-kill 0)))
+  (defun hbournis/validate-bookmark-link (url bookmark-file)
+    (let ((clipboard url))
       (unless (s-starts-with? "http" clipboard)
-        (error "Clipboard does not contain a link."))
+        (progn (message "Clipboard does not contain a link.") (org-capture-kill)))
       (if (--any?
            (-contains?
             `(,clipboard
@@ -905,31 +903,51 @@ aggregate tables
                    (s-chop-suffix "/" clipboard)
                  (concat clipboard "/")))
             it)
-           (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,hbournis/bookmarks-file)))
-          (error "Link already exists.")))
+           (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,bookmark-file)))
+          (progn (message "Link already exists.") (org-capture-kill)))))
 
-    (defun hbournis/extract-host-from-clipboard ()
-      (s-chop-prefix "www." (url-host (url-generic-parse-url (current-kill 0)))))
+  (defun hbournis/org-capture-bookmark (bookmark-file)
+    "Validate that the link does not already exist in bookmarks."
+    (interactive)
+    (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
 
-    (defun hbournis/org-tag-from-host-from-clipboard ()
-      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host-from-clipboard)))
+    (defun hbournis/extract-host (url)
+      (s-chop-prefix "www." (url-host (url-generic-parse-url url))))
+    (defun hbournis/org-tag-from-host (url)
+      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host url)))
 
     (goto-char (point-min))
     (re-search-forward "Web"))
 
-  (setq org-capture-templates `(
-                                ("l" "Link" entry
-                                 (file+function hbournis/bookmarks-file hbournis/org-capture-link)
-                                 (file "~/.emacs.d/org-templates/bookmark.orgtemplate"))
-                                ("L" "Private Link" entry
-                                 (file+function hbournis/private-bookmarks-file hbournis/org-capture-link)
-                                 (file "~/.emacs.d/org-templates/bookmark.orgtemplate"))
-                                ("b" "Book" entry
-                                 (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
-                                 (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
-                                ("w" "Work Note" entry
-                                 (file+datetree hbournis/org-work-file)
-                                 "** %U - %?")))
+  (defun hbournis/org-capture-bookmark-generic ()
+    (hbournis/org-capture-bookmark hbournis/bookmarks-file))
+
+  (defun hbournis/org-capture-bookmark-private ()
+    (hbournis/org-capture-bookmark hbournis/private-bookmarks-file))
+
+  ;; Bookmarks for Browser
+  ;; Bookmark url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'l',url: window.location.href,title: document.title,body: window.getSelection() }); })();
+  ;; Bookmark private url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'L',url: window.location.href,title: document.title,body: window.getSelection() }); })();
+  (setq org-capture-templates
+        `(
+          ("l" "Link" entry
+           (file+function hbournis/bookmarks-file hbournis/org-capture-bookmark-generic)
+           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
+           :prepend t
+           :empty-lines-after 1
+           :immediate-finish t)
+          ("L" "Private Link" entry
+           (file+function hbournis/private-bookmarks-file hbournis/org-capture-bookmark-private)
+           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
+           :prepend t
+           :empty-lines-after 1
+           :immediate-finish t)
+          ("b" "Book" entry
+           (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
+           (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
+          ("w" "Work Note" entry
+           (file+datetree hbournis/org-work-file)
+           "** %U - %?")))
 #+END_SRC
 **** Org Agenda
 #+BEGIN_SRC emacs-lisp

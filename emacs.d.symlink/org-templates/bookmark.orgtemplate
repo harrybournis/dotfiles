@@ -1,6 +1,6 @@
-* %(org-cliplink-capture) :%(hbournis/org-tag-from-host-from-clipboard):
+* [[%:link][%(transform-square-brackets-to-round-ones "%:description")]] :%(hbournis/org-tag-from-host "%:link"):
 :PROPERTIES:
 :CREATED: %U
-:URL: %c
-:HOST: %(hbournis/extract-host-from-clipboard)
+:URL: %:link
+:HOST: %(hbournis/extract-host "%:link")
 :END:
