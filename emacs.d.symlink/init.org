@@ -3129,7 +3129,18 @@ global shortcuts
 
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
-* Autostart Org Agenda
+* Start emacs server
+Start an emacs server so you can open files from the command line using
+emacsclient
+
+#+BEGIN_SRC emacs-lisp
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+
+  ;; (require 'org-protocol)
+#+END_SRC
+* DISABLED Autostart Org Agenda
 Reload all agenda files before before showing the agenda, since they might
 have been edited from the mobile app.
 
@@ -3156,18 +3167,7 @@ the last opened window config.
 
   (delete-other-windows)
 #+END_SRC
-* Start emacs server
-Start an emacs server so you can open files from the command line using
-emacsclient
-
-#+BEGIN_SRC emacs-lisp
-  (require 'server)
-  (unless (server-running-p)
-    (server-start))
-
-  (require 'org-protocol)
-#+END_SRC
-* Start fullscreen
+* DISABLED Start fullscreen
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
