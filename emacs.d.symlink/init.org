@@ -24,44 +24,33 @@
               ("http"     . ,config/proxy-url)
               ("https"    . ,config/proxy-url))))
 #+END_SRC
-** Repositories
-
-the elpa repositories from where the packages are fetched.
-
-If gnu is down use mirror: https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/
+** straight.el
 
 #+BEGIN_SRC emacs-lisp
-  (setq package-archives '(("gnu"          . "https://elpa.gnu.org/packages/")
-                           ("melpa"        . "https://melpa.org/packages/")
-                           ("melpa-stable" . "https://stable.melpa.org/packages/"))
-        package-user-dir (concat (file-name-directory (or load-file-name buffer-file-name)) "elpa"))
-#+END_SRC
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
+  (straight-use-package 'use-package)
+  (straight-use-package '(org :type built-in))
+
+  (setq straight-use-package-by-default t)
+#+END_SRC
 ** Security
 #+BEGIN_SRC emacs-lisp
   (setq network-security-level 'high
         gnutls-algorithm-priority "normal:-vers-tls1.3"
         url-cookie-untrusted-urls '(".*"))
 #+END_SRC
-** use-package & bind-key
-
-#+BEGIN_SRC emacs-lisp
-  ;; avoid problems with files newer than their byte-compiled counterparts
-  ;; it's better a lower startup than load an outdated and maybe bugged package
-  (setq load-prefer-newer t)
-
-  (when (not package-archive-contents)
-    (package-refresh-contents))
-
-  ;; install use-package if not exists
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  (eval-when-compile
-    (require 'use-package))
-  (require 'bind-key)                ;; if you use any :bind variant
-#+END_SRC
-
 ** IS-MAC/IS-LINUX
 Determine whether the system is mac or linux
 
@@ -107,6 +96,7 @@ Variables are set here that are used in the configuration below
         apropos-do-all t                        ;; apropos commands perform more extensive searches than default
         large-file-warning-threshold 100000000  ;; warn only when opening files bigger than 100mb
         ring-bell-function
+        ;; load-prefer-newer t
         (lambda ()
           (let ((orig-fg (face-foreground 'mode-line)))
             (set-face-foreground 'mode-line "#F2804F")
@@ -283,13 +273,13 @@ A modern [[https://github.com/magnars/dash.el][list]] API for Emacs.
 
 #+begin_src emacs-lisp
   (use-package dash
-    :ensure t)
+    :straight t)
 #+end_src
 *** s
 The long lost Emacs string manipulation [[https://github.com/magnars/s.el][library]].
 #+begin_src emacs-lisp
   (use-package s
-    :ensure t)
+    :straight t)
 #+end_src
 *** evil-mode
 :PROPERTIES:
@@ -319,7 +309,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :ensure t
+    :straight t
     :init
     (setq evil-want-integration t
           evil-want-keybinding nil
@@ -366,7 +356,7 @@ mode only when it is needed.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-collection
     :after evil
-    :ensure t
+    :straight t
     :init
     ;; check options in variable evil-collection--supported-modes
     (defcustom evil-collection-mode-list
@@ -418,7 +408,7 @@ mode only when it is needed.
 **** evil-surround
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
-    :ensure t
+    :straight t
     :after evil
     :config
     (global-evil-surround-mode))
@@ -427,7 +417,7 @@ mode only when it is needed.
 Indents to a similar level elements on similar lines e.g. all '=' in variable assignments
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
-    :ensure t
+    :straight t
     :after evil
     :config
     (evil-lion-mode))
@@ -436,7 +426,7 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
-    :ensure t
+    :straight t
     :after evil
     :config
     (global-evil-matchit-mode t))
@@ -445,7 +435,7 @@ Press % to move between opening and closing tag in any language
 Increment / decrement binary, octal, decimal and hex literals
 #+BEGIN_SRC emacs-lisp
   (use-package evil-numbers
-    :ensure t
+    :straight t
     :after evil
     :config
     (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
@@ -455,14 +445,14 @@ Increment / decrement binary, octal, decimal and hex literals
 Nerd commenter emulation
 #+BEGIN_SRC emacs-lisp
   (use-package evil-nerd-commenter
-    :ensure t
+    :straight t
     :after evil)
 #+END_SRC
 **** evil-org
 Org mode key bindings for evil mode
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
-    :ensure t
+    :straight t
     :after (evil org)
     :diminish
     :config
@@ -477,7 +467,7 @@ Org mode key bindings for evil mode
 Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
 #+BEGIN_SRC emacs-lisp
   (use-package evil-string-inflection
-    :ensure t
+    :straight t
     :after evil)
 #+END_SRC
 **** Greek Keybindings
@@ -541,7 +531,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 
 #+BEGIN_SRC emacs-lisp
   (use-package general
-    :ensure t
+    :straight t
     :config
     (setq general-override-states '(emacs
                                     hybrid
@@ -655,8 +645,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 **** Org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :ensure t
-    :pin gnu
+    :straight t
     :config
     ;; Element cache makes it slow for some reason
     (setq org-element-cache-persistent nil)
@@ -688,7 +677,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 Disabled on windows because it makes emacs extremely slow
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
-    :ensure t
+    :straight t
     :config
     ;; Performance fix for windows
     ;; Source: https://github.com/sabof/org-bullets/issues/11#issuecomment-439228372
@@ -707,7 +696,7 @@ Display org priorities as custom strings
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-fancy-priorities
-    :ensure t
+    :straight t
     :diminish
     :hook
     (org-mode . org-fancy-priorities-mode)
@@ -733,7 +722,7 @@ Pretty-copy links from the browser to org with title instead of just url
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-cliplink
-    :ensure t
+    :straight t
     :config
     (global-set-key (kbd "C-c p b") 'org-cliplink))
 #+END_SRC
@@ -742,7 +731,7 @@ Display org properties in the agenda buffer
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda-property
-    :ensure t)
+    :straight t)
 #+END_SRC
 ***** org-reveal
 [[https://github.com/yjwen/org-reveal][Presentations]]
@@ -771,20 +760,20 @@ Some defaults:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ox-reveal
-    :ensure t
+    :straight t
     :config
     ;; Set the root
     ;; (setq org-reveal-root "file:///Users/<user>/reveal.js-master")
 
     ;; Used for using emacs theme to highligh code
     (use-package htmlize
-      :ensure t)
+      :straight t)
     )
 #+END_SRC
 ***** org-kanban
 #+begin_src emacs-lisp
   (use-package org-kanban
-    :ensure t
+    :straight t
     :hook (org-after-todo-state-change . org-update-all-dblocks))
 #+end_src
 
@@ -792,7 +781,7 @@ Some defaults:
 aggregate tables
 #+begin_src emacs-lisp
   (use-package orgtbl-aggregate
-    :ensure t)
+    :straight t)
 #+end_src
 **** Org Settings
 #+BEGIN_SRC emacs-lisp
@@ -1021,7 +1010,7 @@ aggregate tables
 *** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :ensure t
+    :straight t
     :config
     (evil-define-minor-mode-key 'normal 'magit-blame-mode
       (kbd "<return>")  'magit-show-commit)
@@ -1092,7 +1081,7 @@ Syntax checking
 
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :ensure t
+    :straight t
     :diminish
     :init (global-flycheck-mode)
     :config
@@ -1131,19 +1120,19 @@ Spell checking. Needs the aspell program installed.
 *** ivy
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :ensure t
+    :straight t
     :diminish (ivy-mode . "")
     :config
     ;; Required to show the recent commands
     (use-package smex
-      :ensure t)
+      :straight t)
 
     (use-package wgrep
-      :ensure t)
+      :straight t)
 
     ;; sort results better
     (use-package flx
-      :ensure t)
+      :straight t)
 
     ;; configure regexp engine.
     (setq ivy-re-builders-alist
@@ -1172,8 +1161,7 @@ Spell checking. Needs the aspell program installed.
 *** projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-    :ensure t
-    :pin melpa-stable
+    :straight t
     :diminish " P"
     :config
     (setq projectile-mode-line
@@ -1186,7 +1174,7 @@ Spell checking. Needs the aspell program installed.
         (setq projectile-indexing-method 'alien))
 
     (use-package counsel-projectile
-      :ensure t
+      :straight t
       :config
       (counsel-projectile-mode)))
 #+END_SRC
@@ -1195,9 +1183,8 @@ Autocompletion
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :ensure t
+    :straight t
     :diminish
-    :pin melpa-stable
     :hook
     (after-init . global-company-mode)
     :config
@@ -1218,7 +1205,7 @@ Autocompletion
 *** lsp-mode
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :ensure t
+    :straight t
     :hook (ruby-mode . lsp-deferred)
     :hook (js-mode . lsp-deferred)
     :hook (typescript-mode . lsp-deferred)
@@ -1233,7 +1220,7 @@ Autocompletion
           )
 
     (use-package lsp-ui
-      :ensure t
+      :straight t
       :commands lsp-ui-mode
       :config
       (setq lsp-ui-doc-enable nil
@@ -1243,11 +1230,11 @@ Autocompletion
             lsp-line-ignore-duplicate t))
 
     (use-package lsp-ivy
-      :ensure t
+      :straight t
       :commands lsp-ivy-workspace-symbol)
 
     (use-package lsp-treemacs
-      :ensure t
+      :straight t
       :defer t
       :after treemacs lsp
       :commands (lsp-treemacs-errors-list lsp-treemacs-references)
@@ -1263,7 +1250,7 @@ Not working currently
 
 #+begin_src emacs-lisp
   (use-package dap-mode
-    :ensure t
+    :straight t
     ;; Uncomment the config below if you want all UI panes to be hidden by default!
     ;; :custom
     ;; (lsp-enable-dap-auto-configure nil)
@@ -1283,7 +1270,7 @@ Not working currently
 *** editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
-    :ensure t
+    :straight t
     :diminish
     :config
     (editorconfig-mode 1))
@@ -1291,7 +1278,7 @@ Not working currently
 *** smartparens
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
-    :ensure t
+    :straight t
     :diminish
     :config
     (require 'smartparens-config)
@@ -1311,7 +1298,7 @@ Not working currently
     (show-smartparens-global-mode t)
 
     (use-package evil-smartparens
-      :ensure t
+      :straight t
       :diminish
       :config
       (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)))
@@ -1320,7 +1307,7 @@ Not working currently
 
 #+BEGIN_SRC emacs-lisp
   (use-package windmove
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 *** desktop
@@ -1328,7 +1315,7 @@ Save emacs session
 
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
-    :ensure t
+    :straight t
     :config
     (setq desktop-path '("~/.emacs.d/etc/")
           desktop-dirname "~/.emacs.d/etc/"
@@ -1365,7 +1352,7 @@ Save emacs session
 *** git-gutter
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
-    :ensure t
+    :straight t
     :diminish
     :config
     (setq git-gutter:update-interval 2
@@ -1377,13 +1364,13 @@ An Emacs Package for GitHub .gitignore templates
 
 #+BEGIN_SRC emacs-lisp
   (use-package gitignore-templates
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** ag
 
 #+BEGIN_SRC emacs-lisp
   (use-package ag
-    :ensure t
+    :straight t
     :config
     (setq ag-highlight-search t
           ag-reuse-window t))
@@ -1393,7 +1380,7 @@ Display the keys available after pressing C-x for example.
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :ensure t
+    :straight t
     :defer t
     :diminish
     :config
@@ -1406,7 +1393,7 @@ guesses the correct indentation
 
 #+BEGIN_SRC emacs-lisp
   (use-package dtrt-indent
-    :ensure t
+    :straight t
     :hook (diminish 'dtrt-indent-mode)
     :config
     (dtrt-indent-mode t))
@@ -1416,7 +1403,7 @@ shows the color of hex color codes as their background
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :ensure t
+    :straight t
     :defer t
     :diminish
     :config
@@ -1431,7 +1418,7 @@ hide specific modes from the modeline
 
 #+begIN_SRC emacs-lisp
   (use-package diminish
-    :ensure t
+    :straight t
     :config
     (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
@@ -1444,7 +1431,7 @@ Get environment variables from the shell
 
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
-    :ensure t
+    :straight t
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
@@ -1454,12 +1441,10 @@ Calendar framework
 
 #+BEGIN_SRC emacs-lisp
   (use-package calfw
-    :ensure t
-    :pin melpa-stable
+    :straight t
     :init
     (use-package calfw-org
-      :ensure t
-      :pin melpa-stable)
+      :straight t)
 
     :config
     (require 'calfw-org))
@@ -1469,7 +1454,7 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ranger
-    :ensure t
+    :straight t
     :config
     (setq ranger-override-dired 'ranger
           ranger-show-hidden t
@@ -1493,15 +1478,14 @@ Disabled for now because it requires extra packages to be installed in the
 system in order to work.
 #+BEGIN_SRC emacs-lisp
     (use-package pdf-tools
-      :ensure t
-      :pin melpa-stable
+      :straight t
       :config
       (pdf-tools-install))
 #+END_SRC
 *** git-timemachine
 #+BEGIN_SRC emacs-lisp
   (use-package git-timemachine
-    :ensure t
+    :straight t
     :config
     (evil-define-minor-mode-key 'normal 'git-timemachine-mode
       (kbd "<return>")  'git-timemachine-show-commit))
@@ -1509,7 +1493,7 @@ system in order to work.
 *** treemacs
 #+BEGIN_SRC emacs-lisp
   (use-package treemacs
-    :ensure t
+    :straight t
     :defer t
     :init
     (with-eval-after-load 'winum
@@ -1549,23 +1533,23 @@ system in order to work.
 
   (use-package treemacs-evil
     :after treemacs evil
-    :ensure t)
+    :straight t)
 
   (use-package treemacs-projectile
     :after treemacs projectile
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** dumb-jumb
 #+begin_src emacs-lisp
   (use-package dumb-jump
-    :ensure t
+    :straight t
     :config
     (setq dumb-jump-selector 'ivy))
 #+end_src
 *** hydra
 #+BEGIN_SRC emacs-lisp
   (use-package hydra
-    :ensure t
+    :straight t
     :config
     (require 'hydra-examples)
 
@@ -1628,7 +1612,7 @@ system in order to work.
 **** DISABLED docker
 #+BEGIN_SRC emacs-lisp
   (use-package docker
-    :ensure t
+    :straight t
     :config
     (setenv "DOCKER_TLS_VERIFY" "1")
     (setenv "DOCKER_HOST" "tcp://10.11.12.13:2376")
@@ -1638,19 +1622,19 @@ system in order to work.
 **** NOT_WINDOWS dockerfile-mode
 #+BEGIN_SRC emacs-lisp
   (use-package dockerfile-mode
-    :ensure t
+    :straight t
     :config
     (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 #+END_SRC
 **** NOT_WINDOWS docker-compose-mode
 #+BEGIN_SRC emacs-lisp
   (use-package docker-compose-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** restclient.el
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
-    :ensure t
+    :straight t
     :config
     (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode)))
 #+END_SRC
@@ -1659,7 +1643,7 @@ system in order to work.
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :ensure t
+    :straight t
     :diminish yas-minor-mode
     :config
     (add-hook 'tide-mode-hook
@@ -1667,10 +1651,10 @@ system in order to work.
                   (yas-activate-extra-mode 'js-mode)))
 
     (use-package yasnippet-snippets
-      :ensure t)
+      :straight t)
 
     (use-package react-snippets
-      :ensure t)
+      :straight t)
 
     (yas-global-mode 1))
 #+END_SRC
@@ -1679,14 +1663,14 @@ https://github.com/joostkremers/writeroom-mode
 
 #+begin_src emacs-lisp
   (use-package writeroom-mode
-    :ensure t)
+    :straight t)
 #+end_src
 *** nswbuff
 Go to next/previous buffer in a project-aware context
 
 #+begin_src emacs-lisp
   (use-package nswbuff
-    :ensure t
+    :straight t
     :config
     (setq nswbuff-buffer-list-function #'nswbuff-projectile-buffer-list
           nswbuff-clear-delay 0
@@ -1696,7 +1680,7 @@ Go to next/previous buffer in a project-aware context
 *** aggressive-indent
 #+begin_src emacs-lisp
   (use-package aggressive-indent
-    :ensure t
+    :straight t
     :config
     (global-aggressive-indent-mode t)
     (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode web-mode typescript-mode sql-mode)))
@@ -1704,13 +1688,12 @@ Go to next/previous buffer in a project-aware context
 *** csv-mode
 #+begin_src emacs-lisp
   (use-package csv-mode
-    :ensure t
-    :pin gnu)
+    :straight t)
 #+end_src
 *** deadgrep
 #+begin_src emacs-lisp
   (use-package deadgrep
-    :ensure t
+    :straight t
     :config
     (global-set-key (kbd "<f5>") #'deadgrep))
 #+end_src
@@ -1719,12 +1702,12 @@ see logs easily
 
 #+begin_src emacs-lisp
   (use-package itail
-    :ensure t)
+    :straight t)
 #+end_src
 *** NOT_WORK hledger
 #+begin_src emacs-lisp
   (use-package hledger-mode
-    :ensure t
+    :straight t
     :mode
     (("\\.hledger\\'" . hledger-mode))
     :config
@@ -1741,7 +1724,7 @@ Use C-j to expand.
 
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
-    :ensure t
+    :straight t
     :config
     ;; Autostart on any markup modes and CSS
     (define-key emmet-mode-keymap [tab] 'emmet-expand-line)
@@ -1752,7 +1735,7 @@ Use C-j to expand.
 **** web-mode
 #+BEGIN_SRC emacs-lisp
   (use-package web-mode
-    :ensure t
+    :straight t
     :mode
     (("\\.html?\\'" . web-mode)
      ("\\.tsx\\'" . web-mode)
@@ -1802,7 +1785,7 @@ I don't even remember what this is
 **** DISABLED haml-mode
 #+begin_src emacs-lisp
   (use-package haml-mode
-    :ensure t
+    :straight t
     :hook
     (haml-mode . display-line-numbers-mode)
     :config
@@ -1822,12 +1805,12 @@ Some guides:
 **** json-mode
 #+BEGIN_SRC emacs-lisp
   (use-package json-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 **** typescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package typescript-mode
-    :ensure t
+    :straight t
     :hook
     (typescript-mode . display-line-numbers-mode)
     :config
@@ -1838,7 +1821,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 
 #+BEGIN_SRC emacs-lisp
   (use-package mocha
-    :ensure t
+    :straight t
     :commands (mocha-test-project
                mocha-debug-project
                mocha-test-file
@@ -1896,7 +1879,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** jasmine
 #+BEGIN_SRC emacs-lisp
   (use-package jasminejs-mode
-    :ensure t
+    :straight t
     :defer t
     :after yasnippet
     :hook
@@ -1905,7 +1888,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** DISABLED svelte
 #+begin_src emacs-lisp
   (use-package svelte-mode
-    :ensure t
+    :straight t
     :hook (svelte-mode . lsp-deferred)
     :mode (("\\.svelte\\'" . svelte-mode)))
 #+end_src
@@ -1913,13 +1896,13 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** DISABLED purescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
-    :ensure t
+    :straight t
     :hook (purescript-mode . display-line-numbers-mode))
 #+END_SRC
 **** DISABLED psc-ide
 #+BEGIN_SRC emacs-lisp
   (use-package psc-ide
-    :ensure t
+    :straight t
     :config
     (add-hook 'purescript-mode-hook
               (lambda ()
@@ -1938,8 +1921,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** markdown-mode
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
-    :ensure t
-    :pin melpa-stable
+    :straight t
     :commands (markdown-mode gfm-mode)
     :hook (markdown-mode . flyspell-mode)
     :mode (("README\\.md\\'" . gfm-mode)
@@ -1951,7 +1933,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** yaml-mode
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :ensure t
+    :straight t
     :hook
     (yaml-mode . display-line-numbers-mode)
     :config
@@ -1969,7 +1951,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** ruby-mode
 #+BEGIN_SRC emacs-lisp
   (use-package ruby-mode
-    :ensure t
+    :straight t
     :mode
     (("\\.rbi?\\'" . ruby-mode))
     :config
@@ -1979,7 +1961,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** MAC_ONLY inf-ruby
 #+BEGIN_SRC emacs-lisp
   (use-package inf-ruby
-    :ensure t
+    :straight t
     :config
     (setq inf-ruby-console-environment "development")
     (add-hook 'after-init-hook 'inf-ruby-switch-setup))
@@ -1987,9 +1969,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 **** MAC_ONLY projectile-rails
 #+BEGIN_SRC emacs-lisp
   (use-package projectile-rails
-    :ensure t
+    :straight t
     :requires projectile
-    :pin melpa-stable
     :diminish
     :config
     (projectile-rails-global-mode))
@@ -1999,7 +1980,7 @@ Enhancements to ruby-mode for RSpec files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rspec-mode
-    :ensure t
+    :straight t
     :general (:keymaps 'rspec-compilation-mode-map "r" 'rspec-rerun)
     :config
     (setq compilation-scroll-output t
@@ -2012,7 +1993,7 @@ Enhancements to ruby-mode for RSpec files.
 **** MAC_ONLY minitest-mode
 #+BEGIN_SRC emacs-lisp
   (use-package minitest
-    :ensure t
+    :straight t
     :hook (ruby-mode . minitest-mode)
     :config
     (setq minitest-use-rails t))
@@ -2022,12 +2003,12 @@ Interact with bundler with Emacs
 
 #+BEGIN_SRC emacs-lisp
   (use-package bundler
-    :ensure t)
+    :straight t)
 #+END_SRC
 **** MAC_ONLY rubocop
 #+BEGIN_SRC emacs-lisp
   (use-package rubocop
-    :ensure t
+    :straight t
     :config
     ;; Load rubocopfmt
     (add-to-list 'load-path "~/.emacs.d/lisp/rubocopfmt.el")
@@ -2044,8 +2025,7 @@ replace with: https://github.com/jyp/dante
 
 #+BEGIN_SRC emacs-lisp
   (use-package intero
-    :ensure t
-    :pin melpa-stable
+    :straight t
     :config
     (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
@@ -2056,8 +2036,7 @@ was broken, so melpa-stable should be preferred.
 
 #+BEGIN_SRC emacs-lisp
     (use-package ess
-      :ensure t
-      :pin melpa-stable)
+      :straight t)
 #+END_SRC
 *** Prolog
 **** DISABLED Prolog-mode
@@ -2072,7 +2051,7 @@ consult Prolog programs and evaluate embedded queries."
 
 #+BEGIN_SRC emacs-lisp
   (use-package ediprolog
-    :ensure t
+    :straight t
     :config
     (global-set-key [f10] 'ediprolog-dwim))
 #+END_SRC
@@ -2081,17 +2060,17 @@ Org-babel support for prolog.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ob-prolog
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** Clojure/ClojureScript
 **** NOT_WORK clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
-    :ensure t
+    :straight t
     :hook
     (clojure-mode . display-line-numbers-mode)
     :config
-    (require 'flycheck-clj-kondo)
+    ;; (require 'flycheck-clj-kondo)
 
     ;; Start cider in test env in order to run tests
     ;; Source: https://stackoverflow.com/questions/18304271/how-do-i-choose-switch-leiningen-profiles-with-emacs-nrepl
@@ -2108,22 +2087,22 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 
 #+begin_src emacs-lisp
   (use-package cider
-    :ensure t
+    :straight t
     :config
     (setq cider-repl-history-file "~/.emacs.d/cider-history"))
 #+end_src
 **** NOT_WORK flycheck-clojure
 #+begin_src emacs-lisp
   (use-package flycheck-clojure
-    :ensure t
+    :straight t
     :config
     (use-package flycheck-pos-tip
-      :ensure t
+      :straight t
       :config
       (with-eval-after-load 'flycheck
         (flycheck-pos-tip-mode)))
     (use-package flycheck-clj-kondo
-      :ensure t)
+      :straight t)
     (eval-after-load 'flycheck '(flycheck-clojure-setup))
     (eval-after-load 'flycheck
       '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
@@ -2134,18 +2113,19 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 **** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
   (use-package ob-clojurescript
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** Latex
 **** NOT_WORK Auctex
 #+BEGIN_SRC emacs-lisp
   (use-package tex
-    :ensure auctex)
+  :straight auctex
+  :defer t)
 #+END_SRC
 **** DISABLED latex-preview-pane
 #+BEGIN_SRC emacs-lisp
   (use-package latex-preview-pane
-    :ensure t
+    :straight t
     :config
     (latex-preview-pane-enable))
 #+END_SRC
@@ -2153,7 +2133,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 **** DISABLED go mode
 #+begin_src emacs-lisp
   (use-package go-mode
-    :ensure t
+    :straight t
     :hook
     (go-mode . display-line-numbers-mode)
     :config
@@ -2166,13 +2146,13 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 **** DISABLED go-guru
 #+begin_src emacs-lisp
   (use-package go-guru
-    :ensure t)
+    :straight t)
 #+end_src
 ** Trying
 *** vdiff
 #+begin_src emacs-lisp
 (use-package vdiff
-  :ensure t)
+  :straight t)
 #+end_src
 * Font and Theme
 ** Fonts
@@ -2228,10 +2208,10 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
   ;; Used for treemacs
   (use-package doom-themes
-    :ensure t
+    :straight t
     :config
     (use-package all-the-icons
-      :ensure t)
+      :straight t)
     (setq doom-themes-enable-bold t
           doom-themes-enable-italic t
           doom-themes-treemacs-line-spacing 2
@@ -2289,7 +2269,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 
   ;; Light theme
   (use-package flatui-theme
-    :ensure t
+    :straight t
     :config
     (setq light-theme-var 'flatui)
     (setq light-theme-overrides-var

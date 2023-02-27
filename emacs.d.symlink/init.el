@@ -18,21 +18,12 @@
 ;; set correct user-emacs-directory on Windows
 
 
-(setq gc-cons-threshold 100000000)
-
-(setq read-process-output-max (* 1024 1024)) ; 1mb (needed for lsp mode)
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
-(setq my-user-emacs-directory "~/.emacs.d/")
+(setq gc-cons-threshold 100000000
+      read-process-output-max (* 1024 1024) ; 1mb (needed for lsp mode)
+      my-user-emacs-directory "~/.emacs.d/")
 
 (let ((local-pre-file (concat user-emacs-directory "local-pre.el")))
   (if (file-exists-p local-pre-file) (load local-pre-file)))
-
 
 (defun for-correct-platform-p (keyword)
   "Return t if KEYWORD match the check for the current platform."
@@ -77,8 +68,6 @@
          (org-babel-default-header-args (org-babel-merge-params org-babel-default-header-args
                                                                 (list (cons :tangle output-file)))))
     (message "—————• Re-generating %s …" output-file)
-    ;; save-restriction
-    ;; save-excursion
     (save-restriction
       (save-excursion
         ;; If I set it to ~/.emacs.d/init.org it does not recognize that it is the same
