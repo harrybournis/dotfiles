@@ -17,22 +17,15 @@
 
 ;; set correct user-emacs-directory on Windows
 
-
-(setq gc-cons-threshold 100000000)
-
-(setq read-process-output-max (* 3 (* 1024 1024))) ; 1mb (needed for lsp mode)
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
-(setq my-user-emacs-directory "~/.emacs.d/")
+;;; Code:
+(setq gc-cons-percentage 0.6
+      gc-cons-threshold most-positive-fixnum
+      read-process-output-max (* 1024 1024) ; 1mb (needed for lsp mode)
+      debug-on-error t
+      my-user-emacs-directory "~/.emacs.d/")
 
 (let ((local-pre-file (concat user-emacs-directory "local-pre.el")))
   (if (file-exists-p local-pre-file) (load local-pre-file)))
-
 
 (defun for-correct-platform-p (keyword)
   "Return t if KEYWORD match the check for the current platform."
@@ -77,8 +70,6 @@
          (org-babel-default-header-args (org-babel-merge-params org-babel-default-header-args
                                                                 (list (cons :tangle output-file)))))
     (message "—————• Re-generating %s …" output-file)
-    ;; save-restriction
-    ;; save-excursion
     (save-restriction
       (save-excursion
         ;; If I set it to ~/.emacs.d/init.org it does not recognize that it is the same
@@ -127,15 +118,23 @@
 
 (let ((orgfile (concat my-user-emacs-directory "init.org"))
       (elfile (concat my-user-emacs-directory "init-tangled.el"))
-      (local-post-file (concat user-emacs-directory "local-post.el"))
-      (gc-cons-threshold most-positive-fixnum))
+      (local-post-file (concat user-emacs-directory "local-post.el")))
   ;; following lines are executed only when my-tangle-config-org-hook-func()
   ;; was not invoked when saving config.org which is the normal case:
   (when (or (not (file-exists-p elfile))
             (file-newer-than-file-p orgfile elfile))
     (my-tangle-config-org))
 
-  (load-file elfile)
+  (let ((file-name-handler-alist nil))
+    (load-file elfile))
   (if (file-exists-p local-post-file) (load local-post-file)))
+
+(run-with-idle-timer 1 nil
+                     (lambda ()
+                       "Clean up gc."
+                       (setq gc-cons-threshold  100000000
+                             gc-cons-percentage 0.1
+                             debug-on-error t)
+                       (garbage-collect)))
 
 ;;; init.el ends here

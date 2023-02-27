@@ -29,3 +29,5 @@ abbrev_defs
 tramp
 local*.el
 cider-history
+straight/*
+!straight/versions
