@@ -372,6 +372,7 @@ mode only when it is needed.
     (defcustom evil-collection-mode-list
       `(eshell
         calendar
+        company
         custom
         cus-theme
         deadgrep
@@ -598,6 +599,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "c"         'hbournis/copy-filename-to-clipboard
       "RET"       'hbournis/generic-find-definition
       "w"         'hydra-window-deluxe-custom/body
+      "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
       "r"         (lambda () (interactive) (hbournis/call-with-prefix 'lsp-treemacs-references))
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
@@ -1197,21 +1199,13 @@ Autocompletion
   (use-package company
     :ensure t
     :diminish
-    :pin melpa-stable
     :hook
     (after-init . global-company-mode)
     :config
     ;; Disable autocompletion in org files
     (setq company-global-modes '(not org-mode)
-          company-idle-delay 0.0 ;; default is 0.2
-          company-minimum-prefix-length 1)
-
-    ;; Change keybindings for navigating results
-    (with-eval-after-load 'company
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous))
+          company-idle-delay 1.5 ;; default is 0.2
+          company-minimum-prefix-length 2)
     :bind
     (("C-;" . company-complete)))
 #+END_SRC
@@ -1219,16 +1213,16 @@ Autocompletion
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :hook (ruby-mode . lsp-deferred)
-    :hook (js-mode . lsp-deferred)
-    :hook (typescript-mode . lsp-deferred)
-    :hook (go-mode . lsp-deferred)
+    :hook (ruby-mode . lsp)
+    :hook (js-mode . lsp)
+    :hook (typescript-mode . lsp)
+    :hook (go-mode . lsp)
     :commands (lsp lsp-deferred)
     :config
     (setq lsp-prefer-flymake nil
           lsp-headerline-breadcrumb-enable nil
           lsp-modeline-diagnostics-enable t
-          lsp-idle-delay 0.800 ; performance
+          lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
           )
 
@@ -1652,6 +1646,8 @@ system in order to work.
   (use-package restclient
     :ensure t
     :config
+    ;; show response in fundamental mode only to speed it up
+    (setq restclient-response-size-threshold 0.00001)
     (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode)))
 #+END_SRC
 *** yasnippet
@@ -1662,10 +1658,6 @@ system in order to work.
     :ensure t
     :diminish yas-minor-mode
     :config
-    (add-hook 'tide-mode-hook
-              #'(lambda ()
-                  (yas-activate-extra-mode 'js-mode)))
-
     (use-package yasnippet-snippets
       :ensure t)
 
@@ -1698,6 +1690,7 @@ Go to next/previous buffer in a project-aware context
   (use-package aggressive-indent
     :ensure t
     :config
+    (setq aggressive-indent-sit-for-time 0.2)
     (global-aggressive-indent-mode t)
     (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode web-mode typescript-mode sql-mode)))
 #+end_src
