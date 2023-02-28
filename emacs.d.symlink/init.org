@@ -1826,6 +1826,14 @@ Some guides:
     :config
     (setq typescript-indent-level 2))
 #+END_SRC
+**** jest-test-mode
+#+begin_src emacs-lisp
+  (use-package jest-test-mode
+    :ensure t
+    :defer t
+    :commands jest-test-mode
+    :hook (typescript-mode))
+#+end_src
 **** DISABLED mocha
 Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-318919735][Source]]
 
@@ -1885,15 +1893,6 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 
     (advice-add 'mocha-generate-command
                 :override 'mocha-generate-command--jest-command))
-#+END_SRC
-**** jasmine
-#+BEGIN_SRC emacs-lisp
-  (use-package jasminejs-mode
-    :ensure t
-    :defer t
-    :after yasnippet
-    :hook
-    ((jasminejs-mode . #'jasminejs-add-snippets-to-yas-snippet-dirs)))
 #+END_SRC
 **** DISABLED svelte
 #+begin_src emacs-lisp
@@ -2278,6 +2277,8 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                               :box nil
                               :foreground "#00d3d0"
                               :background nil)
+          (set-face-attribute 'org-block-begin-line nil
+                              :background "#000000")
           ))
 
   ;; Light theme
@@ -2931,7 +2932,7 @@ Run itail on the currently highlighted file in ranger.
                                            rspec-mode      rspec-verify-single
                                            minitest-mode   minitest-verify-single
                                            js-mode         mocha-test-at-point
-                                           typescript-mode mocha-test-at-point
+                                           typescript-mode jest-test-run-at-point
                                            web-mode        mocha-test-at-point
                                            clojure-mode    cider-test-run-test)))
 
@@ -2940,7 +2941,7 @@ Run itail on the currently highlighted file in ranger.
                                            rspec-mode      rspec-verify
                                            minitest-mode   minitest-verify
                                            js-mode         mocha-test-file
-                                           typescript-mode mocha-test-file
+                                           typescript-mode jest-test-run
                                            web-mode        mocha-test-file
                                            clojure-mode    cider-test-run-ns-tests)))
 
@@ -2950,14 +2951,14 @@ Run itail on the currently highlighted file in ranger.
                                            ruby-mode       rspec-verify-all
                                            minitest-mode   minitest-verify-all
                                            js-mode         mocha-test-project
-                                           typescript-mode mocha-test-project
+                                           typescript-mode jest-test-run-all-tests
                                            web-mode        mocha-test-project
                                            clojure-mode    cider-test-run-project-tests)))
 
   (setq hbournis/find-definition-map
         #s(hash-table size 2 test eq data (
                                            ruby-mode       lsp-find-definition
-                                           typescript-mode dumb-jump-go
+                                           typescript-mode lsp-find-definition
                                            java-mode       dumb-jump-go
                                            web-mode        dumb-jump-go)))
 

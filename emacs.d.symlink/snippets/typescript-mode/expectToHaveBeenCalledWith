@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: expect().toHaveBeenCalledWith()
 # key: expcw
 # condition: (looking-back "^\s*expcw")

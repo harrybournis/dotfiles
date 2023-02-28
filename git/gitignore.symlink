@@ -37,3 +37,4 @@ Temporary Items
 .tern-port
 .byebug_history
 /.dir-locals.el
+.flycheck_*

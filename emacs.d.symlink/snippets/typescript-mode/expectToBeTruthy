@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: expect().toBeTruthy()
 # key: expt
 # condition: (looking-back "^\s*expt")

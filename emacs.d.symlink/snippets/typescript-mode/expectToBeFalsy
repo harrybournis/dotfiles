@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: expect().toBeFalsy()
 # key: expf
 # condition: (looking-back "^\s*expf")

@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: beforeEach
 # key: befe
 # condition: (looking-back "^\s*befe")

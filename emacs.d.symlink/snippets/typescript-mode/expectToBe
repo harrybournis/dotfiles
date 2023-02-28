@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: expect().toBe()
 # key: expb
 # condition: (looking-back "^\s*expb")

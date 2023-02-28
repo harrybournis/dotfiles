@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: beforeAll
 # key: befa
 # expand-env: ((yas-indent-line 'fixed))

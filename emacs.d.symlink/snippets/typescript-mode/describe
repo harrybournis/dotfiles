@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: describe
 # key: desc
 # condition: (looking-back "^\s*desc")

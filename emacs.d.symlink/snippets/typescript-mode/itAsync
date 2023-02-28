@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: async it
 # key: ita
 # condition: (looking-back "^\s*ita")

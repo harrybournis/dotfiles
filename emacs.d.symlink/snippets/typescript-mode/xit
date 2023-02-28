@@ -1,4 +1,4 @@
-# -*- mode: jasminejs-mode -*-
+# -*- mode: snippet -*-
 # name: xit
 # key: xit
 # condition: (looking-back "^\s*xit")
