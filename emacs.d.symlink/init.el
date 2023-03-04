@@ -17,9 +17,11 @@
 
 ;; set correct user-emacs-directory on Windows
 
-
-(setq gc-cons-threshold 100000000
+;;; Code:
+(setq gc-cons-percentage 0.6
+      gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024) ; 1mb (needed for lsp mode)
+      debug-on-error t
       my-user-emacs-directory "~/.emacs.d/")
 
 (let ((local-pre-file (concat user-emacs-directory "local-pre.el")))
@@ -126,5 +128,13 @@
 
   (load-file elfile)
   (if (file-exists-p local-post-file) (load local-post-file)))
+
+(run-with-idle-timer 1 nil
+                     (lambda ()
+                       "Clean up gc."
+                       (setq gc-cons-threshold  100000000
+                             gc-cons-percentage 0.1
+                             debug-on-error t)
+                       (garbage-collect)))
 
 ;;; init.el ends here

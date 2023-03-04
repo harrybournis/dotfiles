@@ -27,6 +27,14 @@
 ** straight.el
 
 #+BEGIN_SRC emacs-lisp
+  (setq straight-use-package-by-default t
+        use-package-expand-minimally t
+        use-package-always-ensure nil
+        use-package-always-defer t
+        straight-check-for-modifications nil
+        site-run-file nil
+        inhibit-compacting-font-caches t)
+
   (defvar bootstrap-version)
   (let ((bootstrap-file
          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -41,9 +49,8 @@
     (load bootstrap-file nil 'nomessage))
 
   (straight-use-package 'use-package)
+  (setq use-package-verbose t)
   (straight-use-package '(org :type built-in))
-
-  (setq straight-use-package-by-default t)
 #+END_SRC
 ** Security
 #+BEGIN_SRC emacs-lisp
@@ -91,6 +98,7 @@ Variables are set here that are used in the configuration below
 ** General
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-screen t
+        inhibit-startup-message t
         initial-scratch-message nil
         visible-bell nil
         apropos-do-all t                        ;; apropos commands perform more extensive searches than default
@@ -310,6 +318,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :straight t
+    :demand t
     :init
     (setq evil-want-integration t
           evil-want-keybinding nil
@@ -357,6 +366,7 @@ mode only when it is needed.
   (use-package evil-collection
     :after evil
     :straight t
+    :demand t
     :init
     ;; check options in variable evil-collection--supported-modes
     (defcustom evil-collection-mode-list
@@ -409,6 +419,7 @@ mode only when it is needed.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :straight t
+    :demand t
     :after evil
     :config
     (global-evil-surround-mode))
@@ -418,6 +429,7 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :straight t
+    :demand t
     :after evil
     :config
     (evil-lion-mode))
@@ -427,15 +439,17 @@ Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :straight t
+    :demand t
     :after evil
     :config
     (global-evil-matchit-mode t))
 #+END_SRC
-**** evil-numbers
+**** DISABLED evil-numbers
 Increment / decrement binary, octal, decimal and hex literals
 #+BEGIN_SRC emacs-lisp
   (use-package evil-numbers
     :straight t
+    :demand t
     :after evil
     :config
     (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
@@ -446,6 +460,7 @@ Nerd commenter emulation
 #+BEGIN_SRC emacs-lisp
   (use-package evil-nerd-commenter
     :straight t
+    :demand t
     :after evil)
 #+END_SRC
 **** evil-org
@@ -453,6 +468,7 @@ Org mode key bindings for evil mode
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
     :straight t
+    :demand t
     :after (evil org)
     :diminish
     :config
@@ -463,11 +479,12 @@ Org mode key bindings for evil mode
                 (require 'evil-org-agenda)
                 (evil-org-agenda-set-keys))))
 #+END_SRC
-**** evil-string-inflection
+**** DISABLED evil-string-inflection
 Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
 #+BEGIN_SRC emacs-lisp
   (use-package evil-string-inflection
     :straight t
+    :demand t
     :after evil)
 #+END_SRC
 **** Greek Keybindings
@@ -532,6 +549,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :straight t
+    :demand t
     :config
     (setq general-override-states '(emacs
                                     hybrid
@@ -646,6 +664,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :straight t
+    :demand
     :config
     ;; Element cache makes it slow for some reason
     (setq org-element-cache-persistent nil)
@@ -670,7 +689,74 @@ Improvement on evil-leader. Specify mutliple leaders.
                   (point)))
             (user-error "No link found"))
            ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
-           (t (user-error "No link found")))))))
+           (t (user-error "No link found"))))))
+
+    (require 'ob-R)
+    (require 'ob-sql)
+
+    (ignore-errors
+      (require 'org-tempo))
+
+    (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
+          org-src-tab-acts-natively t
+          org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
+          org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
+          org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
+
+          org-startup-indented t                   ;; indent on startup
+          org-indent-indentation-per-level 2       ;; indent each level by 2
+          org-list-indent-offset 2                 ;; indent lists by 2
+          org-display-inline-images t              ;; display images in org by default
+          org-hide-emphasis-markers t              ;; hide bold, italics etc markers
+          org-tags-column (- (window-total-width)) ;; make tags align at right window width
+          org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
+          org-log-into-drawer t                    ;; save logs in the drawer of current item
+          org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
+          org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
+          org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
+          org-babel-do-load-languages
+          (quote (org-babel-load-languages (quote ((emacs-lisp . t)
+                                                   (ruby . t)
+                                                   (python . t)
+                                                   (haskell . t)
+                                                   (js . t)
+                                                   (shell . t)
+                                                   (R . t)
+                                                   (prolog . t)
+                                                   (clojurescript . t)
+                                                   (plantuml . t)
+                                                   (sql . t)
+                                                   ))))
+          org-export-backends (quote (ascii
+                                      html
+                                      icalendar
+                                      latex
+                                      md
+                                      odt))
+          org-modules '(ol-bbdb
+                        ol-docview
+                        ol-info
+                        ol-w3m
+                        ol-bibtex
+                        org-protocol
+                        org-collector
+                        org-tempo)
+
+          org-lowest-priority ?D
+          org-default-priority ?D
+
+          ;; custom colors for priorities
+          org-priority-faces '((?A . (:foreground "red" :weight bold))
+                               (?B . (:foreground "orange"))
+                               (?C . (:foreground "yellow"))
+                               (?D . (:foreground "green"))))
+
+    (define-key org-mode-map (kbd "C-k") nil)
+
+    ;; Show only the time when a note is added, instead of 'Note taken on..'
+    (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
+    (add-to-list 'org-log-note-headings '(note . "%t"))
+    )
 #+END_SRC
 **** Org-related packages
 ***** UNIX_ONLY org-bullets
@@ -783,74 +869,6 @@ aggregate tables
   (use-package orgtbl-aggregate
     :straight t)
 #+end_src
-**** Org Settings
-#+BEGIN_SRC emacs-lisp
-  (require 'ob-R)
-  (require 'ob-sql)
-
-  (ignore-errors
-    (require 'org-tempo))
-
-  (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
-        org-src-tab-acts-natively t
-        org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
-        org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
-        org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
-
-        org-startup-indented t                   ;; indent on startup
-        org-indent-indentation-per-level 2       ;; indent each level by 2
-        org-list-indent-offset 2                 ;; indent lists by 2
-        org-display-inline-images t              ;; display images in org by default
-        org-hide-emphasis-markers t              ;; hide bold, italics etc markers
-        org-tags-column (- (window-total-width)) ;; make tags align at right window width
-        org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
-        org-log-into-drawer t                    ;; save logs in the drawer of current item
-        org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
-        org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
-        org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
-        org-babel-do-load-languages
-        (quote (org-babel-load-languages (quote ((emacs-lisp . t)
-                                                 (ruby . t)
-                                                 (python . t)
-                                                 (haskell . t)
-                                                 (js . t)
-                                                 (shell . t)
-                                                 (R . t)
-                                                 (prolog . t)
-                                                 (clojurescript . t)
-                                                 (plantuml . t)
-                                                 (sql . t)
-                                                 ))))
-        org-export-backends (quote (ascii
-                                    html
-                                    icalendar
-                                    latex
-                                    md
-                                    odt))
-        org-modules '(ol-bbdb
-                      ol-docview
-                      ol-info
-                      ol-w3m
-                      ol-bibtex
-                      org-protocol
-                      org-collector
-                      org-tempo)
-
-        org-lowest-priority ?D
-        org-default-priority ?D
-
-        ;; custom colors for priorities
-        org-priority-faces '((?A . (:foreground "red" :weight bold))
-                             (?B . (:foreground "orange"))
-                             (?C . (:foreground "yellow"))
-                             (?D . (:foreground "green"))))
-
-  (define-key org-mode-map (kbd "C-k") nil)
-
-  ;; Show only the time when a note is added, instead of 'Note taken on..'
-  (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
-  (add-to-list 'org-log-note-headings '(note . "%t"))
-#+END_SRC
 **** Org custom functions
 #+BEGIN_SRC emacs-lisp
   ;; display week numbers in org calendar
@@ -1083,6 +1101,7 @@ Syntax checking
   (use-package flycheck
     :straight t
     :diminish
+    :defer 3
     :init (global-flycheck-mode)
     :config
     (setq-default flycheck-disabled-checkers
@@ -1121,6 +1140,7 @@ Spell checking. Needs the aspell program installed.
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :straight t
+    :demand t
     :diminish (ivy-mode . "")
     :config
     ;; Required to show the recent commands
@@ -1132,6 +1152,12 @@ Spell checking. Needs the aspell program installed.
 
     ;; sort results better
     (use-package flx
+      :straight t)
+
+    (use-package counsel
+      :straight t)
+
+    (use-package swiper
       :straight t)
 
     ;; configure regexp engine.
@@ -1163,20 +1189,21 @@ Spell checking. Needs the aspell program installed.
   (use-package projectile
     :straight t
     :diminish " P"
+    :defer
+    :commands (projectile-switch-project)
     :config
-    (setq projectile-mode-line
-          (format " [%s]"
-                  (projectile-project-name))
-          projectile-globally-ignored-directories (append
-                                                   projectile-globally-ignored-directories
-                                                   '(".stversions" "vendor")))
+    (setq projectile-mode-line (format " [%s]" (projectile-project-name))
+          projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
+
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
 
     (use-package counsel-projectile
       :straight t
       :config
-      (counsel-projectile-mode)))
+      (counsel-projectile-mode))
+
+    (projectile-global-mode))
 #+END_SRC
 *** company
 Autocompletion
@@ -1184,7 +1211,7 @@ Autocompletion
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :straight t
-    :diminish
+    :defer 4
     :hook
     (after-init . global-company-mode)
     :config
@@ -1279,6 +1306,7 @@ Not working currently
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :straight t
+    :defer 4
     :diminish
     :config
     (require 'smartparens-config)
@@ -1307,15 +1335,17 @@ Not working currently
 
 #+BEGIN_SRC emacs-lisp
   (use-package windmove
-    :straight t)
+    :straight t
+    :commands (windmove-up windmove-down windmove-left windmove-right))
 #+END_SRC
 
-*** desktop
+*** DISABLED desktop
 Save emacs session
 
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
     :straight t
+    :commands (projectile-switch-project)
     :config
     (setq desktop-path '("~/.emacs.d/etc/")
           desktop-dirname "~/.emacs.d/etc/"
@@ -1344,6 +1374,7 @@ Save emacs session
         tab-bar-close-button-show nil)
 
   (tab-bar-mode)
+  (tab-bar-rename-tab "1")
 
   (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
   (global-set-key   (kbd "C-2")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "2")))
@@ -1353,6 +1384,7 @@ Save emacs session
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
     :straight t
+    :defer 5
     :diminish
     :config
     (setq git-gutter:update-interval 2
@@ -1455,6 +1487,7 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
 #+BEGIN_SRC emacs-lisp
   (use-package ranger
     :straight t
+    :defer 1
     :config
     (setq ranger-override-dired 'ranger
           ranger-show-hidden t
@@ -1494,7 +1527,6 @@ system in order to work.
 #+BEGIN_SRC emacs-lisp
   (use-package treemacs
     :straight t
-    :defer t
     :init
     (with-eval-after-load 'winum
       (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
@@ -1646,14 +1678,7 @@ system in order to work.
     :straight t
     :diminish yas-minor-mode
     :config
-    (add-hook 'tide-mode-hook
-              #'(lambda ()
-                  (yas-activate-extra-mode 'js-mode)))
-
     (use-package yasnippet-snippets
-      :straight t)
-
-    (use-package react-snippets
       :straight t)
 
     (yas-global-mode 1))
@@ -1665,7 +1690,7 @@ https://github.com/joostkremers/writeroom-mode
   (use-package writeroom-mode
     :straight t)
 #+end_src
-*** nswbuff
+*** DISABLED nswbuff
 Go to next/previous buffer in a project-aware context
 
 #+begin_src emacs-lisp
@@ -1681,6 +1706,7 @@ Go to next/previous buffer in a project-aware context
 #+begin_src emacs-lisp
   (use-package aggressive-indent
     :straight t
+    :defer 4
     :config
     (global-aggressive-indent-mode t)
     (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode web-mode typescript-mode sql-mode)))
@@ -1694,10 +1720,9 @@ Go to next/previous buffer in a project-aware context
 #+begin_src emacs-lisp
   (use-package deadgrep
     :straight t
-    :config
-    (global-set-key (kbd "<f5>") #'deadgrep))
+    :bind (("<f5>" . deadgrep)))
 #+end_src
-*** itail
+*** DISABLED itail
 see logs easily
 
 #+begin_src emacs-lisp
@@ -2148,12 +2173,6 @@ CIDER extends Emacs with support for interactive programming in Clojure.
   (use-package go-guru
     :straight t)
 #+end_src
-** Trying
-*** vdiff
-#+begin_src emacs-lisp
-(use-package vdiff
-  :straight t)
-#+end_src
 * Font and Theme
 ** Fonts
 SourceCodePro is my default font.
@@ -2234,18 +2253,18 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
                               :foreground "#3ab795")
           (set-face-attribute 'fringe nil
                               :background "#000000")
-          (set-face-attribute 'git-gutter:added nil
-                              :background "#000000"
-                              :foreground "#338533")
-          (set-face-attribute 'git-gutter:modified nil
-                              :background "#000000"
-                              :foreground "#8B7233")
-          (set-face-attribute 'git-gutter:deleted nil
-                              :background "#000000"
-                              :foreground "#A54B6F")
-          (set-face-attribute 'git-gutter:separator nil
-                              :background "#000000"
-                              :foreground "#3372A5")
+          ;; (set-face-attribute 'git-gutter:added nil
+          ;;                     :background "#000000"
+          ;;                     :foreground "#338533")
+          ;; (set-face-attribute 'git-gutter:modified nil
+          ;;                     :background "#000000"
+          ;;                     :foreground "#8B7233")
+          ;; (set-face-attribute 'git-gutter:deleted nil
+          ;;                     :background "#000000"
+          ;;                     :foreground "#A54B6F")
+          ;; (set-face-attribute 'git-gutter:separator nil
+          ;;                     :background "#000000"
+          ;;                     :foreground "#3372A5")
           (set-face-attribute 'line-number nil
                               :background "#000000")
           (set-face-attribute 'vertical-border nil
@@ -2361,7 +2380,7 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
 *** Modeline
 **** Custom Modeline
 #+begin_src emacs-lisp
-  (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
+  (run-with-idle-timer 1 nil (lambda () (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")))
 #+end_src
 *** Theme Functions
 #+BEGIN_SRC emacs-lisp
@@ -2412,8 +2431,6 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq evil-insert-state-cursor   '("cyan" box))
     (setq evil-replace-state-cursor  '("red" box))
     (setq evil-operator-state-cursor '("red" box))
-
-    (set-face-attribute 'hl-line nil :background "slate blue")
 
     (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
 
