@@ -9,7 +9,7 @@
 (declare-function projectile-project-name "projectile")
 (defun sml/perform-projectile-replacement (in)
   "If path IN is inside a project, use its name as a prefix."
-  (let ((proj (projectile-project-p)))
+  (let ((proj (if (fboundp 'projectile-project-p) (projectile-project-p) nil)))
     (if (stringp proj)
         (let* ((replacement
                 (format "[%s] "

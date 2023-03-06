@@ -19,7 +19,7 @@
 
 ;;; Code:
 (setq gc-cons-percentage 0.6
-      gc-cons-threshold 100000000
+      gc-cons-threshold most-positive-fixnum
       read-process-output-max (* 1024 1024) ; 1mb (needed for lsp mode)
       debug-on-error t
       my-user-emacs-directory "~/.emacs.d/")
@@ -118,15 +118,15 @@
 
 (let ((orgfile (concat my-user-emacs-directory "init.org"))
       (elfile (concat my-user-emacs-directory "init-tangled.el"))
-      (local-post-file (concat user-emacs-directory "local-post.el"))
-      (gc-cons-threshold most-positive-fixnum))
+      (local-post-file (concat user-emacs-directory "local-post.el")))
   ;; following lines are executed only when my-tangle-config-org-hook-func()
   ;; was not invoked when saving config.org which is the normal case:
   (when (or (not (file-exists-p elfile))
             (file-newer-than-file-p orgfile elfile))
     (my-tangle-config-org))
 
-  (load-file elfile)
+  (let ((file-name-handler-alist nil))
+    (load-file elfile))
   (if (file-exists-p local-post-file) (load local-post-file)))
 
 (run-with-idle-timer 1 nil

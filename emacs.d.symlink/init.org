@@ -92,7 +92,8 @@ Variables are set here that are used in the configuration below
         hbournis/unicode-font           "Unifont"
         hbournis/mac-font-size          "15"
         hbournis/windows-font-size      "11"
-        hbournis/alternate-font-size    "11")
+        hbournis/alternate-font-size    "11"
+        theme                           'dark)
 #+END_SRC
 * Built-in Settings
 ** General
@@ -115,13 +116,6 @@ Variables are set here that are used in the configuration below
   ;; have your emacs window always show your system-name and the full
   ;; path of the buffer you're currently editing
   (setq frame-title-format (list (format "%s %%s: %%j " (system-name)) '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-
-  ;; disable toolbar, scrollbar, menubar (only when not in osx)
-  (and (fboundp 'menu-bar-mode)
-       (not (eq system-type 'darwin))
-       (menu-bar-mode -1))
-  (dolist (mode '(tool-bar-mode scroll-bar-mode))
-    (when (fboundp mode) (funcall mode -1)))
 
   (defun contextual-menubar (&optional frame)
     "Display the menubar in FRAME (default: selected frame) if on a
@@ -201,7 +195,7 @@ Variables are set here that are used in the configuration below
   (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
 
   ;; Automatically refresh buffers that changed on disk
-  (global-auto-revert-mode t)
+  (run-with-idle-timer 4 nil (lambda () (global-auto-revert-mode t)))
 
   ;; Undo/Redo changes in window configuration
   ;; Disabled in windows for performance
@@ -289,6 +283,407 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
   (use-package s
     :straight t)
 #+end_src
+*** org-mode
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+**** Org
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :straight t
+    ;; :demand
+    :config
+    ;; Element cache makes it slow for some reason
+    (setq org-element-cache-persistent nil)
+
+    (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode))
+
+    ;; Copy link to clipboard on right click
+    (define-key org-mouse-map (kbd "<mouse-3>")
+      (lambda (event)
+        (interactive "e")
+        (goto-char (posn-point (event-start event)))
+        (let* ((context
+                (org-element-lineage (org-element-context) '(link) t))
+               (type (org-element-type context))
+               (value (org-element-property :value context)))
+          (cond
+           ((not type) (user-error "No link found"))
+           ((>= (point)
+                (save-excursion
+                  (goto-char (org-element-property :end context))
+                  (skip-chars-backward " \t")
+                  (point)))
+            (user-error "No link found"))
+           ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
+           (t (user-error "No link found"))))))
+
+    (require 'ob-R)
+    (require 'ob-sql)
+
+    (ignore-errors (require 'org-tempo))
+
+    (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
+          org-src-tab-acts-natively t
+          org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
+          org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
+          org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
+
+          org-startup-indented t                   ;; indent on startup
+          org-indent-indentation-per-level 2       ;; indent each level by 2
+          org-list-indent-offset 2                 ;; indent lists by 2
+          org-display-inline-images t              ;; display images in org by default
+          org-hide-emphasis-markers t              ;; hide bold, italics etc markers
+          org-tags-column (- (window-total-width)) ;; make tags align at right window width
+          org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
+          org-log-into-drawer t                    ;; save logs in the drawer of current item
+          org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
+          org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
+          org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
+          org-babel-do-load-languages
+          (quote (org-babel-load-languages (quote ((emacs-lisp . t)
+                                                   (ruby . t)
+                                                   (python . t)
+                                                   (haskell . t)
+                                                   (js . t)
+                                                   (shell . t)
+                                                   (R . t)
+                                                   (prolog . t)
+                                                   (clojurescript . t)
+                                                   (plantuml . t)
+                                                   (sql . t)
+                                                   ))))
+          org-export-backends (quote (ascii
+                                      html
+                                      icalendar
+                                      latex
+                                      md
+                                      odt))
+          org-modules '(ol-bbdb
+                        ol-docview
+                        ol-info
+                        ol-w3m
+                        ol-bibtex
+                        org-protocol
+                        org-collector
+                        org-tempo)
+
+          org-lowest-priority ?D
+          org-default-priority ?D
+
+          ;; custom colors for priorities
+          org-priority-faces '((?A . (:foreground "red" :weight bold))
+                               (?B . (:foreground "orange"))
+                               (?C . (:foreground "yellow"))
+                               (?D . (:foreground "green"))))
+
+    (define-key org-mode-map (kbd "C-k") nil)
+
+    ;; Show only the time when a note is added, instead of 'Note taken on..'
+    (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
+    (add-to-list 'org-log-note-headings '(note . "%t"))
+
+    (if (eq theme 'dark)
+        (progn
+          (set-face-attribute 'org-agenda-date-weekend nil
+                              :weight 'normal)
+          (set-face-attribute 'org-agenda-date          nil :height 1.1)
+          (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
+          (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
+          (set-face-attribute 'org-agenda-structure     nil :height 1.1)
+          (set-face-attribute 'org-level-1 nil
+                              :foreground "#5c9ead")
+          (set-face-attribute 'org-level-4 nil
+                              :foreground "#f0a202")
+          (set-face-attribute 'org-level-2 nil
+                              :foreground "#bbbdf6")
+          (set-face-attribute 'org-level-3 nil
+                              :foreground "#f3b3a6")
+          (set-face-attribute 'org-level-5 nil
+                              :foreground "#cae7b9")
+          (set-face-attribute 'org-level-6 nil
+                              :foreground "#3ab795")
+
+          (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
+                                     (?B . (:foreground "orange"))
+                                     (?C . (:foreground "yellow"))
+                                     (?D . (:foreground "green")))))
+      (progn
+        (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
+                                       ("DOING"       . (:foreground "#2980b9" :weight bold))
+                                       ("WAITING"     . (:foreground "#8e44ad" :weight bold))
+                                       ("DONE"        . (:foreground "green" :weight bold))))
+        (set-face-attribute 'org-checkbox nil
+                            :box nil
+                            :bold 'normal
+                            :background nil)
+        (set-face-attribute 'org-property-value nil
+                            :foreground "black")
+        (set-face-attribute 'org-agenda-date-weekend nil
+                            :weight 'normal)
+        )
+      ))
+#+END_SRC
+**** Org-related packages
+***** DISABLED org-bullets
+Disabled on windows because it makes emacs extremely slow
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :straight t
+    :config
+    ;; Performance fix for windows
+    ;; Source: https://github.com/sabof/org-bullets/issues/11#issuecomment-439228372
+    (if IS-WINDOWS
+        (setq inhibit-compacting-font-caches t))
+    (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+#+END_SRC
+***** org-collector
+#+BEGIN_SRC emacs-lisp
+  ;; Load org-collector
+  (add-to-list 'load-path "~/.emacs.d/lisp/org-collector")
+#+END_SRC
+***** org-fancy-priorities
+Display org priorities as custom strings
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-fancy-priorities
+    :straight t
+    :diminish
+    :hook
+    (org-mode . org-fancy-priorities-mode)
+    :config
+    (setq org-fancy-priorities-list '((?A . "❗")
+                                      (?B . "⬆")
+                                      (?C . "⬇")
+                                      (?D . "☕")
+                                      (?1 . "❗")
+                                      (?2 . "⮬")
+                                      (?3 . "⮮")
+                                      (?4 . "☠"))))
+#+END_SRC
+***** org-capture-vars
+#+BEGIN_SRC emacs-lisp
+  ;; Load org-capture-vars
+  (add-to-list 'load-path "~/.emacs.d/lisp/org-capture-vars")
+  (with-eval-after-load 'org-capture (require 'org-capture-vars))
+#+END_SRC
+***** org-cliplink
+Pretty-copy links from the browser to org with title instead of just url
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-cliplink
+    :straight t
+    :config
+    (global-set-key (kbd "C-c p b") 'org-cliplink))
+#+END_SRC
+***** org-agenda-property
+Display org properties in the agenda buffer
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-agenda-property
+    :straight t)
+#+END_SRC
+***** org-reveal
+[[https://github.com/yjwen/org-reveal][Presentations]]
+
+Download reveal.js from [[https://revealjs.com/installation/#basic-setup][here]]. Set the org-reveal-root to the extracted folder (the root).
+
+For code, swith to light theme before exporting, so that htmlize will use it on the code blocks.
+
+You can also create speaker notes with a BEGIN_NOTES and END_NOTES
+block. pressing "s" while on the presentation will create new browser window for notes
+
+Use "#+ATTR_REVEAL: :frag t" to reveal parts of the page incrementally.
+
+Some defaults:
+#+begin_src
+#+REVEAL_INIT_OPTIONS: margin: 0.1, minScale:0.2, maxScale:2.5, transition:'concave'
+#+REVEAL_THEME: solarized
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Org-Reveal Introduction.">
+#+REVEAL_POSTAMBLE: <p> Created by yjwen. </p>
+#+REVEAL_PLUGINS: (notes)
+#+REVEAL_TITLE_SLIDE: <h1 class="title">%t</h1><h2 class="author">%a</h2><h3 class="email">%e</h3>
+#+REVEAL_DEFAULT_FRAG_STYLE: roll-in
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :straight t
+    :config
+    ;; Set the root
+    ;; (setq org-reveal-root "file:///Users/<user>/reveal.js-master")
+
+    ;; Used for using emacs theme to highligh code
+    (use-package htmlize
+      :straight t)
+    )
+#+END_SRC
+***** org-kanban
+#+begin_src emacs-lisp
+  (use-package org-kanban
+    :straight t
+    :hook (org-after-todo-state-change . org-update-all-dblocks))
+#+end_src
+
+***** orgtbl-aggregate
+aggregate tables
+#+begin_src emacs-lisp
+  (use-package orgtbl-aggregate
+    :straight t)
+#+end_src
+**** Org custom functions
+#+BEGIN_SRC emacs-lisp
+  ;; display week numbers in org calendar
+  (copy-face font-lock-constant-face 'calendar-iso-week-face)
+  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
+  (setq calendar-intermonth-text
+        '(propertize
+          (format "%2d"
+                  (car
+                   (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian (list month day year)))))
+          'font-lock-face 'calendar-iso-week-face))
+
+  ;; Used for the protocol link see below
+  (defun transform-square-brackets-to-round-ones(string-to-transform)
+    "Transforms [ into ( and ] into ), other chars left unchanged."
+    (concat
+     (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
+
+  ;; Keep inherited tags on archived headings.
+  ;; source: https://orgmode.org/worg/org-hacks.html
+  (defadvice org-archive-subtree
+      (before add-inherited-tags-before-org-archive-subtree activate)
+    "add inherited tags before org-archive-subtree"
+    (org-set-tags (org-get-tags)))
+#+END_SRC
+**** Org Capture
+#+BEGIN_SRC emacs-lisp
+  (setq hbournis/org-capture-file
+        (if WORK?
+            hbournis/org-work-file
+          hbournis/org-inbox-file))
+
+  (defun hbournis/validate-bookmark-link (url bookmark-file)
+    (let ((clipboard url))
+      (unless (s-starts-with? "http" clipboard)
+        (progn (message "Clipboard does not contain a link.") (org-capture-kill)))
+      (if (--any?
+           (-contains?
+            `(,clipboard
+              ,(if (s-suffix? "/" clipboard)
+                   (s-chop-suffix "/" clipboard)
+                 (concat clipboard "/")))
+            it)
+           (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,bookmark-file)))
+          (progn (message "Link already exists.") (org-capture-kill)))))
+
+  (defun hbournis/org-capture-bookmark (bookmark-file)
+    "Validate that the link does not already exist in bookmarks."
+    (interactive)
+    (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
+
+    (defun hbournis/extract-host (url)
+      (s-chop-prefix "www." (url-host (url-generic-parse-url url))))
+    (defun hbournis/org-tag-from-host (url)
+      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host url)))
+
+    (goto-char (point-min))
+    (re-search-forward "Web"))
+
+  (defun hbournis/org-capture-bookmark-generic ()
+    (hbournis/org-capture-bookmark hbournis/bookmarks-file))
+
+  (defun hbournis/org-capture-bookmark-private ()
+    (hbournis/org-capture-bookmark hbournis/private-bookmarks-file))
+
+  ;; Bookmarks for Browser
+  ;; Bookmark url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'l',url: window.location.href,title: document.title,body: window.getSelection() }); })();
+  ;; Bookmark private url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'L',url: window.location.href,title: document.title,body: window.getSelection() }); })();
+  (setq org-capture-templates
+        `(
+          ("l" "Link" entry
+           (file+function hbournis/bookmarks-file hbournis/org-capture-bookmark-generic)
+           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
+           :prepend t
+           :empty-lines-after 1
+           :immediate-finish t)
+          ("L" "Private Link" entry
+           (file+function hbournis/private-bookmarks-file hbournis/org-capture-bookmark-private)
+           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
+           :prepend t
+           :empty-lines-after 1
+           :immediate-finish t)
+          ("b" "Book" entry
+           (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
+           (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
+          ("w" "Work Note" entry
+           (file+datetree hbournis/org-work-file)
+           "** %U - %?")))
+#+END_SRC
+**** Org Agenda
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files (seq-filter 'file-exists-p hbournis/org-agenda-files)
+        org-agenda-span 14                       ;; org agenda shows 10 days
+        org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
+        org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
+        org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
+        org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
+        org-agenda-block-separator 32            ;; disable seperator between agenda sections
+        agenda-label-work-tag "Check & Refile"
+        agenda-label-inbox "Inbox"
+        agenda-label-calendar "10 days"
+        agenda-label-priority-a "High-Priority"
+        agenda-label-priority-b "Mid-Priority"
+        agenda-label-priority-c "Low-Priority"
+        agenda-label-priority-d "Other Todos"
+        org-agenda-custom-commands '(("c" "Startup Agenda"
+                                      (
+                                       (tags "-work+.*"
+                                             ((org-agenda-files `(,hbournis/org-inbox-file))
+                                              (org-agenda-overriding-header agenda-label-inbox)))
+                                       (agenda ""
+                                               ((org-agenda-overriding-header agenda-label-calendar)))
+                                       (tags "PRIORITY=\"A\""
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
+                                                                         org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-a)))
+                                       (tags "PRIORITY=\"B\""
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
+                                                                         org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-b)))
+                                       (tags "PRIORITY=\"C\""
+                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
+                                                                         org-agenda-files))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-c)))
+                                       ))
+                                     ("w" "Work Agenda"
+                                      (
+                                       (tags-todo "capture_notes"
+                                                  ((org-agenda-files `(,hbournis/org-work-file))
+                                                   (org-agenda-overriding-header agenda-label-work-tag)))
+                                       (agenda ""
+                                               ((org-agenda-files `(,hbournis/org-work-file))
+                                                (org-agenda-overriding-header agenda-label-calendar)))
+                                       (tags "-capture_notes+PRIORITY=\"A\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-a)))
+                                       (tags "-capture_notes+PRIORITY=\"B\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-b)))
+                                       (tags "-capture_notes+PRIORITY=\"C\""
+                                             ((org-agenda-files `(,hbournis/org-work-file))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                              (org-agenda-overriding-header agenda-label-priority-c)))))))
+#+END_SRC
 *** evil-mode
 :PROPERTIES:
 :VISIBILITY: folded
@@ -323,11 +718,25 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     (setq evil-want-integration t
           evil-want-keybinding nil
           evil-undo-system 'undo-redo)
+
+    (if (eq theme 'dark)
+        (progn
+          (setq evil-emacs-state-cursor    '("red" box)
+                evil-normal-state-cursor   '("white" box)
+                evil-visual-state-cursor   '("orange" box)
+                evil-insert-state-cursor   '("cyan" box)
+                evil-replace-state-cursor  '("red" box)
+                evil-operator-state-cursor '("red" box))
+          )
+      (progn
+        (setq evil-emacs-state-cursor    '("red" box)
+              evil-normal-state-cursor   '("#1abc9c" box)
+              evil-visual-state-cursor   '("orange" box)
+              evil-insert-state-cursor   '("#9b59b6" box)
+              evil-replace-state-cursor  '("red" box)
+              evil-operator-state-cursor '("red" box))))
     :config
     (evil-mode t)
-    ;; This is a collection of Evil bindings for the parts of Emacs that Evil does
-    ;; not cover properly by default, such as help-mode, M-x calendar, Eshell and more.
-
     ;; Scroll faster with C-e and C-y
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
@@ -338,13 +747,6 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
       (kbd "g h") 'org-previous-visible-heading
       (kbd "g H") 'outline-up-heading)
 
-    ;; Remap tab to org-cycle in normal mode
-    ;; (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-    ;; (evil-define-key 'normal org-mode-map (kbd "S-<tab>") #'org-global-cycle)
-
-    ;; Disable evil mode in shell mode
-    ;; (evil-set-initial-state 'shell-mode 'emacs)
-
     ;; Save and quit ingoring mistakes from keeping shift pressed down
     (evil-ex-define-cmd "Q"  'evil-quit)
     (evil-ex-define-cmd "W"  'evil-write)
@@ -353,8 +755,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     (evil-ex-define-cmd "WQ" 'evil-save-and-close)
 
     ;; Does not replace clipboard copy with the text selected while in visual mode
-    (fset 'evil-visual-update-x-selection 'ignore)
-    )
+    (fset 'evil-visual-update-x-selection 'ignore))
 #+END_SRC
 
 **** evil-collection
@@ -364,54 +765,45 @@ mode only when it is needed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil-collection
-    :after evil
     :straight t
     :demand t
+    :after evil
     :init
     ;; check options in variable evil-collection--supported-modes
-    (defcustom evil-collection-mode-list
-      `(eshell
-        calendar
-        custom
-        cus-theme
-        deadgrep
-        debbugs
-        debug
-        diff-mode
-        dired
-        doc-view
-        edebug
-        ediff
-        elfeed
-        emms
-        eval-sexp-fu
-        flycheck
-        ggtags
-        git-timemachine
-        help
-        ibuffer
-        image
-        image+
-        magit
-        magit-todos
-        neotree
-        info
-        man
-        (package-menu package)
-        (pdf pdf-view)
-        (term term ansi-term multi-term)
-        vdiff
-        vc-annotate
-        xref
-        )
-      "The list of modes which will be evilified by `evil-collection-init'.
-      Elements are either target mode symbols or lists which `car' is the
-      mode symbol and `cdr' the packages to register.
-      By default, `minibuffer' is not included because many users find
-      this confusing. It will be included if
-      `evil-collection-setup-minibuffer' is set to t."
-      :type '(repeat (choice symbol sexp))
-      :group 'evil-collection)
+    (setq evil-collection-mode-list
+          `(eshell
+            calendar
+            custom
+            cus-theme
+            deadgrep
+            debbugs
+            debug
+            diff-mode
+            dired
+            doc-view
+            edebug
+            ediff
+            elfeed
+            emms
+            eval-sexp-fu
+            flycheck
+            ggtags
+            git-timemachine
+            help
+            ibuffer
+            image
+            image+
+            magit
+            magit-todos
+            neotree
+            info
+            man
+            (package-menu package)
+            (pdf pdf-view)
+            (term term ansi-term multi-term)
+            vdiff
+            vc-annotate
+            xref))
     :config
     (evil-collection-init))
 #+END_SRC
@@ -419,8 +811,11 @@ mode only when it is needed.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :straight t
-    :demand t
-    :after evil
+    ;; :demand t
+    :commands (global-evil-surround-mode
+               evil-surround-edit
+               evil-Surround-edit
+               evil-surround-region)
     :config
     (global-evil-surround-mode))
 #+END_SRC
@@ -429,7 +824,6 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :straight t
-    :demand t
     :after evil
     :config
     (evil-lion-mode))
@@ -439,7 +833,6 @@ Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :straight t
-    :demand t
     :after evil
     :config
     (global-evil-matchit-mode t))
@@ -460,19 +853,19 @@ Nerd commenter emulation
 #+BEGIN_SRC emacs-lisp
   (use-package evil-nerd-commenter
     :straight t
-    :demand t
-    :after evil)
+    :commands (evilnc-comment-operator
+               evilnc-inner-commenter
+               evilnc-outer-commenter))
 #+END_SRC
 **** evil-org
 Org mode key bindings for evil mode
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
     :straight t
-    :demand t
-    :after (evil org)
+    :hook (org-mode . evil-org-mode)
     :diminish
     :config
-    (add-hook 'org-mode-hook 'evil-org-mode)
+    ;; (add-hook 'org-mode-hook 'evil-org-mode)
     (add-hook 'evil-org-mode-hook
               (lambda ()
                 (evil-org-set-key-theme '(return))
@@ -656,390 +1049,34 @@ Improvement on evil-leader. Specify mutliple leaders.
       "rt"  'projectile-rails-find-current-spec
       ))
 #+END_SRC
-*** org-mode
-:PROPERTIES:
-:VISIBILITY: folded
-:END:
-**** Org
-#+BEGIN_SRC emacs-lisp
-  (use-package org
-    :straight t
-    :demand
-    :config
-    ;; Element cache makes it slow for some reason
-    (setq org-element-cache-persistent nil)
-
-    (add-to-list 'auto-mode-alist '("\\.orgtemplate\\'" . org-mode))
-
-    ;; Copy link to clipboard on right click
-    (define-key org-mouse-map (kbd "<mouse-3>")
-      (lambda (event)
-        (interactive "e")
-        (goto-char (posn-point (event-start event)))
-        (let* ((context
-                (org-element-lineage (org-element-context) '(link) t))
-               (type (org-element-type context))
-               (value (org-element-property :value context)))
-          (cond
-           ((not type) (user-error "No link found"))
-           ((>= (point)
-                (save-excursion
-                  (goto-char (org-element-property :end context))
-                  (skip-chars-backward " \t")
-                  (point)))
-            (user-error "No link found"))
-           ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
-           (t (user-error "No link found"))))))
-
-    (require 'ob-R)
-    (require 'ob-sql)
-
-    (ignore-errors
-      (require 'org-tempo))
-
-    (setq org-src-fontify-natively t               ;; Use language's syntax highlighting in code blocks
-          org-src-tab-acts-natively t
-          org-src-window-setup 'current-window     ;; Don't open new window when editing code blocks
-          org-todo-keywords '((sequence "TODO(t)" "DOING(i!)" "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)"))
-          org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
-
-          org-startup-indented t                   ;; indent on startup
-          org-indent-indentation-per-level 2       ;; indent each level by 2
-          org-list-indent-offset 2                 ;; indent lists by 2
-          org-display-inline-images t              ;; display images in org by default
-          org-hide-emphasis-markers t              ;; hide bold, italics etc markers
-          org-tags-column (- (window-total-width)) ;; make tags align at right window width
-          org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
-          org-log-into-drawer t                    ;; save logs in the drawer of current item
-          org-clock-into-drawer "CLOCKING"         ;; name the clock drawer clocking
-          org-log-reschedule (quote note)          ;; take a note in the log when rescheduling
-          org-blank-before-new-entry (quote ((heading . t) (plain-list-item . auto)))
-          org-babel-do-load-languages
-          (quote (org-babel-load-languages (quote ((emacs-lisp . t)
-                                                   (ruby . t)
-                                                   (python . t)
-                                                   (haskell . t)
-                                                   (js . t)
-                                                   (shell . t)
-                                                   (R . t)
-                                                   (prolog . t)
-                                                   (clojurescript . t)
-                                                   (plantuml . t)
-                                                   (sql . t)
-                                                   ))))
-          org-export-backends (quote (ascii
-                                      html
-                                      icalendar
-                                      latex
-                                      md
-                                      odt))
-          org-modules '(ol-bbdb
-                        ol-docview
-                        ol-info
-                        ol-w3m
-                        ol-bibtex
-                        org-protocol
-                        org-collector
-                        org-tempo)
-
-          org-lowest-priority ?D
-          org-default-priority ?D
-
-          ;; custom colors for priorities
-          org-priority-faces '((?A . (:foreground "red" :weight bold))
-                               (?B . (:foreground "orange"))
-                               (?C . (:foreground "yellow"))
-                               (?D . (:foreground "green"))))
-
-    (define-key org-mode-map (kbd "C-k") nil)
-
-    ;; Show only the time when a note is added, instead of 'Note taken on..'
-    (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
-    (add-to-list 'org-log-note-headings '(note . "%t"))
-    )
-#+END_SRC
-**** Org-related packages
-***** UNIX_ONLY org-bullets
-Disabled on windows because it makes emacs extremely slow
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :straight t
-    :config
-    ;; Performance fix for windows
-    ;; Source: https://github.com/sabof/org-bullets/issues/11#issuecomment-439228372
-    (if IS-WINDOWS
-        (setq inhibit-compacting-font-caches t))
-    (setq org-bullets-bullet-list '("◉" "○" "✹" "◈" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"))
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
-#+END_SRC
-***** org-collector
-#+BEGIN_SRC emacs-lisp
-  ;; Load org-collector
-  (add-to-list 'load-path "~/.emacs.d/lisp/org-collector")
-#+END_SRC
-***** org-fancy-priorities
-Display org priorities as custom strings
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-fancy-priorities
-    :straight t
-    :diminish
-    :hook
-    (org-mode . org-fancy-priorities-mode)
-    (cfw:calendar-mode . org-fancy-priorities-mode)
-    :config
-    (setq org-fancy-priorities-list '((?A . "❗")
-                                      (?B . "⬆")
-                                      (?C . "⬇")
-                                      (?D . "☕")
-                                      (?1 . "❗")
-                                      (?2 . "⮬")
-                                      (?3 . "⮮")
-                                      (?4 . "☠"))))
-#+END_SRC
-***** org-capture-vars
-#+BEGIN_SRC emacs-lisp
-  ;; Load org-capture-vars
-  (add-to-list 'load-path "~/.emacs.d/lisp/org-capture-vars")
-  (with-eval-after-load 'org-capture (require 'org-capture-vars))
-#+END_SRC
-***** org-cliplink
-Pretty-copy links from the browser to org with title instead of just url
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-cliplink
-    :straight t
-    :config
-    (global-set-key (kbd "C-c p b") 'org-cliplink))
-#+END_SRC
-***** org-agenda-property
-Display org properties in the agenda buffer
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-agenda-property
-    :straight t)
-#+END_SRC
-***** org-reveal
-[[https://github.com/yjwen/org-reveal][Presentations]]
-
-Download reveal.js from [[https://revealjs.com/installation/#basic-setup][here]]. Set the org-reveal-root to the extracted folder (the root).
-
-For code, swith to light theme before exporting, so that htmlize will use it on the code blocks.
-
-You can also create speaker notes with a BEGIN_NOTES and END_NOTES
-block. pressing "s" while on the presentation will create new browser window for notes
-
-Use "#+ATTR_REVEAL: :frag t" to reveal parts of the page incrementally.
-
-Some defaults:
-#+begin_src
-#+REVEAL_INIT_OPTIONS: margin: 0.1, minScale:0.2, maxScale:2.5, transition:'concave'
-#+REVEAL_THEME: solarized
-#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Org-Reveal Introduction.">
-#+REVEAL_POSTAMBLE: <p> Created by yjwen. </p>
-#+REVEAL_PLUGINS: (notes)
-#+REVEAL_TITLE_SLIDE: <h1 class="title">%t</h1><h2 class="author">%a</h2><h3 class="email">%e</h3>
-#+REVEAL_DEFAULT_FRAG_STYLE: roll-in
-#+OPTIONS: toc:nil
-#+OPTIONS: num:nil
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-reveal
-    :straight t
-    :config
-    ;; Set the root
-    ;; (setq org-reveal-root "file:///Users/<user>/reveal.js-master")
-
-    ;; Used for using emacs theme to highligh code
-    (use-package htmlize
-      :straight t)
-    )
-#+END_SRC
-***** org-kanban
-#+begin_src emacs-lisp
-  (use-package org-kanban
-    :straight t
-    :hook (org-after-todo-state-change . org-update-all-dblocks))
-#+end_src
-
-***** orgtbl-aggregate
-aggregate tables
-#+begin_src emacs-lisp
-  (use-package orgtbl-aggregate
-    :straight t)
-#+end_src
-**** Org custom functions
-#+BEGIN_SRC emacs-lisp
-  ;; display week numbers in org calendar
-  (copy-face font-lock-constant-face 'calendar-iso-week-face)
-  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
-  (setq calendar-intermonth-text
-        '(propertize
-          (format "%2d"
-                  (car
-                   (calendar-iso-from-absolute
-                    (calendar-absolute-from-gregorian (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face))
-
-  ;; Used for the protocol link see below
-  (defun transform-square-brackets-to-round-ones(string-to-transform)
-    "Transforms [ into ( and ] into ), other chars left unchanged."
-    (concat
-     (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
-
-  ;; Keep inherited tags on archived headings.
-  ;; source: https://orgmode.org/worg/org-hacks.html
-  (defadvice org-archive-subtree
-      (before add-inherited-tags-before-org-archive-subtree activate)
-    "add inherited tags before org-archive-subtree"
-    (org-set-tags (org-get-tags)))
-#+END_SRC
-**** Org Capture
-#+BEGIN_SRC emacs-lisp
-  (setq hbournis/org-capture-file
-        (if WORK?
-            hbournis/org-work-file
-          hbournis/org-inbox-file))
-
-  (defun hbournis/validate-bookmark-link (url bookmark-file)
-    (let ((clipboard url))
-      (unless (s-starts-with? "http" clipboard)
-        (progn (message "Clipboard does not contain a link.") (org-capture-kill)))
-      (if (--any?
-           (-contains?
-            `(,clipboard
-              ,(if (s-suffix? "/" clipboard)
-                   (s-chop-suffix "/" clipboard)
-                 (concat clipboard "/")))
-            it)
-           (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,bookmark-file)))
-          (progn (message "Link already exists.") (org-capture-kill)))))
-
-  (defun hbournis/org-capture-bookmark (bookmark-file)
-    "Validate that the link does not already exist in bookmarks."
-    (interactive)
-    (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
-
-    (defun hbournis/extract-host (url)
-      (s-chop-prefix "www." (url-host (url-generic-parse-url url))))
-    (defun hbournis/org-tag-from-host (url)
-      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host url)))
-
-    (goto-char (point-min))
-    (re-search-forward "Web"))
-
-  (defun hbournis/org-capture-bookmark-generic ()
-    (hbournis/org-capture-bookmark hbournis/bookmarks-file))
-
-  (defun hbournis/org-capture-bookmark-private ()
-    (hbournis/org-capture-bookmark hbournis/private-bookmarks-file))
-
-  ;; Bookmarks for Browser
-  ;; Bookmark url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'l',url: window.location.href,title: document.title,body: window.getSelection() }); })();
-  ;; Bookmark private url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'L',url: window.location.href,title: document.title,body: window.getSelection() }); })();
-  (setq org-capture-templates
-        `(
-          ("l" "Link" entry
-           (file+function hbournis/bookmarks-file hbournis/org-capture-bookmark-generic)
-           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
-           :prepend t
-           :empty-lines-after 1
-           :immediate-finish t)
-          ("L" "Private Link" entry
-           (file+function hbournis/private-bookmarks-file hbournis/org-capture-bookmark-private)
-           (file "~/.emacs.d/org-templates/bookmark.orgtemplate")
-           :prepend t
-           :empty-lines-after 1
-           :immediate-finish t)
-          ("b" "Book" entry
-           (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
-           (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
-          ("w" "Work Note" entry
-           (file+datetree hbournis/org-work-file)
-           "** %U - %?")))
-#+END_SRC
-**** Org Agenda
-#+BEGIN_SRC emacs-lisp
-  (require 'seq)
-
-  (setq org-agenda-files (seq-filter 'file-exists-p hbournis/org-agenda-files)
-        org-agenda-span 14                       ;; org agenda shows 10 days
-        org-agenda-start-on-weekday nil          ;; org agenda does not start from beggining of week
-        org-agenda-start-day "-2d"               ;; org agenda starts 2 days before today
-        org-deadline-warning-days 3              ;; Number of days before expiration that it shows in agenda
-        org-agenda-window-setup "only-frame"     ;; open a new full screen frame for org agenda
-        org-agenda-block-separator 32            ;; disable seperator between agenda sections
-        )
-
-  ;; org agenda label variables
-  (setq agenda-label-work-tag "Check & Refile"
-        agenda-label-inbox "Inbox"
-        agenda-label-calendar "10 days"
-        agenda-label-priority-a "High-Priority"
-        agenda-label-priority-b "Mid-Priority"
-        agenda-label-priority-c "Low-Priority"
-        agenda-label-priority-d "Other Todos")
-
-  (setq org-agenda-custom-commands '(("c" "Startup Agenda"
-                                      (
-                                       (tags "-work+.*"
-                                             ((org-agenda-files `(,hbournis/org-inbox-file))
-                                              (org-agenda-overriding-header agenda-label-inbox)))
-                                       (agenda ""
-                                               ((org-agenda-overriding-header agenda-label-calendar)))
-                                       (tags "PRIORITY=\"A\""
-                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
-                                                                           org-agenda-files))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-a)))
-                                       (tags "PRIORITY=\"B\""
-                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
-                                                                           org-agenda-files))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-b)))
-                                       (tags "PRIORITY=\"C\""
-                                             ((org-agenda-files (-remove (apply-partially #'equal hbournis/org-inbox-file)
-                                                                           org-agenda-files))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-c)))
-                                       ))
-                                     ("w" "Work Agenda"
-                                      (
-                                       (tags-todo "capture_notes"
-                                                  ((org-agenda-files `(,hbournis/org-work-file))
-                                                   (org-agenda-overriding-header agenda-label-work-tag)))
-                                       (agenda ""
-                                               ((org-agenda-files `(,hbournis/org-work-file))
-                                                (org-agenda-overriding-header agenda-label-calendar)))
-                                       (tags "-capture_notes+PRIORITY=\"A\""
-                                             ((org-agenda-files `(,hbournis/org-work-file))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-a)))
-                                       (tags "-capture_notes+PRIORITY=\"B\""
-                                             ((org-agenda-files `(,hbournis/org-work-file))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-b)))
-                                       (tags "-capture_notes+PRIORITY=\"C\""
-                                             ((org-agenda-files `(,hbournis/org-work-file))
-                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                              (org-agenda-overriding-header agenda-label-priority-c)))))))
-#+END_SRC
 *** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :straight t
     :config
+    (with-eval-after-load 'magit (evil-collection-magit-init))
+
     (evil-define-minor-mode-key 'normal 'magit-blame-mode
       (kbd "<return>")  'magit-show-commit)
 
     (transient-append-suffix 'magit-push "-u"
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
-
     (setq magit-blame-echo-style 'headings)
 
-    (setq magit-git-executable "/usr/local/bin/git"))
+    (setq magit-git-executable "/usr/local/bin/git")
+    (if (not (eq theme 'dark))
+        (progn
+          (set-face-attribute 'magit-section-highlight nil
+                              :background "#dfe4ea")
+          (set-face-attribute 'magit-section-heading nil
+                              :foreground "#8E44AD")
+          (set-face-attribute 'magit-branch-local nil
+                              :foreground "#2980B9")
+          (set-face-attribute 'magit-branch-remote nil
+                              :foreground "#27AE60")
+          (set-face-attribute 'magit-diff-context nil
+                              :background "grey20"))))
 #+END_SRC
 *** smerge-mode
 Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge-mode][Source]]
@@ -1102,37 +1139,43 @@ Syntax checking
     :straight t
     :diminish
     :defer 3
-    :init (global-flycheck-mode)
     :config
+    (setq flycheck-idle-change-delay 1.0
+          flycheck-buffer-switch-check-intermediate-buffers t
+          flycheck-display-errors-delay 0.25)
+
     (setq-default flycheck-disabled-checkers
-                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint ruby-reek)))
-    (setq-default flycheck-temp-prefix ".flycheck")
+                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint ruby-reek))
+                  flycheck-temp-prefix ".flycheck")
+
     ;; Set flycheck to only check when saving a file or changin a major mode
     ;; Done mainly for performance on windows
     (if IS-WINDOWS
-        (setq flycheck-check-syntax-automatically '(save mode-enable))))
-#+END_SRC
-**** DISABLED Use local eslint if available
-[[https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable][Source]]
+        (setq flycheck-check-syntax-automatically '(save mode-enable)))
 
-#+BEGIN_SRC emacs-lisp
-(defun my/use-eslint-from-node-modules ()
-  (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node_modules"))
-         (eslint (and root
-                      (expand-file-name "node_modules/eslint/bin/eslint.js"
-                                        root))))
-    (when (and eslint (file-executable-p eslint))
-      (setq-local flycheck-javascript-eslint-executable eslint))))
-(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+    (if (not (eq theme 'dark))
+        (set-face-attribute 'flycheck-error-list-error nil :foreground "blue" ))
+
+    ;; Use local eslint if available https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
+    ;; (defun my/use-eslint-from-node-modules ()
+    ;;   (let* ((root (locate-dominating-file
+    ;;                 (or (buffer-file-name) default-directory)
+    ;;                 "node_modules"))
+    ;;          (eslint (and root
+    ;;                       (expand-file-name "node_modules/eslint/bin/eslint.js"
+    ;;                                         root))))
+    ;;     (when (and eslint (file-executable-p eslint))
+    ;;       (setq-local flycheck-javascript-eslint-executable eslint))))
+    ;; (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+
+    (global-flycheck-mode))
 #+END_SRC
 *** UNIX_ONLY flyspell
 Spell checking. Needs the aspell program installed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
-    :diminish " ✐"
+    :diminish
     :config
     (setq ispell-program-name "aspell"))
 #+END_SRC
@@ -1182,6 +1225,24 @@ Spell checking. Needs the aspell program installed.
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 
+    (if (not (eq theme 'dark))
+        (progn
+          (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                              :background "#F1C40F"
+                              :foreground "white")
+          (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                              :background "#F1C40F"
+                              :foreground "white")
+          (set-face-attribute 'ivy-minibuffer-match-face-3 nil
+                              :background "#F1C40F"
+                              :foreground "white")
+          (set-face-attribute 'ivy-minibuffer-match-face-4 nil
+                              :background "#F1C40F"
+                              :foreground "white")
+          (set-face-attribute 'ivy-current-match nil
+                              :background "#9B59B6"
+                              :foreground "white")))
+
     (ivy-mode 1))
 #+END_SRC
 *** projectile
@@ -1189,8 +1250,7 @@ Spell checking. Needs the aspell program installed.
   (use-package projectile
     :straight t
     :diminish " P"
-    :defer
-    :commands (projectile-switch-project)
+    :commands (projectile-switch-project counsel-projectile-ag)
     :config
     (setq projectile-mode-line (format " [%s]" (projectile-project-name))
           projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
@@ -1211,7 +1271,7 @@ Autocompletion
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :straight t
-    :defer 4
+    :defer 2
     :hook
     (after-init . global-company-mode)
     :config
@@ -1306,7 +1366,7 @@ Not working currently
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :straight t
-    :defer 4
+    :defer 2
     :diminish
     :config
     (require 'smartparens-config)
@@ -1376,6 +1436,30 @@ Save emacs session
   (tab-bar-mode)
   (tab-bar-rename-tab "1")
 
+  (if (eq theme 'dark)
+      (progn
+        (set-face-attribute 'tab-bar-tab-inactive nil
+                            :box nil
+                            :foreground "#BDC3C7"
+                            :background nil
+                            :inherit 'bold)
+        (set-face-attribute 'tab-bar-tab nil
+                            :box nil
+                            :foreground "#00d3d0"
+                            :background nil)
+
+        )
+    (progn
+      (set-face-attribute 'tab-bar-tab nil
+                          :box nil
+                          :foreground "#16A085"
+                          :background nil)
+      (set-face-attribute 'tab-bar-tab-inactive nil
+                          :box nil
+                          :foreground "#BDC3C7"
+                          :background nil)
+      ))
+
   (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
   (global-set-key   (kbd "C-2")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "2")))
   (global-set-key   (kbd "C-3")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "3")))
@@ -1384,14 +1468,28 @@ Save emacs session
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
     :straight t
-    :defer 5
+    :defer 3
     :diminish
     :config
     (setq git-gutter:update-interval 2
           git-gutter:hide-gutter t)
+
+    (set-face-attribute 'git-gutter:added nil
+                             :background "#000000"
+                             :foreground "#338533")
+    (set-face-attribute 'git-gutter:modified nil
+                             :background "#000000"
+                             :foreground "#8B7233")
+    (set-face-attribute 'git-gutter:deleted nil
+                             :background "#000000"
+                             :foreground "#A54B6F")
+    (set-face-attribute 'git-gutter:separator nil
+                             :background "#000000"
+                             :foreground "#3372A5")
+
     (global-git-gutter-mode t))
 #+END_SRC
-*** gitignore-templates
+*** DISABLED gitignore-templates
 An Emacs Package for GitHub .gitignore templates
 
 #+BEGIN_SRC emacs-lisp
@@ -1413,7 +1511,6 @@ Display the keys available after pressing C-x for example.
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :straight t
-    :defer t
     :diminish
     :config
     ;;(setq which-key-idle-delay 0.2)
@@ -1436,7 +1533,6 @@ shows the color of hex color codes as their background
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
     :straight t
-    :defer t
     :diminish
     :config
     ;; enable it by default in org mode
@@ -1464,6 +1560,7 @@ Get environment variables from the shell
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
     :straight t
+    :defer 2
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
@@ -1530,46 +1627,45 @@ system in order to work.
     :init
     (with-eval-after-load 'winum
       (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    :bind (:map global-map ([f8] . treemacs))
     :config
-    (progn
-      (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
-            treemacs-python-executable          "python3"
-            treemacs-file-event-delay           5000
-            treemacs-follow-after-init          t
-            treemacs-follow-recenter-distance   0.1
-            treemacs-goto-tag-strategy          'refetch-index
-            treemacs-indentation                2
-            treemacs-indentation-string         " "
-            treemacs-is-never-other-window      nil
-            treemacs-no-png-images              nil
-            treemacs-project-follow-cleanup     nil
-            treemacs-recenter-after-file-follow nil
-            treemacs-recenter-after-tag-follow  nil
-            treemacs-show-hidden-files          t
-            treemacs-silent-filewatch           nil
-            treemacs-silent-refresh             nil
-            treemacs-sorting                    'alphabetic-case-insensitive-asc
-            treemacs-tag-follow-cleanup         t
-            treemacs-tag-follow-delay           1.5
-            treemacs-width                      35)
+    (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+          treemacs-python-executable          "python3"
+          treemacs-file-event-delay           5000
+          treemacs-follow-after-init          t
+          treemacs-follow-recenter-distance   0.1
+          treemacs-goto-tag-strategy          'refetch-index
+          treemacs-indentation                2
+          treemacs-indentation-string         " "
+          treemacs-is-never-other-window      nil
+          treemacs-no-png-images              nil
+          treemacs-project-follow-cleanup     nil
+          treemacs-recenter-after-file-follow nil
+          treemacs-recenter-after-tag-follow  nil
+          treemacs-show-hidden-files          t
+          treemacs-silent-filewatch           nil
+          treemacs-silent-refresh             nil
+          treemacs-sorting                    'alphabetic-case-insensitive-asc
+          treemacs-tag-follow-cleanup         t
+          treemacs-tag-follow-delay           1.5
+          treemacs-width                      35)
 
-      (treemacs-follow-mode t)
-      (treemacs-filewatch-mode t)
-      (pcase (cons (not (null (executable-find "git")))
-                   (not (null (executable-find "python3"))))
-        (`(t . t)
-         (treemacs-git-mode 'extended))
-        (`(t . _)
-         (treemacs-git-mode 'simple))))
-    :bind (:map global-map ([f8] . treemacs)))
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'extended))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
 
-  (use-package treemacs-evil
-    :after treemacs evil
-    :straight t)
+    (use-package treemacs-evil
+      :after treemacs evil
+      :straight t)
 
-  (use-package treemacs-projectile
-    :after treemacs projectile
-    :straight t)
+    (use-package treemacs-projectile
+      :after treemacs projectile
+      :straight t))
 #+END_SRC
 *** dumb-jumb
 #+begin_src emacs-lisp
@@ -1667,8 +1763,7 @@ system in order to work.
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
     :straight t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode)))
+    :mode (("\\.rest\\'" . restclient-mode)))
 #+END_SRC
 *** yasnippet
 [[https://github.com/AndreaCrotti/yasnippet-snippets][Snippets]]
@@ -1959,18 +2054,18 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :straight t
+    :mode
+    (("\\.yml?\\'" . yaml-mode)
+     ("\\.yaml\\'" . yaml-mode))
     :hook
     (yaml-mode . display-line-numbers-mode)
     :config
-    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)
-                                  '("\\.yaml\\'" . yaml-mode))
-
     ;;  Unlike python-mode, this mode follows the Emacs convention of not
     ;; binding the ENTER key to `newline-and-indent'.  To get this
     ;; behavior, add the key definition to `yaml-mode-hook':
     (add-hook 'yaml-mode-hook
               #'(lambda ()
-                 (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 #+END_SRC
 *** Ruby
 **** ruby-mode
@@ -2088,7 +2183,7 @@ Org-babel support for prolog.
     :straight t)
 #+END_SRC
 *** Clojure/ClojureScript
-**** NOT_WORK clojure-mode
+**** DISABLED clojure-mode
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :straight t
@@ -2107,7 +2202,7 @@ Org-babel support for prolog.
         (cider-jack-in '()))))
 
 #+END_SRC
-**** NOT_WORK cider
+**** DISABLED cider
 CIDER extends Emacs with support for interactive programming in Clojure.
 
 #+begin_src emacs-lisp
@@ -2116,7 +2211,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :config
     (setq cider-repl-history-file "~/.emacs.d/cider-history"))
 #+end_src
-**** NOT_WORK flycheck-clojure
+**** DISABLED flycheck-clojure
 #+begin_src emacs-lisp
   (use-package flycheck-clojure
     :straight t
@@ -2212,12 +2307,74 @@ Emacs expects you to write them.
   (hbournis/update-font)
 #+END_SRC
 ** Themes
-*** Color Scheme
+*** new color theme
+#+begin_src emacs-lisp
+  (defun hbournis/load-dark-theme ()
+    "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
+        Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
+
+    (use-package doom-themes
+      :straight t
+      :config
+      (use-package all-the-icons
+        :straight t)
+      (setq doom-themes-enable-bold t
+            doom-themes-enable-italic t
+            doom-themes-treemacs-line-spacing 2
+            doom-themes-treemacs-theme "doom-colors")
+      (doom-themes-treemacs-config))
+
+    (load-theme 'modus-vivendi t)
+
+    (set-face-attribute 'line-number nil
+                        :background "#000000")
+    (set-face-attribute 'vertical-border nil
+                        :background "#000000"
+                        :foreground "#000000")
+    (set-face-attribute 'mode-line-inactive nil
+                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                        :background "#000000")
+    (set-face-attribute 'mode-line nil
+                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
+    (set-face-attribute 'font-lock-string-face nil :background "#050505" )
+    (set-face-attribute 'font-lock-keyword-face nil :background "#050505" ))
+
+  (defun hbournis/load-light-theme ()
+    (use-package flatui-theme
+      :straight t)
+
+    (load-theme 'flatui t)
+
+    (set-face-attribute 'font-lock-string-face nil
+                        :background nil
+                        :foreground "#0a74b9")
+    (set-face-attribute 'line-number nil
+                        :background "#ecf0f1")
+    (set-face-attribute 'mode-line nil
+                        :background "#dfe4ea"
+                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+    (set-face-attribute 'mode-line-inactive nil
+                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                        :background "#ecf0f1"))
+
+  (hbournis/load-dark-theme)
+
+  (run-with-idle-timer 2 nil
+                       (lambda ()
+                         (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
+                         (redraw-frame)))
+#+end_src
+*** DISABLED Color Scheme
 First I set two built-in themes, in case downloading the custom themes fails.
 Currently using [[https://github.com/ideasman42/emacs-inkpot-theme][inkpot-theme]] for dark theme, and [[https://github.com/john2x/flatui-theme.el][flatui]] for light theme.
 Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][atom-one-dark-theme]], [[https://github.com/owainlewis/emacs-color-themes][sublime themes]], [[https://github.com/steckerhalter/grandshell-theme][grandshell-theme]], [[https://github.com/steckerhalter/grandshell-theme][badwolf-theme]].
 
 #+BEGIN_SRC emacs-lisp
+  (defun set-face-attribute (&rest attributes)
+    (if (facep (car attributes))
+        (apply 'set-face-attribute attributes)))
+
   (setq light-theme-var 'tango)
   (setq dark-theme-var  'tsdh-dark)
   (setq light-theme-modeline-var nil)
@@ -2238,53 +2395,26 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (doom-themes-treemacs-config))
 
   (setq dark-theme-var 'modus-vivendi)
-  (setq dark-theme-overrides-var
-        '((set-face-attribute 'org-level-1 nil
-                              :foreground "#5c9ead")
-          (set-face-attribute 'org-level-4 nil
-                              :foreground "#f0a202")
-          (set-face-attribute 'org-level-2 nil
-                              :foreground "#bbbdf6")
-          (set-face-attribute 'org-level-3 nil
-                              :foreground "#f3b3a6")
-          (set-face-attribute 'org-level-5 nil
-                              :foreground "#cae7b9")
-          (set-face-attribute 'org-level-6 nil
-                              :foreground "#3ab795")
-          (set-face-attribute 'fringe nil
-                              :background "#000000")
-          ;; (set-face-attribute 'git-gutter:added nil
-          ;;                     :background "#000000"
-          ;;                     :foreground "#338533")
-          ;; (set-face-attribute 'git-gutter:modified nil
-          ;;                     :background "#000000"
-          ;;                     :foreground "#8B7233")
-          ;; (set-face-attribute 'git-gutter:deleted nil
-          ;;                     :background "#000000"
-          ;;                     :foreground "#A54B6F")
-          ;; (set-face-attribute 'git-gutter:separator nil
-          ;;                     :background "#000000"
-          ;;                     :foreground "#3372A5")
-          (set-face-attribute 'line-number nil
-                              :background "#000000")
-          (set-face-attribute 'vertical-border nil
-                              :background "#000000"
-                              :foreground "#000000")
-          (set-face-attribute 'mode-line-inactive nil
-                              :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
-                              :background "#000000")
-          (set-face-attribute 'mode-line nil
-                              :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
-          (set-face-attribute 'tab-bar-tab-inactive nil
-                              :box nil
-                              :foreground "#BDC3C7"
-                              :background nil
-                              :inherit 'bold)
-          (set-face-attribute 'tab-bar-tab nil
-                              :box nil
-                              :foreground "#00d3d0"
-                              :background nil)
-          ))
+
+  (set-face-attribute 'line-number nil
+                           :background "#000000")
+  (set-face-attribute 'vertical-border nil
+                           :background "#000000"
+                           :foreground "#000000")
+  (set-face-attribute 'mode-line-inactive nil
+                           :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                           :background "#000000")
+  (set-face-attribute 'mode-line nil
+                           :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+  (set-face-attribute 'tab-bar-tab-inactive nil
+                           :box nil
+                           :foreground "#BDC3C7"
+                           :background nil
+                           :inherit 'bold)
+  (set-face-attribute 'tab-bar-tab nil
+                           :box nil
+                           :foreground "#00d3d0"
+                           :background nil)
 
   ;; Light theme
   (use-package flatui-theme
@@ -2293,64 +2423,64 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (setq light-theme-var 'flatui)
     (setq light-theme-overrides-var
           '((set-face-attribute 'org-checkbox nil
-                                :box nil
-                                :bold 'normal
-                                :background nil)
+                                     :box nil
+                                     :bold 'normal
+                                     :background nil)
 
             (set-face-attribute 'font-lock-string-face nil
-                                :background nil
-                                :foreground "#0a74b9")
+                                     :background nil
+                                     :foreground "#0a74b9")
 
             (set-face-attribute 'org-property-value nil
-                                :foreground "black")
+                                     :foreground "black")
 
             (set-face-attribute 'tab-bar-tab nil
-                                :box nil
-                                :foreground "#16A085"
-                                :background nil)
+                                     :box nil
+                                     :foreground "#16A085"
+                                     :background nil)
 
             (set-face-attribute 'tab-bar-tab-inactive nil
-                                :box nil
-                                :foreground "#BDC3C7"
-                                :background nil)
+                                     :box nil
+                                     :foreground "#BDC3C7"
+                                     :background nil)
 
             (set-face-attribute 'org-agenda-date-weekend nil
-                                :weight 'normal)
+                                     :weight 'normal)
 
             (set-face-attribute 'magit-section-highlight nil
-                                :background "#dfe4ea")
+                                     :background "#dfe4ea")
 
             (set-face-attribute 'magit-section-heading nil
-                                :foreground "#8E44AD")
+                                     :foreground "#8E44AD")
 
             (set-face-attribute 'magit-branch-local nil
-                                :foreground "#2980B9")
+                                     :foreground "#2980B9")
 
             (set-face-attribute 'magit-branch-remote nil
-                                :foreground "#27AE60")
+                                     :foreground "#27AE60")
 
             (set-face-attribute 'line-number nil
-                                :background "#ecf0f1")
+                                     :background "#ecf0f1")
 
             (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                                :background "#F1C40F"
-                                :foreground "white")
+                                     :background "#F1C40F"
+                                     :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                                :background "#F1C40F"
-                                :foreground "white")
+                                     :background "#F1C40F"
+                                     :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-3 nil
-                                :background "#F1C40F"
-                                :foreground "white")
+                                     :background "#F1C40F"
+                                     :foreground "white")
 
             (set-face-attribute 'ivy-minibuffer-match-face-4 nil
-                                :background "#F1C40F"
-                                :foreground "white")
+                                     :background "#F1C40F"
+                                     :foreground "white")
 
             (set-face-attribute 'ivy-current-match nil
-                                :background "#9B59B6"
-                                :foreground "white")
+                                     :background "#9B59B6"
+                                     :foreground "white")
 
             (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
                                            ("DOING"       . (:foreground "#2980b9" :weight bold))
@@ -2364,25 +2494,24 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
             (setq evil-replace-state-cursor  '("red" box))
             (setq evil-operator-state-cursor '("red" box))
             (set-face-attribute 'mode-line nil
-                                :background "#dfe4ea"
-                                :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+                                     :background "#dfe4ea"
+                                     :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
             (set-face-attribute 'mode-line-inactive nil
-                                :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
-                                :background "#ecf0f1")
+                                     :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                                     :background "#ecf0f1")
             (set-face-attribute 'magit-diff-context nil
-                                :background "grey20")
+                                     :background "grey20")
             )))
 
   ;; Add the default theme in the load path
   (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
 #+END_SRC
 
-*** Modeline
-**** Custom Modeline
+*** DISABLED Modeline
 #+begin_src emacs-lisp
   (run-with-idle-timer 1 nil (lambda () (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")))
 #+end_src
-*** Theme Functions
+*** DISABLED Theme Functions
 #+BEGIN_SRC emacs-lisp
   (defun switch-theme (theme)
     "This interactive call is taken from `load-theme'
@@ -2448,12 +2577,18 @@ Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][
     (if light-theme-modeline-var (load-theme light-theme-modeline-var))
     (if (not (eq light-theme-overrides-var nil)) (mapcar 'eval light-theme-overrides-var)))
 #+END_SRC
-*** Load Theme
+*** DISABLED Load Theme
 #+BEGIN_SRC emacs-lisp
   (load-dark-theme)
 #+END_SRC
 
 * Custom Functions
+** DISABLED set-face-attribute
+#+begin_src emacs-lisp
+  (defun set-face-attribute (&rest attributes)
+    (if (facep (car attributes))
+        (apply 'set-face-attribute attributes)))
+#+end_src
 ** Call with prefix
 #+begin_src emacs-lisp
   (defun hbournis/call-with-prefix (func &optional prefix)
@@ -3146,7 +3281,7 @@ global shortcuts
 
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
-* Start emacs server
+* DISABLED Start emacs server
 Start an emacs server so you can open files from the command line using
 emacsclient
 
@@ -3188,3 +3323,16 @@ the last opened window config.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
+
+* Cleanup startup
+#+begin_src emacs-lisp
+  (setq debug-on-error nil)
+
+  ;; after started up, reset GC threshold to normal.
+  (run-with-idle-timer 4 nil
+                       (lambda ()
+                         "Clean up gc."
+                         (setq gc-cons-threshold (* 16 1024 1024)
+                               gc-cons-percentage 0.1)
+                         (garbage-collect)))
+#+end_src
