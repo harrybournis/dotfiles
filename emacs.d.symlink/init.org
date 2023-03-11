@@ -972,9 +972,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "" nil
       "f"         'list-buffers
       "F"         'ivy-switch-buffer-other-window
-      "TAB"       'nswbuff-switch-to-next-buffer
       "ESC"       'keyboard-quit
-      "<backtab>" 'nswbuff-switch-to-previous-buffer
       "x"         'execute-extended-command
       "k"         'windmove-up
       "j"         'windmove-down
@@ -1433,12 +1431,21 @@ Save emacs session
         tab-bar-format '(tab-bar-format-tabs)
         tab-bar-close-button-show nil)
 
+  (defun hbournis/tab-exists-p (name)
+    (member name (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
+
   (tab-bar-mode)
   (tab-bar-rename-tab "1")
-  (tab-bar-new-tab)
-  (tab-bar-rename-tab "2")
-  (tab-bar-new-tab)
-  (tab-bar-rename-tab "3")
+
+  (mapcar (lambda (tab-name)
+          (unless (hbournis/tab-exists-p tab-name)
+            (progn
+              (tab-bar-new-tab)
+              (tab-bar-rename-tab tab-name))))
+        '("2" "3"))
+
+  ;; (tab-bar-new-tab)
+  ;; (tab-bar-rename-tab "3")
   (tab-bar-switch-to-tab "1")
 
   (if (eq theme 'dark)
@@ -2365,228 +2372,8 @@ Emacs expects you to write them.
 
   (hbournis/load-dark-theme)
 
-  (run-with-idle-timer 2 nil
-                       (lambda ()
-                         (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")
-                         (redraw-frame)))
-#+end_src
-*** DISABLED Color Scheme
-First I set two built-in themes, in case downloading the custom themes fails.
-Currently using [[https://github.com/ideasman42/emacs-inkpot-theme][inkpot-theme]] for dark theme, and [[https://github.com/john2x/flatui-theme.el][flatui]] for light theme.
-Other interesting themes: [[https://github.com/jonathanchu/atom-one-dark-theme][atom-one-dark-theme]], [[https://github.com/owainlewis/emacs-color-themes][sublime themes]], [[https://github.com/steckerhalter/grandshell-theme][grandshell-theme]], [[https://github.com/steckerhalter/grandshell-theme][badwolf-theme]].
-
-#+BEGIN_SRC emacs-lisp
-  (defun set-face-attribute (&rest attributes)
-    (if (facep (car attributes))
-        (apply 'set-face-attribute attributes)))
-
-  (setq light-theme-var 'tango)
-  (setq dark-theme-var  'tsdh-dark)
-  (setq light-theme-modeline-var nil)
-  (setq dark-theme-modeline-var nil)
-  (setq light-theme-overrides-var nil)
-  (setq dark-theme-overrides-var nil)
-
-  ;; Used for treemacs
-  (use-package doom-themes
-    :straight t
-    :config
-    (use-package all-the-icons
-      :straight t)
-    (setq doom-themes-enable-bold t
-          doom-themes-enable-italic t
-          doom-themes-treemacs-line-spacing 2
-          doom-themes-treemacs-theme "doom-colors")
-    (doom-themes-treemacs-config))
-
-  (setq dark-theme-var 'modus-vivendi)
-
-  (set-face-attribute 'line-number nil
-                           :background "#000000")
-  (set-face-attribute 'vertical-border nil
-                           :background "#000000"
-                           :foreground "#000000")
-  (set-face-attribute 'mode-line-inactive nil
-                           :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
-                           :background "#000000")
-  (set-face-attribute 'mode-line nil
-                           :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
-  (set-face-attribute 'tab-bar-tab-inactive nil
-                           :box nil
-                           :foreground "#BDC3C7"
-                           :background nil
-                           :inherit 'bold)
-  (set-face-attribute 'tab-bar-tab nil
-                           :box nil
-                           :foreground "#00d3d0"
-                           :background nil)
-
-  ;; Light theme
-  (use-package flatui-theme
-    :straight t
-    :config
-    (setq light-theme-var 'flatui)
-    (setq light-theme-overrides-var
-          '((set-face-attribute 'org-checkbox nil
-                                     :box nil
-                                     :bold 'normal
-                                     :background nil)
-
-            (set-face-attribute 'font-lock-string-face nil
-                                     :background nil
-                                     :foreground "#0a74b9")
-
-            (set-face-attribute 'org-property-value nil
-                                     :foreground "black")
-
-            (set-face-attribute 'tab-bar-tab nil
-                                     :box nil
-                                     :foreground "#16A085"
-                                     :background nil)
-
-            (set-face-attribute 'tab-bar-tab-inactive nil
-                                     :box nil
-                                     :foreground "#BDC3C7"
-                                     :background nil)
-
-            (set-face-attribute 'org-agenda-date-weekend nil
-                                     :weight 'normal)
-
-            (set-face-attribute 'magit-section-highlight nil
-                                     :background "#dfe4ea")
-
-            (set-face-attribute 'magit-section-heading nil
-                                     :foreground "#8E44AD")
-
-            (set-face-attribute 'magit-branch-local nil
-                                     :foreground "#2980B9")
-
-            (set-face-attribute 'magit-branch-remote nil
-                                     :foreground "#27AE60")
-
-            (set-face-attribute 'line-number nil
-                                     :background "#ecf0f1")
-
-            (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                                     :background "#F1C40F"
-                                     :foreground "white")
-
-            (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                                     :background "#F1C40F"
-                                     :foreground "white")
-
-            (set-face-attribute 'ivy-minibuffer-match-face-3 nil
-                                     :background "#F1C40F"
-                                     :foreground "white")
-
-            (set-face-attribute 'ivy-minibuffer-match-face-4 nil
-                                     :background "#F1C40F"
-                                     :foreground "white")
-
-            (set-face-attribute 'ivy-current-match nil
-                                     :background "#9B59B6"
-                                     :foreground "white")
-
-            (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
-                                           ("DOING"       . (:foreground "#2980b9" :weight bold))
-                                           ("WAITING"     . (:foreground "#8e44ad" :weight bold))
-                                           ("DONE"        . (:foreground "green" :weight bold))))
-
-            (setq evil-emacs-state-cursor    '("red" box))
-            (setq evil-normal-state-cursor   '("#1abc9c" box))
-            (setq evil-visual-state-cursor   '("orange" box))
-            (setq evil-insert-state-cursor   '("#9b59b6" box))
-            (setq evil-replace-state-cursor  '("red" box))
-            (setq evil-operator-state-cursor '("red" box))
-            (set-face-attribute 'mode-line nil
-                                     :background "#dfe4ea"
-                                     :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
-            (set-face-attribute 'mode-line-inactive nil
-                                     :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
-                                     :background "#ecf0f1")
-            (set-face-attribute 'magit-diff-context nil
-                                     :background "grey20")
-            )))
-
-  ;; Add the default theme in the load path
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/default-theme-clean")
-#+END_SRC
-
-*** DISABLED Modeline
-#+begin_src emacs-lisp
   (run-with-idle-timer 1 nil (lambda () (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")))
 #+end_src
-*** DISABLED Theme Functions
-#+BEGIN_SRC emacs-lisp
-  (defun switch-theme (theme)
-    "This interactive call is taken from `load-theme'
-    Seen at: https://www.reddit.com/r/emacs/comments/30b67j/how_can_you_reset_emacs_to_the_default_theme/cprkyl0/
-    It first loads the default clean Emacs theme, then disables all themes, and loads the specified THEME."
-    (interactive
-     (list
-      (intern (completing-read "Load custom theme: "
-                               (mapcar 'symbol-name
-                                       (custom-available-themes))))))
-    ;; (load-theme 'default-theme-clean)
-    (mapcar #'disable-theme custom-enabled-themes)
-    (load-theme theme t))
-
-  (defun toggle-light-dark-theme ()
-    "Toggle between the selected dark and light themes."
-    (interactive)
-    (if (get 'toggle-light-dark-theme 'light-theme-loaded)
-        (load-dark-theme)
-      (load-light-theme))
-    (put 'toggle-light-dark-theme 'light-theme-loaded (not (get 'toggle-light-dark-theme 'light-theme-loaded))))
-
-  (defun load-dark-theme ()
-    "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
-      Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
-    (if dark-theme-var (switch-theme dark-theme-var))
-    (if dark-theme-modeline-var (load-theme dark-theme-modeline-var))
-    (if (not (eq dark-theme-overrides-var nil)) (mapcar 'eval dark-theme-overrides-var))
-
-    (set-face-attribute 'org-agenda-date-weekend nil
-                        :weight 'normal)
-
-    (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
-                               (?B . (:foreground "orange"))
-                               (?C . (:foreground "yellow"))
-                               (?D . (:foreground "green"))))
-
-    (set-face-attribute 'org-agenda-date          nil :height 1.1)
-    (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
-    (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
-    (set-face-attribute 'org-agenda-structure     nil :height 1.1)
-
-    (setq evil-emacs-state-cursor    '("red" box))
-    (setq evil-normal-state-cursor   '("white" box))
-    (setq evil-visual-state-cursor   '("orange" box))
-    (setq evil-insert-state-cursor   '("cyan" box))
-    (setq evil-replace-state-cursor  '("red" box))
-    (setq evil-operator-state-cursor '("red" box))
-
-    (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
-
-    (set-face-attribute 'flycheck-error-list-error nil :foreground "blue" )
-    (set-face-attribute 'font-lock-string-face nil :background "#050505" )
-    (set-face-attribute 'font-lock-keyword-face nil :background "#050505" ))
-
-
-  (defun load-light-theme ()
-    "Load the specified light theme.
-          It uses the variables light-theme-var, light-theme-modeline-var.
-          Also sets some faces for org-checkbox, strings, org TODO items and evil
-          mode cursors."
-    (if light-theme-var (switch-theme light-theme-var))
-    (if light-theme-modeline-var (load-theme light-theme-modeline-var))
-    (if (not (eq light-theme-overrides-var nil)) (mapcar 'eval light-theme-overrides-var)))
-#+END_SRC
-*** DISABLED Load Theme
-#+BEGIN_SRC emacs-lisp
-  (load-dark-theme)
-#+END_SRC
-
 * Custom Functions
 ** DISABLED set-face-attribute
 #+begin_src emacs-lisp
@@ -3255,12 +3042,12 @@ Run itail on the currently highlighted file in ranger.
 #+end_src
 ** Switch to tab
 #+begin_src emacs-lisp
-(defun hbournis/switch-to-or-create-tab (name)
-  (if (member name (--map (alist-get 'name it) (tab-bar-tabs)))
-      (tab-bar-switch-to-tab name)
-    (progn
-      (tab-bar-new-tab)
-      (tab-bar-rename-tab name))))
+  (defun hbournis/switch-to-or-create-tab (name)
+    (if (hbournis/tab-exists-p name)
+        (tab-bar-switch-to-tab name)
+      (progn
+        (tab-bar-new-tab)
+        (tab-bar-rename-tab name))))
 #+end_src
 ** Write file
 #+begin_src emacs-lisp
