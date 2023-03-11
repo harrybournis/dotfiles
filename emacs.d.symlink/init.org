@@ -584,6 +584,7 @@ aggregate tables
   (defun hbournis/org-capture-bookmark (bookmark-file)
     "Validate that the link does not already exist in bookmarks."
     (interactive)
+    (require 's)
     (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
 
     (defun hbournis/extract-host (url)
@@ -1849,6 +1850,7 @@ see logs easily
 
     (add-to-list 'company-backends 'hledger-company))
 #+end_src
+
 ** Programming Language Specific
 *** HTML/CSS
 **** DISABLED emmet-mode
@@ -2372,7 +2374,7 @@ Emacs expects you to write them.
 
   (hbournis/load-dark-theme)
 
-  (run-with-idle-timer 1 nil (lambda () (load-file "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline.el")))
+  (run-with-idle-timer 0.2 nil (lambda () (load "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline")))
 #+end_src
 * Custom Functions
 ** DISABLED set-face-attribute
@@ -3073,7 +3075,7 @@ global shortcuts
 
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 #+END_SRC
-* DISABLED Start emacs server
+* Start emacs server
 Start an emacs server so you can open files from the command line using
 emacsclient
 
