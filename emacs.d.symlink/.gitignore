@@ -1,4 +1,3 @@
-init.elc
 custom.el
 elpa/
 elpa.zip
@@ -31,3 +30,4 @@ local*.el
 cider-history
 straight/*
 !straight/versions
+*.elc
