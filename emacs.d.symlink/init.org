@@ -1298,6 +1298,7 @@ Autocompletion
           lsp-modeline-diagnostics-enable t
           lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
+          lsp-eslint-run "onSave"
           )
 
     (use-package lsp-ui
@@ -1955,7 +1956,9 @@ Some guides:
     :ensure t
     :defer t
     :commands jest-test-mode
-    :hook (typescript-mode))
+    :hook (typescript-mode)
+    :config
+    (setq jest-test-command-string "pnpm %s exec jest %s --verbose --detectOpenHandles %s"))
 #+end_src
 **** DISABLED mocha
 Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-318919735][Source]]

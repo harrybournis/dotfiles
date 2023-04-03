@@ -20,7 +20,7 @@
 ;;; Code:
 (setq gc-cons-percentage 0.6
       gc-cons-threshold most-positive-fixnum
-      read-process-output-max (* 1024 1024) ; 1mb (needed for lsp mode)
+      read-process-output-max (* 4 (* 1024 1024)) ; 1mb (needed for lsp mode)
       debug-on-error t
       my-user-emacs-directory "~/.emacs.d/")
 

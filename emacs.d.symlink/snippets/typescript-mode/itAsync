@@ -4,7 +4,6 @@
 # condition: (looking-back "^\s*ita")
 # expand-env: ((yas-indent-line 'fixed))
 # --
-it('${1:do something}', (done) => {
+it('${1:do something}', async () => {
   $0
-  done();
 });
