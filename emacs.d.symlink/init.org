@@ -972,8 +972,8 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (basic-nav-leader
       "" nil
-      "f"         'list-buffers
-      "F"         'ivy-switch-buffer-other-window
+      "f"         'consult-buffer
+      "F"         'consult-buffer-other-window
       "ESC"       'keyboard-quit
       "x"         'execute-extended-command
       "k"         'windmove-up
@@ -990,9 +990,9 @@ Improvement on evil-leader. Specify mutliple leaders.
       "3"         'split-window-right-and-switch
       "d"         'delete-window
       "|"         'toggle-window-split
-      "p"         'projectile-find-file
-      "P"         'projectile-switch-project
-      "s"         'counsel-projectile-ag
+      "p"         'consult-projectile-find-file
+      "P"         'consult-projectile-switch-project
+      "s"         'consult-ripgrep
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
@@ -1180,7 +1180,7 @@ Spell checking. Needs the aspell program installed.
     :config
     (setq ispell-program-name "aspell"))
 #+END_SRC
-*** ivy
+*** DISABLED ivy
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :straight t
@@ -1246,23 +1246,202 @@ Spell checking. Needs the aspell program installed.
 
     (ivy-mode 1))
 #+END_SRC
+*** vertico-orderless-marginalia-consult
+#+begin_src emacs-lisp
+  ;; Enable vertico
+  (use-package vertico
+    :straight t
+    :init
+    (vertico-mode)
+
+    (define-key vertico-map [escape] 'abort-minibuffers)
+    (define-key vertico-map (kbd "<S-return>") 'vertico-exit-input)
+
+    ;; Different scroll margin
+    ;; (setq vertico-scroll-margin 0)
+
+    ;; Show more candidates
+    ;; (setq vertico-count 20)
+
+    ;; Grow and shrink the Vertico minibuffer
+    ;; (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    ;; (setq vertico-cycle t)
+    )
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  ;; (use-package savehist
+  ;;   :init
+  ;;   (savehist-mode))
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+    (defun crm-indicator (args)
+      (cons (format "[CRM%s] %s"
+                    (replace-regexp-in-string
+                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                     crm-separator)
+                    (car args))
+            (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+    ;; Vertico commands are hidden in normal buffers.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+
+    ;; Enable recursive minibuffers
+    (setq enable-recursive-minibuffers t))
+
+  ;; Optionally use the `orderless' completion style.
+  (use-package orderless
+    :straight t
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+    (setq completion-styles '(orderless basic)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
+
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    :straight t
+    ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+    :bind (("M-A" . marginalia-cycle)
+           :map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+
+    ;; The :init configuration is always executed (Not lazy!)
+    :init
+
+    ;; Must be in the :init section of use-package such that the mode gets
+    ;; enabled right away. Note that this forces loading the package.
+    (marginalia-mode))
+
+  ;; Example configuration for Consult
+  (use-package consult
+    :straight t
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
+    ;; The :init configuration is always executed (Not lazy)
+    :init
+
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.5
+          register-preview-function #'consult-register-format)
+
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Configure other variables and modes in the :config section,
+    ;; after lazily loading the package.
+    :config
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key "M-.")
+    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-file-register
+     consult--source-recent-file consult--source-project-recent-file
+     ;; :preview-key "M-."
+     :preview-key '(:debounce 0.4 any))
+
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; "C-+"
+
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+    ;; By default `consult-project-function' uses `project-root' from project.el.
+    ;; Optionally configure a different project root function.
+    ;;;; 1. project.el (the default)
+    ;; (setq consult-project-function #'consult--default-project--function)
+    ;;;; 2. vc.el (vc-root-dir)
+    ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+    ;;;; 3. locate-dominating-file
+    ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+    ;;;; 4. projectile.el (projectile-project-root)
+    ;; (autoload 'projectile-project-root "projectile")
+    ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
+    ;;;; 5. No project support
+    ;; (setq consult-project-function nil)
+    )
+
+  (use-package consult-projectile
+    :straight t
+    :demand t)
+
+
+  (use-package embark
+    :ensure t
+    :bind
+    (("C-'" . embark-dwim)       ;; good alternative: M-.
+     ;; ("C-," . embark-act)        ;; pick some comfortable binding
+     ;; ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+     )
+
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+    ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
+    ;; strategy, if you want to see the documentation from multiple providers.
+    (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+    ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+    :config
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
 *** projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :straight t
     :diminish " P"
-    :commands (projectile-switch-project counsel-projectile-ag)
+    :commands (projectile-switch-project)
     :config
     (setq projectile-mode-line (format " [%s]" (projectile-project-name))
           projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
 
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
-
-    (use-package counsel-projectile
-      :straight t
-      :config
-      (counsel-projectile-mode))
 
     (projectile-global-mode))
 #+END_SRC
@@ -1309,10 +1488,6 @@ Autocompletion
             lsp-ui-peek-enable nil
             lsp-ui-sideline-enable nil
             lsp-line-ignore-duplicate t))
-
-    (use-package lsp-ivy
-      :straight t
-      :commands lsp-ivy-workspace-symbol)
 
     (use-package lsp-treemacs
       :straight t

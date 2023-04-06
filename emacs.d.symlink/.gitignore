@@ -31,3 +31,4 @@ cider-history
 straight/*
 !straight/versions
 *.elc
+projects
