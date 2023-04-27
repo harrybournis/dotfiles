@@ -826,6 +826,7 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :straight t
+    :demand t
     :after evil
     :config
     (evil-lion-mode))
@@ -835,7 +836,8 @@ Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :straight t
-    :after evil
+    :demand t
+    :after (evil)
     :config
     (global-evil-matchit-mode t))
 #+END_SRC

@@ -32,3 +32,5 @@ straight/*
 !straight/versions
 *.elc
 projects
+workspace/
+eclipse.jdt.ls
