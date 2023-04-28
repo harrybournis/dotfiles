@@ -1962,6 +1962,13 @@ system in order to work.
     ;; show response in fundamental mode only to speed it up
     (setq restclient-response-size-threshold 0.00001))
 #+END_SRC
+*** WORK_ONLY eredis
+Redis client
+#+begin_src emacs-lisp
+  (use-package eredis
+    :straight t
+    :defer t)
+#+end_src
 *** yasnippet
 [[https://github.com/AndreaCrotti/yasnippet-snippets][Snippets]]
 
