@@ -1067,7 +1067,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (setq magit-blame-echo-style 'headings)
 
-    (setq magit-git-executable "/usr/local/bin/git")
+    ;; (setq magit-git-executable "/usr/local/bin/git")
     (if (not (eq theme 'dark))
         (progn
           (set-face-attribute 'magit-section-highlight nil
@@ -1270,6 +1270,8 @@ Spell checking. Needs the aspell program installed.
 
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
+
+    (set-face-attribute 'vertico-current nil :background "#7550ed")
     )
 
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -1432,6 +1434,11 @@ Spell checking. Needs the aspell program installed.
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
+*** wgrep
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :straight t)
+#+end_src
 *** projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
@@ -1479,7 +1486,7 @@ Autocompletion
           lsp-modeline-diagnostics-enable t
           lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
-          )
+          lsp-eslint-run "onSave")
 
     (use-package lsp-ui
       :straight t
@@ -1786,7 +1793,9 @@ Emulates ranger in emacs. Replaces dired when browsing folders.
     ;; Create directory with "cd" like in Treemacs
     (define-key ranger-mode-map "cd" (lambda () (interactive) (progn (call-interactively #'dired-create-directory) (ranger-refresh))))
     ;; Create file with "cf" like in Treemacs
-    (define-key ranger-mode-map "cf" (lambda () (interactive) (progn (call-interactively #'hbournis/dired-create-file) (ranger-refresh)))))
+    (define-key ranger-mode-map "cf" (lambda () (interactive) (progn (call-interactively #'hbournis/dired-create-file) (ranger-refresh))))
+
+    (set-face-attribute 'hl-line nil :background "#7550ed"))
 #+END_SRC
 *** DISABLED pdf-tools
 Disabled for now because it requires extra packages to be installed in the
@@ -2281,7 +2290,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   (use-package projectile-rails
     :straight t
-    :requires projectile
+    :after projectile
     :diminish
     :config
     (projectile-rails-global-mode))

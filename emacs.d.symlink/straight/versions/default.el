@@ -53,7 +53,7 @@
  ("jump.el" . "55caa66a7cc6e0b1a76143fd40eff38416928941")
  ("let-alist" . "021fc10df2e44faba4728d849ee767cf890aa51a")
  ("lsp-ivy" . "9ecf4dd9b1207109802bd1882aa621eb1c385106")
- ("lsp-mode" . "8a46ae519acaf4e586a126d665111d0ba75d642f")
+ ("lsp-mode" . "955b2805b4e3488189da9230382de27f74d20290")
  ("lsp-treemacs" . "a48763ba5d1c024426e237ce65926db849d3ae6f")
  ("lsp-ui" . "295d8984da06a745b0a36c56e28ce915bc389adb")
  ("magit" . "430a52c4b3f403ba8b0f97b4b67b868298dd60f3")
