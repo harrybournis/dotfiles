@@ -813,7 +813,7 @@ mode only when it is needed.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :straight t
-    ;; :demand t
+    :demand t
     :commands (global-evil-surround-mode
                evil-surround-edit
                evil-Surround-edit
@@ -1486,7 +1486,8 @@ Autocompletion
           lsp-modeline-diagnostics-enable t
           lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
-          lsp-eslint-run "onSave")
+          lsp-eslint-run "onSave"
+          lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"])))
 
     (use-package lsp-ui
       :straight t
