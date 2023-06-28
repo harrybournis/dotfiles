@@ -87,7 +87,7 @@ Variables are set here that are used in the configuration below
                                           ,hbournis/org-inbox-file
                                           ,hbournis/recurring-file
                                           ,hbournis/org-work-file)
-        hbournis/default-font           "AurulentSansMono Nerd Font Mono"
+        hbournis/default-font           "AurulentSansM Nerd Font Mono"
         hbournis/fallback-font          "Courier New"
         hbournis/unicode-font           "Unifont"
         hbournis/mac-font-size          "15"
