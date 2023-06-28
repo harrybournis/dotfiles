@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: xit
+# key: xit
+# condition: (looking-back "^\s*xit")
+# expand-env: ((yas-indent-line 'fixed))
+# --
+xit('${1}', () => {
+  $0
+});

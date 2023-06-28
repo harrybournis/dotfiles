@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: org-kanban
+# key: org-kanban
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#+TODO: RESEARCH(v) TODO(t) DELEGATED(l!) BLOCKED(b@/!) DOING(i!) CODE_REVIEW(c) DELIVERED(d!) | DONE(x!) CANCELED(X@)
+#+BEGIN: kanban :layout (">" . 50) :match "stories" :depth 3 :range ("RESEARCH" . "DELIVERED") :sort "p"
+| RESEARCH | TODO | DELEGATED | BLOCKED | DOING | CODE_REVIEW | DELIVERED |
+|----------+------+-----------+---------+-------+-------------+-----------|
+|          |      |           |         |       |             |           |

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: expect().toEqual()
+# key: expe
+# condition: (looking-back "^\s*exp")
+# expand-env: ((yas-indent-line 'fixed))
+# --
+expect($1).$2toEqual($3);
+$0

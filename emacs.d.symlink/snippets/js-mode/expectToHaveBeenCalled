@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: expect().toHaveBeenCalled()
+# key: expc
+# condition: (looking-back "^\s*expc")
+# expand-env: ((yas-indent-line 'fixed))
+# --
+expect($1).$2toHaveBeenCalled();
+$0
