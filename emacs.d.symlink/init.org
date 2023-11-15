@@ -1272,12 +1272,20 @@ Spell checking. Needs the aspell program installed.
     ;; (setq vertico-cycle t)
 
     (set-face-attribute 'vertico-current nil :background "#7550ed")
-    )
 
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  ;; (use-package savehist
-  ;;   :init
-  ;;   (savehist-mode))
+    ;; Configure directory extension.
+    (use-package vertico-directory
+      :straight nil
+      :load-path "straight/build/vertico/extensions"
+      :after vertico
+      :ensure nil
+      ;; More convenient directory navigation commands
+      :bind (:map vertico-map
+                  ("RET" . vertico-directory-enter)
+                  ("DEL" . vertico-directory-delete-char)
+                  ("M-DEL" . vertico-directory-delete-word))
+      ;; Tidy shadowed file names
+      :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)))
 
   ;; A few more useful configurations...
   (use-package emacs
@@ -1401,38 +1409,6 @@ Spell checking. Needs the aspell program installed.
   (use-package consult-projectile
     :straight t
     :demand t)
-
-
-  (use-package embark
-    :ensure t
-    :bind
-    (("C-'" . embark-dwim)       ;; good alternative: M-.
-     ;; ("C-," . embark-act)        ;; pick some comfortable binding
-     ;; ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-     )
-
-    :init
-
-    ;; Optionally replace the key help with a completing-read interface
-    (setq prefix-help-command #'embark-prefix-help-command)
-
-    ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
-    ;; strategy, if you want to see the documentation from multiple providers.
-    (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-    ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-
-    :config
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none)))))
-
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
-    :ensure t ; only need to install it, embark loads it after consult if found
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 *** wgrep
 #+begin_src emacs-lisp
