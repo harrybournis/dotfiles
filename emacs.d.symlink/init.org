@@ -1610,23 +1610,23 @@ Save emacs session
         (set-face-attribute 'tab-bar-tab-inactive nil
                             :box nil
                             :foreground "#BDC3C7"
-                            :background nil
+                            :background 'unspecified
                             :inherit 'bold)
         (set-face-attribute 'tab-bar-tab nil
                             :box nil
                             :foreground "#00d3d0"
-                            :background nil)
+                            :background 'unspecified)
 
         )
     (progn
       (set-face-attribute 'tab-bar-tab nil
                           :box nil
                           :foreground "#16A085"
-                          :background nil)
+                          :background 'unspecified)
       (set-face-attribute 'tab-bar-tab-inactive nil
                           :box nil
                           :foreground "#BDC3C7"
-                          :background nil)
+                          :background 'unspecified)
       ))
 
   (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
@@ -2516,10 +2516,12 @@ Emacs expects you to write them.
                         :background "#000000"
                         :foreground "#000000")
     (set-face-attribute 'mode-line-inactive nil
-                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                        :box nil
                         :background "#000000")
     (set-face-attribute 'mode-line nil
-                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+                        :box nil)
+    (set-face-attribute 'fringe nil
+                        :background 'unspecified)
     (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
     (set-face-attribute 'font-lock-string-face nil :background "#050505" )
     (set-face-attribute 'font-lock-keyword-face nil :background "#050505" ))
@@ -2537,9 +2539,9 @@ Emacs expects you to write them.
                         :background "#ecf0f1")
     (set-face-attribute 'mode-line nil
                         :background "#dfe4ea"
-                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button))
+                        :box nil)
     (set-face-attribute 'mode-line-inactive nil
-                        :box '(:line-width (1 . 3) :color "grey75" :style flat-button)
+                        :box nil
                         :background "#ecf0f1"))
 
   (hbournis/load-dark-theme)
