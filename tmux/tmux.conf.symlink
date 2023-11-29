@@ -1,11 +1,20 @@
 ### command prefix
 unbind C-b
 set-option -g prefix C-Space
+
+# remove delay from escape button
+set -s escape-time 0
+
 # set mouse to scroll
 set -g mouse on
 setw -g mode-keys vi
+
 # allow the arrow key to be used immediately after changing windows
 set-option -g repeat-time 0
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
 
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
