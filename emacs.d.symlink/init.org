@@ -196,12 +196,6 @@ Variables are set here that are used in the configuration below
 
   ;; Automatically refresh buffers that changed on disk
   (run-with-idle-timer 4 nil (lambda () (global-auto-revert-mode t)))
-
-  ;; Undo/Redo changes in window configuration
-  ;; Disabled in windows for performance
-  (unless IS-WINDOWS
-    (when (fboundp 'winner-mode)
-      (winner-mode 1)))
 #+END_SRC
 ** Encryption
 
@@ -1875,8 +1869,8 @@ system in order to work.
   --------------------------------------------
   _h_ ←   _H_ X←   _v_ertical       _b_uffer
   _j_ ↓   _J_ X↓   _x_ horizontal   _f_ind
-  _k_ ↑   _K_ X↑   _z_ undo         _d_elete
-  _l_ →   _L_ X→   _Z_ redo
+  _k_ ↑   _K_ X↑                    _d_elete
+  _l_ →   _L_ X→
   "
       ("h" windmove-left )
       ("j" windmove-down )
@@ -1898,13 +1892,7 @@ system in order to work.
              (split-window-below)
              (windmove-down))
        )
-      ("d" delete-window)
-      ("z" (progn
-             (winner-undo)
-             (setq this-command 'winner-undo))
-       )
-      ("Z" winner-redo)
-      )
+      ("d" delete-window))
     (global-set-key (kbd "M-#") 'hydra-windows/body))
 #+END_SRC
 *** Docker
