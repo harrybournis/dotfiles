@@ -25,7 +25,7 @@
       my-user-emacs-directory "~/.emacs.d/")
 
 (let ((local-pre-file (concat user-emacs-directory "local-pre.el")))
-  (if (file-exists-p local-pre-file) (load local-pre-file)))
+  (if (file-exists-p local-pre-file) (load local-pre-file nil t)))
 
 (defun for-correct-platform-p (keyword)
   "Return t if KEYWORD match the check for the current platform."
@@ -126,8 +126,8 @@
     (my-tangle-config-org))
 
   (let ((file-name-handler-alist nil))
-    (load-file elfile))
-  (if (file-exists-p local-post-file) (load local-post-file)))
+    (load elfile nil t))
+  (if (file-exists-p local-post-file) (load local-post-file nil t)))
 
 (run-with-idle-timer 1 nil
                      (lambda ()

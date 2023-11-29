@@ -187,7 +187,7 @@ Variables are set here that are used in the configuration below
 
   ;; set a custom file for customize to keep init.el clean
   (setq custom-file "~/.emacs.d/custom.el")
-  (load custom-file 'no-error)
+  (load custom-file 'no-error t)
 
   ;; save all backups to a single folder to avoid clutter
   (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
@@ -2534,7 +2534,7 @@ Emacs expects you to write them.
 
   (hbournis/load-dark-theme)
 
-  (run-with-idle-timer 0.2 nil (lambda () (load "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline")))
+  (run-with-idle-timer 0.2 nil (lambda () (load "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline" nil t)))
 #+end_src
 * Custom Functions
 ** DISABLED set-face-attribute
