@@ -49,8 +49,8 @@
     (load bootstrap-file nil 'nomessage))
 
   (straight-use-package 'use-package)
-  (setq use-package-verbose t)
-  (straight-use-package '(org :type built-in))
+  (setq use-package-verbose t
+        straight-vc-git-default-clone-depth 1)
 #+END_SRC
 ** Security
 #+BEGIN_SRC emacs-lisp
@@ -170,7 +170,7 @@ Variables are set here that are used in the configuration below
   (setq-default fill-column 80)
 
   ;; cleanup whitespace on save
-  (add-hook 'before-save-hook 'whitespace-cleanup)
+  ;; (add-hook 'before-save-hook 'whitespace-cleanup)
 
   ;; set line spacing
   (setq-default line-spacing 0.2)
@@ -284,8 +284,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
 **** Org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :straight t
-    ;; :demand
+    :straight (:type built-in)
     :config
     ;; Element cache makes it slow for some reason
     (setq org-element-cache-persistent nil)
@@ -1503,7 +1502,7 @@ Not working currently
     (dap-gdb-lldb-setup)
     )
 #+end_src
-*** editorconfig
+*** DISABLED editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
     :straight t
