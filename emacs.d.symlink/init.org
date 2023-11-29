@@ -1015,7 +1015,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "`"   'hbournis/open-terminal
       "g"   'magit-status
       "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
-      "["   'wrap-with-parens
+      "["   'sp-wrap-round
       "]"   'sp-unwrap-sexp
       "\\"  'org-align-all-tags-right
       "fn"  'flycheck-next-error
@@ -2707,29 +2707,6 @@ future.
                (file-name-nondirectory (buffer-file-name))
                linum))
       (message "Copied link to position")))
-#+END_SRC
-** Smartparens wrap-with- functions
-For each pair character, generate a function called ~wrap-with-<pair name>~. [[https://ebzzry.io/en/emacs-pairs/][Source]]
-#+BEGIN_SRC emacs-lisp
-  ;; Source: https://ebzzry.io/en/emacs-pairs/
-  (defmacro def-pairs (pairs)
-    `(progn
-       ,@(cl-loop for (key . val) in pairs
-                  collect
-                  `(defun ,(read (concat
-                                  "wrap-with-"
-                                  (prin1-to-string key)
-                                  "s"))
-                       (&optional arg)
-                     (interactive "p")
-                     (sp-wrap-with-pair ,val)))))
-
-  (def-pairs ((paren . "(")
-              (bracket . "[")
-              (brace . "{")
-              (single-quote . "'")
-              (double-quote . "\"")
-              (back-quote . "`")))
 #+END_SRC
 ** Transform org date to simple year-month-day string
 #+BEGIN_SRC emacs-lisp
