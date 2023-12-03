@@ -1338,7 +1338,7 @@ Spell checking. Needs the aspell program installed.
     :straight t
     ;; Enable automatic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
-    :hook (completion-list-mode . consult-preview-at-point-mode)
+    ;; :hook (completion-list-mode . consult-preview-at-point-mode)
 
     ;; The :init configuration is always executed (Not lazy)
     :init
@@ -1362,7 +1362,7 @@ Spell checking. Needs the aspell program installed.
     :config
     ;; Optionally configure preview. The default value
     ;; is 'any, such that any key triggers the preview.
-    ;; (setq consult-preview-key 'any)
+    (setq consult-preview-key nil)
     ;; (setq consult-preview-key "M-.")
     ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
     ;; For some commands and buffer sources it is useful to configure the
@@ -1373,8 +1373,9 @@ Spell checking. Needs the aspell program installed.
      consult-bookmark consult-recent-file consult-xref
      consult--source-bookmark consult--source-file-register
      consult--source-recent-file consult--source-project-recent-file
-     ;; :preview-key "M-."
-     :preview-key '(:debounce 0.4 any))
+     :preview-key "M-."
+     ;; :preview-key '(:debounce 0.4 any)
+     )
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
