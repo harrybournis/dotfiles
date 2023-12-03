@@ -7,13 +7,10 @@
 #+PROPERTY: header-args :tangle init.el :comments org
 
 * Prerequisites
-- [[http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack][ag ("the silver searcher")]] for searching
 - [[http://git-scm.com/][git]]
 - [[https://www.gnupg.org/][gnupg]] for encryption
-- [[http://www.latex-project.org/][latex]] and [[http://pygments.org/][pygments]] to pdf export with syntax highlighting
 - [[http://aspell.net/][GNU aspell]] for spell checking
-- [[https://github.com/julienXX/terminal-notifier][Terminal Notifier]] for notifications on Mac
-- [[https://github.com/BurntSushi/ripgrep][rigprep]] for [[https://github.com/alphapapa/magit-todos][magit-todos]]
+- [[https://github.com/BurntSushi/ripgrep][rigprep]]
 
 * Packages Setup
 ** Proxy settings
@@ -71,7 +68,8 @@ Determine whether the system is mac or linux
 Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
-  (setq hbournis/org-main-file          "~/org/stuff.org"
+  (setq hbournis/projects-dir           "~/Documents/projects"
+        hbournis/org-main-file          "~/org/stuff.org"
         hbournis/org-book-file          "~/org/books.org"
         hbournis/org-mobile-file        "~/org/mobile_notes.org"
         hbournis/org-album-file         "~/org/album.org"
@@ -104,6 +102,7 @@ Variables are set here that are used in the configuration below
         visible-bell nil
         apropos-do-all t                        ;; apropos commands perform more extensive searches than default
         large-file-warning-threshold 100000000  ;; warn only when opening files bigger than 100mb
+        scroll-bar-mode nil
         ring-bell-function
         ;; load-prefer-newer t
         (lambda ()
@@ -1059,6 +1058,15 @@ Improvement on evil-leader. Specify mutliple leaders.
       '(1 "=s" "Skip gitlab pipeline" "--push-option=ci.skip"))
 
     (setq magit-blame-echo-style 'headings)
+
+    ;; Source: https://github.com/doomemacs/doomemacs/commit/641cef98480baf7af29eeaa6825044a1c40846d4
+    (defun +magit|update-vc ()
+      "Update vc in all verson-controlled buffers when magit refreshes."
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (vc-refresh-state))))
+
+    (add-hook 'magit-post-refresh-hook #'+magit|update-vc)
 
     ;; (setq magit-git-executable "/usr/local/bin/git")
     (if (not (eq theme 'dark))
