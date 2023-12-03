@@ -2500,7 +2500,6 @@ Emacs expects you to write them.
   (hbournis/update-font)
 #+END_SRC
 ** Themes
-*** new color theme
 #+begin_src emacs-lisp
   (defun hbournis/load-dark-theme ()
     "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
@@ -2554,8 +2553,16 @@ Emacs expects you to write them.
                         :background "#ecf0f1"))
 
   (hbournis/load-dark-theme)
+#+end_src
+** Mode line
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/lisp/custom-mode-line")
 
-  (run-with-idle-timer 0.2 nil (lambda () (load "~/.dotfiles/emacs.d.symlink/lisp/custom-modeline" nil t)))
+  (use-package custom-mode-line
+    :straight '(:type built-in)
+    :defer 2
+    :config
+    (custom-mode-line-mode))
 #+end_src
 * Custom Functions
 ** DISABLED set-face-attribute

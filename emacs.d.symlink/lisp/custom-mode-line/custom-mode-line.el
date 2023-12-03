@@ -4,7 +4,11 @@
 ;; https://gitlab.com/jessieh/mood-line
 
 ;;; Code:
-(setq hbournis/modeline-buffer-name-length 40)
+(defvar hbournis/mode-line-buffer-name-length 40)
+
+(defvar hbournis/mode-line-original-format mode-line-format)
+
+(declare-function projectile-project-name "ext:projectile")
 
 (defface hbournis/mode-line-status-grayed-out
   '((t (:inherit (font-lock-doc-face))))
@@ -68,7 +72,7 @@ Keep the last MAX-LENGTH characters intact."
 (defun hbournis/mode-line-buffer-name ()
   "Return the buffer or file name with the project for the mode-line."
   (let ((projectile-root (if (fboundp 'projectile-project-root) (projectile-project-root) nil))
-        (max-length hbournis/modeline-buffer-name-length))
+        (max-length hbournis/mode-line-buffer-name-length))
     (if projectile-root
         (concat
          "["
@@ -116,26 +120,38 @@ Keep the last MAX-LENGTH characters intact."
      (propertize " " 'display `((space :align-to (- right ,reserve))))
      right)))
 
-(setq-default mode-line-format
-              '(:eval
-                (hbournis/mode-line-format
-                 ;; Left
-                 (format-mode-line
-                  (list
-                   (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
-                   (propertize (hbournis/mode-line-buffer-name) 'face 'font-lock-constant-face)))
-                 ;; Right
-                 (format-mode-line
-                  (list
-                   mode-line-misc-info
-                   (tab-bar-format-tabs)
-                   (hbournis/mode-line-major-mode)
-                   (hbournis/mode-line-git)
-                   )))))
 
 (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
 (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
 (advice-add #'vc-refresh-state :after #'hbournis/mode-line-update-vc-segment)
 
-(provide 'custom-modeline)
-;;; custom-modeline.el ends here
+;;;###autoload
+(define-minor-mode custom-mode-line-mode
+  "Custom mode-line."
+  :init-value nil
+  :keymap nil
+  :lighter ""
+  :group 'custom-mode-line
+  :global t
+  (if custom-mode-line-mode
+      (setq-default mode-line-format
+                    '(:eval
+                      (hbournis/mode-line-format
+                       ;; Left
+                       (format-mode-line
+                        (list
+                         (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
+                         (propertize (hbournis/mode-line-buffer-name) 'face 'font-lock-constant-face)))
+                       ;; Right
+                       (format-mode-line
+                        (list
+                         mode-line-misc-info
+                         (tab-bar-format-tabs)
+                         (hbournis/mode-line-major-mode)
+                         (hbournis/mode-line-git)
+                         )))))
+    (setq-default mode-line-format hbournis/mode-line-original-format))
+  )
+
+(provide 'custom-mode-line)
+;;; custom-mode-line.el ends here
