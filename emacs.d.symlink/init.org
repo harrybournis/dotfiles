@@ -229,9 +229,7 @@ Variables are set here that are used in the configuration below
               (other-window 1)
               (split-window-below)))
           (other-window 1)))
-    (if IS-WINDOWS
-        (eshell)
-      (ansi-term "zsh")))
+    (eshell))
 #+END_SRC
 *** Kill the buffer when term exits
 #+BEGIN_SRC emacs-lisp
@@ -777,6 +775,7 @@ mode only when it is needed.
             doc-view
             edebug
             ediff
+            eshell
             elfeed
             emms
             eval-sexp-fu
@@ -2016,6 +2015,19 @@ see logs easily
     (add-to-list 'company-backends 'hledger-company))
 #+end_src
 
+*** eat (emulate a terminal)
+#+begin_src emacs-lisp
+  (use-package eat
+    :straight t
+    :commands (eat eshell)
+    :config
+    (setq eat-kill-buffer-on-exit t
+          eat-enable-mouse t
+          eshell-visual-commands '()
+          eat-term-name "xterm-256color")
+
+    (eat-eshell-mode))
+#+end_src
 ** Programming Language Specific
 *** HTML/CSS
 **** DISABLED emmet-mode
