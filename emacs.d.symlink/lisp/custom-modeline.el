@@ -4,29 +4,27 @@
 ;; https://gitlab.com/jessieh/mood-line
 
 ;;; Code:
+(setq hbournis/modeline-buffer-name-length 40)
 
-(declare-function projectile-project-p "projectile")
-(declare-function projectile-project-name "projectile")
-(defun sml/perform-projectile-replacement (in)
-  "If path IN is inside a project, use its name as a prefix."
-  (let ((proj (if (fboundp 'projectile-project-p) (projectile-project-p) nil)))
-    (if (stringp proj)
-        (let* ((replacement
-                (format "[%s] "
-                        (projectile-project-name)))
-               (short (replace-regexp-in-string
-                       (concat "^" (regexp-quote (abbreviate-file-name proj)))
-                       replacement
-                       in)))
-          (if (string= short in)
-              (let* ((true-in (abbreviate-file-name (file-truename in)))
-                     (true-short
-                      (replace-regexp-in-string
-                       (concat "^" (regexp-quote (abbreviate-file-name (file-truename proj))))
-                       replacement true-in)))
-                (if (string= true-in true-short) in true-short))
-            short))
-      in)))
+(defface hbournis/mode-line-status-grayed-out
+  '((t (:inherit (font-lock-doc-face))))
+  "Face used for neutral or inactive status indicators in the mode-line."
+  :group 'custom-mode-line)
+
+(defface hbournis/mode-line-status-info
+  '((t (:inherit (org-level-5))))
+  "Face used for generic status indicators in the mode-line."
+  :group 'custom-mode-line)
+
+(defface hbournis/mode-line-status-warning
+  '((t (:inherit (org-level-3))))
+  "Face for warning status indicators in the mode-line."
+  :group 'custom-mode-line)
+
+(defface hbournis/mode-line-status-error
+  '((t (:inherit (org-todo))))
+  "Face for error stauts indicators in the mode-line."
+  :group 'custom-mode-line)
 
 (defun sml/buffer-name ()
   "Return either buffer name or file name to be shown on the mode-line.
@@ -59,179 +57,85 @@ duplicated buffer names) from being displayed."
      (with-current-buffer (buffer-base-buffer) (sml/get-directory)))
     (t ""))))
 
+(defun hbournis/abbreviate-long-file-name (file-name max-length)
+  "Abbreviate FILE-NAME if its length is more than MAX-LENGTH.
+Keep the last MAX-LENGTH characters intact."
+  (if (> (length file-name) max-length)
+      (concat "..."
+              (substring file-name (- (length file-name) max-length)))
+    file-name))
 
-(defun gk-ellipsize-file-or-directory-name (name maxlen)
-  "Ellipsize the directory part of a file NAME.
-If NAME is larget than MAXLEN, ellipsise the directory part,
-preserving, ‘file-name-nondirectory’ if it's a file or the last
-directory name if a directory, returning the ellipsized string as
-the result."
-  (if (> (length name) maxlen)
-      (if (or (file-directory-p name)
-              (save-match-data (string-match "/$" name)))
-          (let* ((bits (split-string name "/" t))
-                 (head (butlast bits))
-                 (tail (car (last bits))))
-            (concat
-             (unless (equal (car bits) "~") "/")
-             (substring (mapconcat #'identity head "/") 0
-                        (- (- maxlen 4) (length bits)))
-             ".../" tail "/"))
-        (let ((fnod (file-name-nondirectory name)))
-          (concat
-           (substring (file-name-directory name) 0
-                      (- (- maxlen 4) (length fnod)))
-           ".../" fnod)))
-    name))
+(defun hbournis/mode-line-buffer-name ()
+  "Return the buffer or file name with the project for the mode-line."
+  (let ((projectile-root (if (fboundp 'projectile-project-root) (projectile-project-root) nil))
+        (max-length hbournis/modeline-buffer-name-length))
+    (if projectile-root
+        (concat
+         "["
+         (projectile-project-name)
+         "] "
+         (hbournis/abbreviate-long-file-name
+          (string-remove-prefix projectile-root (buffer-file-name))
+          max-length))
+      (hbournis/abbreviate-long-file-name
+       (concat (sml/get-directory) (sml/buffer-name))
+       max-length))))
 
+(defun hbournis/mode-line-major-mode ()
+  "Return the major mode of the buffer."
+  (let ((mode (if (stringp mode-name) mode-name (car mode-name))))
+    (when mode
+      (propertize (concat " " mode) 'face 'font-lock-variable-name-face))))
 
-(defun mood-line-format (left right)
-  "Return a string of `window-width' length containing LEFT and RIGHT,aligned respectively."
-  (let ((reserve (length right)))
-    (when (and (display-graphic-p) (eq 'right (get-scroll-bar-mode)))
-      (setq reserve (- reserve 3)))
+(defvar-local hbournis/mode-line-git-text nil)
+
+(defun hbournis/mode-line-git ()
+  "Update git segment."
+  (when hbournis/mode-line-git-text
+    hbournis/mode-line-git-text))
+
+(defun hbournis/mode-line-update-vc-segment ()
+  "Update `hbournis/mode-line-vc-text'."
+  (setq hbournis/mode-line-git-text
+        (when (and vc-mode buffer-file-name)
+          (let ((state (vc-state buffer-file-name (vc-backend buffer-file-name))))
+            (propertize
+             (concat " \ue725 " (substring-no-properties vc-mode 5))
+             'face
+             (cond ((memq state '(edited added)) 'hbournis/mode-line-status-info)
+                   ((eq state 'needs-merge) 'hbournis/mode-line-status-warning)
+                   ((eq state 'needs-update) 'hbournis/mode-line-status-warning)
+                   ((memq state '(removed conflict unregistered)) 'hbournis/mode-line-status-error)
+                   (t 'hbournis/mode-line-status-grayed-out)))))))
+
+(defun hbournis/mode-line-format (left right)
+  "Format LEFT, RIGHT and space in-between."
+  (let ((reserve (+ 1 (length right))))
     (concat
      left
-     " "
-     (propertize  " "
-                  'display `((space :align-to (- (+ right right-fringe right-margin) ,(+ reserve 0)))))
+     (propertize " " 'display `((space :align-to (- right ,reserve))))
      right)))
 
-(defface mood-line-status-grayed-out
-  '((t (:inherit (font-lock-doc-face))))
-  "Face used for neutral or inactive status indicators in the mode-line."
-  :group 'mood-line)
-
-(defface mood-line-status-info
-  '((t (:inherit (org-level-5))))
-  "Face used for generic status indicators in the mode-line."
-  :group 'mood-line)
-
-(defface mood-line-status-warning
-  '((t (:inherit (org-level-3))))
-  "Face for warning status indicators in the mode-line."
-  :group 'mood-line)
-
-(defface mood-line-status-error
-  '((t (:inherit (org-todo))))
-  "Face for error stauts indicators in the mode-line."
-  :group 'mood-line)
-
-;; VC update function
-(defvar-local mood-line--vc-text nil)
-(defun mood-line--update-vc-segment (&rest _)
-  "Update `mood-line--vc-text' against the current VCS state."
-  (setq mood-line--vc-text
-        (when (and vc-mode buffer-file-name)
-          (let ((backend (vc-backend buffer-file-name))
-                (state (vc-state buffer-file-name (vc-backend buffer-file-name))))
-            (let ((face 'mode-line-inactive)
-                  (active t))
-              (concat (cond ((memq state '(edited added))
-                             (if active (setq face 'mood-line-status-info))
-                             (propertize "+ " 'face face))
-                            ((eq state 'needs-merge)
-                             (if active (setq face 'mood-line-status-warning))
-                             (propertize "● " 'face face))
-                            ((eq state 'needs-update)
-                             (if active (setq face 'mood-line-status-warning))
-                             (propertize "⇧ " 'face face))
-                            ((memq state '(removed conflict unregistered))
-                             (if active (setq face 'mood-line-status-error))
-                             (propertize "✖ " 'face face))
-                            (t
-                             (if active (setq face 'mood-line-status-grayed-out))
-                             (propertize "" 'face face)))
-                      (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
-                                  'face (if active face))
-                      "  "))))))
-
-(defun mood-line-segment-vc ()
-  "Displays color-coded version control information in the mode-line."
-  (if mood-line--vc-text
-      (concat " | " mood-line--vc-text)
-    " "))
-
-(defvar sml/directory-truncation-string (if (char-displayable-p ?…) "…/" ".../")
-  "String used when truncating part of the file path.
-Set this to nil or an empty string if you don't want any
-indication of a truncated path.")
-
-(defvar sml/prefix-regexp '(":\\(.*:\\)" "~/"))
-(defun sml/regexp-composer (getter)
-  "Prepare the actual regexp using `sml/prefix-regexp'.
-If GETTER is non-nil, result regexp also accepts empty match."
-  (let ((left "^\\(")
-        (right (if getter "\\|\\).*" "\\)")))
-    (if (stringp sml/prefix-regexp)
-        (if (string-match "\\(" sml/prefix-regexp)
-            sml/prefix-regexp
-          (concat left sml/prefix-regexp right))
-      (concat left (mapconcat 'identity sml/prefix-regexp "\\|") right))))
-
-(defun sml/strip-prefix (path)
-  "Remove prefix from string PATH.
-A prefix is anything at the beginning of the line that matches a
-regexp in `sml/prefix-regexp'."
-  (replace-regexp-in-string (sml/regexp-composer nil) "" path))
-
-(defun sml/do-shorten-directory (dir max-length)
-  "Show up to MAX-LENGTH characters of a directory name DIR."
-  (let ((longname (sml/strip-prefix dir)))
-    ;; If it fits, return the string.
-    (if (<= (string-width longname) max-length) longname
-      ;; If it doesn't, shorten it
-      (let ((path (reverse (split-string longname "/")))
-            (output ""))
-        (when (and path (equal "" (car path)))
-          (setq path (cdr path)))
-        (let ((max (- max-length (string-width sml/directory-truncation-string))))
-          ;; Concat as many levels as possible, leaving 4 chars for safety.
-          (while (and path (<= (string-width (concat (car path) "/" output))
-                               max))
-            (setq output (concat (car path) "/" output))
-            (setq path (cdr path))))
-        ;; If we had to shorten, prepend .../
-        (when path
-          (setq output (concat sml/directory-truncation-string output)))
-        output))))
-
 (setq-default mode-line-format
-              '((:eval
-                 (mood-line-format
-                  ;; Left
-                  (format-mode-line
-                   (list
-                    '(:eval (when buffer-read-only
-                              (concat (propertize " READ-ONLY "
-                                                  'face 'org-todo
-                                                  'help-echo "Buffer is read-only"))))
+              '(:eval
+                (hbournis/mode-line-format
+                 ;; Left
+                 (format-mode-line
+                  (list
+                   (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
+                   (propertize (hbournis/mode-line-buffer-name) 'face 'font-lock-constant-face)))
+                 ;; Right
+                 (format-mode-line
+                  (list
+                   mode-line-misc-info
+                   (tab-bar-format-tabs)
+                   (hbournis/mode-line-major-mode)
+                   (hbournis/mode-line-git)
+                   )))))
 
-                    '(:eval (propertize (concat (sml/perform-projectile-replacement (sml/get-directory))
-                                                (sml/do-shorten-directory (sml/buffer-name) 40)
-                                                " ")
-                                        'face 'font-lock-constant-face
-                                        ;; 'help-echo (if buffer-file-name (abbreviate-file-name buffer-file-name) nil)
-                                        ))))
+(add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
+(add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
+(advice-add #'vc-refresh-state :after #'hbournis/mode-line-update-vc-segment)
 
-                  ;; Right
-                  (format-mode-line
-                   (list
-                    mode-line-misc-info
-                    " |"
-                    (tab-bar-format-tabs)
-                    '(:eval (let ((mode (if (stringp mode-name) mode-name (-first-item mode-name))))
-                              (if mode
-                                  (concat " | "
-                                          (propertize mode
-                                                      'face 'font-lock-variable-name-face
-                                                      'help-echo buffer-file-coding-system))
-                                nil)))
-                    '(:eval (mood-line-segment-vc))))))))
-
-(add-hook 'find-file-hook #'mood-line--update-vc-segment)
-(add-hook 'after-save-hook #'mood-line--update-vc-segment)
-(advice-add #'vc-refresh-state :after #'mood-line--update-vc-segment)
-
-(provide 'hbournis/modeline)
+(provide 'custom-modeline)
 ;;; custom-modeline.el ends here
