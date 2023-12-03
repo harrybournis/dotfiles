@@ -992,6 +992,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "c"         'hbournis/copy-filename-to-clipboard
       "RET"       'hbournis/generic-find-definition
       "w"         'hydra-window-deluxe-custom/body
+      "g"         'hbournis/magit-hydra
       "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
       "r"         (lambda () (interactive) (hbournis/call-with-prefix 'lsp-treemacs-references))
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
@@ -3213,6 +3214,42 @@ Run itail on the currently highlighted file in ranger.
   (defun hbournis/write-file (filename content)
     "Write content to file."
     (with-temp-file filename (insert content)))
+#+end_src
+** magit-hydra
+#+begin_src emacs-lisp
+(defun hbournis/get-all-git-repos (directory)
+  "Get all git repositories in DIRECTORY."
+  (let ((result '()))
+    (dolist (file (directory-files directory t))
+      (when (and (file-directory-p file)
+                 (not (string-equal "." (file-name-nondirectory file)))
+                 (not (string-equal ".." (file-name-nondirectory file)))
+                 (file-exists-p (concat (file-name-as-directory file) ".git")))
+        (push file result)))
+    result))
+
+(defun hbournis/generate-magit-hydra (dir-list)
+  "Generate a hydra for launching magit at each directory in DIR-LIST."
+  (let ((hydra-name (make-symbol "magit-hydra"))
+        (docstring "\nMagit Hydra\n")
+        (heads '()))
+    (dotimes (index (length dir-list))
+      (let* ((dir (nth index dir-list))
+             (key (number-to-string (+ 1 index)))
+             (func `(magit-status ,dir)))
+        (push `(,key ,func) heads)
+        (setq docstring (concat docstring "[_" key "_]: " (file-name-nondirectory dir) "\n"))))
+    ;; Add "q" key to exit the hydra
+    (push '("q" nil "exit" :color blue) heads)
+    (eval `(defhydra ,hydra-name (:exit t :hint nil)
+             ,docstring
+             ,@(reverse heads)))))
+
+(defun hbournis/magit-hydra ()
+  (interactive)
+  "Launch magit hydra by generating it dynamically."
+  (hbournis/generate-magit-hydra (hbournis/get-all-git-repos hbournis/projects-dir))
+  (eval '(magit-hydra/body)))
 #+end_src
 * Shortcuts
 global shortcuts
