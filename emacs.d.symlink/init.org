@@ -965,8 +965,8 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (basic-nav-leader
       "" nil
-      "f"         'consult-buffer
-      "F"         'consult-buffer-other-window
+      "f"         'list-buffers
+      "F"         'ivy-switch-buffer-other-window
       "ESC"       'keyboard-quit
       "x"         'execute-extended-command
       "k"         'windmove-up
@@ -983,9 +983,9 @@ Improvement on evil-leader. Specify mutliple leaders.
       "3"         'split-window-right-and-switch
       "d"         'delete-window
       "|"         'toggle-window-split
-      "p"         'consult-projectile-find-file
-      "P"         'consult-projectile-switch-project
-      "s"         'consult-ripgrep
+      "p"         'projectile-find-file
+      "P"         'projectile-switch-project
+      "s"         'counsel-rg
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
@@ -1169,7 +1169,7 @@ Spell checking. Needs the aspell program installed.
     :config
     (setq ispell-program-name "aspell"))
 #+END_SRC
-*** DISABLED ivy
+*** ivy
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :straight t
@@ -1190,17 +1190,42 @@ Spell checking. Needs the aspell program installed.
     (use-package counsel
       :straight t)
 
-    (use-package swiper
-      :straight t)
+    (use-package counsel-projectile
+      :straight t
+      :config
+      (counsel-projectile-mode))
+
+    (use-package lsp-ivy
+      :straight t
+      :commands lsp-ivy-workspace-symbol)
+
+    (use-package orderless
+      :straight t
+      :init
+      ;; Configure a custom style dispatcher (see the Consult wiki)
+      ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+      ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+      (setq completion-styles '(orderless basic)
+            completion-category-defaults nil
+            completion-category-overrides '((file (styles partial-completion)))))
+
+    (use-package ivy-rich
+      :straight t
+      :config
+      (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
     ;; configure regexp engine.
-    (setq ivy-re-builders-alist
-          '((counsel-projectile-find-file . ivy--regex-plus)
-            (ivy-switch-buffer . ivy--regex-plus)
-            (counsel-projectile-rg . ivy--regex-plus)
-            (counsel-rg . ivy--regex-plus)
-            (counsel-ag . ivy--regex-plus)
-            (t   . ivy--regex-fuzzy)))
+    ;; (setq ivy-re-builders-alist
+    ;;       '((counsel-projectile-find-file . ivy--regex-plus)
+    ;;         (ivy-switch-buffer . ivy--regex-plus)
+    ;;         (counsel-projectile-rg . ivy--regex-plus)
+    ;;         (counsel-rg . ivy--regex-plus)
+    ;;         (counsel-ag . ivy--regex-plus)
+    ;;         (t   . ivy--regex-fuzzy)))
+
+    ;; Use orderless
+    (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
+    (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
 
     ;; Set ivy for completion in projectile
     (setq projectile-completion-system 'ivy
@@ -1211,7 +1236,6 @@ Spell checking. Needs the aspell program installed.
     (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
     (define-key ivy-minibuffer-map [escape] 'minibuffer-keyboard-quit)
     (define-key ivy-minibuffer-map (kbd "<S-return>") 'ivy-immediate-done)
-    (global-set-key (kbd "C-s") 'swiper)
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 
@@ -1233,9 +1257,10 @@ Spell checking. Needs the aspell program installed.
                               :background "#9B59B6"
                               :foreground "white")))
 
-    (ivy-mode 1))
+    (ivy-mode 1)
+    (ivy-rich-mode))
 #+END_SRC
-*** vertico-orderless-marginalia-consult
+*** DISABLED vertico-orderless-marginalia-consult
 #+begin_src emacs-lisp
   ;; Enable vertico
   (use-package vertico
