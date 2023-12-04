@@ -10,6 +10,11 @@
 
 (declare-function projectile-project-name "ext:projectile")
 
+(defface hbournis/mode-line-buffer-name-face
+  '((t (:inherit (font-lock-constant-face))))
+  "Face used for neutral or inactive status indicators in the mode-line."
+  :group 'custom-mode-line)
+
 (defface hbournis/mode-line-status-grayed-out
   '((t (:inherit (font-lock-doc-face))))
   "Face used for neutral or inactive status indicators in the mode-line."
@@ -85,6 +90,9 @@ Keep the last MAX-LENGTH characters intact."
        (concat (sml/get-directory) (sml/buffer-name))
        max-length))))
 
+(defun hbournis/mode-line-tab-bar ()
+  (when (display-graphic-p) (tab-bar-format-tabs)))
+
 (defun hbournis/mode-line-major-mode ()
   "Return the major mode of the buffer."
   (let ((mode (if (stringp mode-name) mode-name (car mode-name))))
@@ -114,12 +122,11 @@ Keep the last MAX-LENGTH characters intact."
 
 (defun hbournis/mode-line-format (left right)
   "Format LEFT, RIGHT and space in-between."
-  (let ((reserve (+ 1 (length right))))
+  (let ((reserve (length right)))
     (concat
      left
      (propertize " " 'display `((space :align-to (- right ,reserve))))
      right)))
-
 
 (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
 (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
@@ -134,24 +141,32 @@ Keep the last MAX-LENGTH characters intact."
   :group 'custom-mode-line
   :global t
   (if custom-mode-line-mode
-      (setq-default mode-line-format
-                    '(:eval
-                      (hbournis/mode-line-format
-                       ;; Left
-                       (format-mode-line
-                        (list
-                         (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
-                         (propertize (hbournis/mode-line-buffer-name) 'face 'font-lock-constant-face)))
-                       ;; Right
-                       (format-mode-line
-                        (list
-                         mode-line-misc-info
-                         (tab-bar-format-tabs)
-                         (hbournis/mode-line-major-mode)
-                         (hbournis/mode-line-git)
-                         )))))
-    (setq-default mode-line-format hbournis/mode-line-original-format))
-  )
+      (progn
+        (setq-default mode-line-format
+                      '(:eval
+                        (hbournis/mode-line-format
+                         ;; Left
+                         (format-mode-line
+                          (list
+                           (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
+                           (propertize (hbournis/mode-line-buffer-name) 'face 'hbournis/mode-line-buffer-name-face)))
+                         ;; Right
+                         (format-mode-line
+                          (list
+                           mode-line-misc-info
+                           (hbournis/mode-line-tab-bar)
+                           (hbournis/mode-line-major-mode)
+                           (hbournis/mode-line-git))))))
+
+        (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
+        (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
+        (advice-add #'vc-refresh-state :after #'hbournis/mode-line-update-vc-segment))
+    (progn
+      (setq-default mode-line-format hbournis/mode-line-original-format)
+
+      (remove-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
+      (remove-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
+      (advice-remove #'vc-refresh-state #'hbournis/mode-line-update-vc-segment))))
 
 (provide 'custom-mode-line)
 ;;; custom-mode-line.el ends here

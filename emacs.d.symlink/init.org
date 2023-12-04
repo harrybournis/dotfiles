@@ -1066,21 +1066,7 @@ Improvement on evil-leader. Specify mutliple leaders.
         (with-current-buffer buf
           (vc-refresh-state))))
 
-    (add-hook 'magit-post-refresh-hook #'+magit|update-vc)
-
-    ;; (setq magit-git-executable "/usr/local/bin/git")
-    (if (not (eq theme 'dark))
-        (progn
-          (set-face-attribute 'magit-section-highlight nil
-                              :background "#dfe4ea")
-          (set-face-attribute 'magit-section-heading nil
-                              :foreground "#8E44AD")
-          (set-face-attribute 'magit-branch-local nil
-                              :foreground "#2980B9")
-          (set-face-attribute 'magit-branch-remote nil
-                              :foreground "#27AE60")
-          (set-face-attribute 'magit-diff-context nil
-                              :background "grey20"))))
+    (add-hook 'magit-post-refresh-hook #'+magit|update-vc))
 #+END_SRC
 *** smerge-mode
 Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge-mode][Source]]
@@ -1597,39 +1583,15 @@ Save emacs session
   (tab-bar-rename-tab "1")
 
   (mapcar (lambda (tab-name)
-          (unless (hbournis/tab-exists-p tab-name)
-            (progn
-              (tab-bar-new-tab)
-              (tab-bar-rename-tab tab-name))))
-        '("2" "3"))
+            (unless (hbournis/tab-exists-p tab-name)
+              (progn
+                (tab-bar-new-tab)
+                (tab-bar-rename-tab tab-name))))
+          '("2" "3"))
 
   ;; (tab-bar-new-tab)
   ;; (tab-bar-rename-tab "3")
   (tab-bar-switch-to-tab "1")
-
-  (if (eq theme 'dark)
-      (progn
-        (set-face-attribute 'tab-bar-tab-inactive nil
-                            :box nil
-                            :foreground "#BDC3C7"
-                            :background 'unspecified
-                            :inherit 'bold)
-        (set-face-attribute 'tab-bar-tab nil
-                            :box nil
-                            :foreground "#00d3d0"
-                            :background 'unspecified)
-
-        )
-    (progn
-      (set-face-attribute 'tab-bar-tab nil
-                          :box nil
-                          :foreground "#16A085"
-                          :background 'unspecified)
-      (set-face-attribute 'tab-bar-tab-inactive nil
-                          :box nil
-                          :foreground "#BDC3C7"
-                          :background 'unspecified)
-      ))
 
   (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
   (global-set-key   (kbd "C-2")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "2")))
@@ -2499,6 +2461,16 @@ Emacs expects you to write them.
 
   (hbournis/update-font)
 #+END_SRC
+** Mode line
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/lisp/custom-mode-line")
+
+  (use-package custom-mode-line
+    :straight '(:type built-in)
+    :defer 2
+    :config
+    (custom-mode-line-mode))
+#+end_src
 ** Themes
 #+begin_src emacs-lisp
   (defun hbournis/load-dark-theme ()
@@ -2523,6 +2495,10 @@ Emacs expects you to write them.
     (set-face-attribute 'vertical-border nil
                         :background "#000000"
                         :foreground "#000000")
+    ;; (set-face-attribute 'mode-line-active nil
+    ;;                     :background "#5C0AFF")
+    (set-face-attribute 'mode-line-active nil
+                        :background "#6a00ff")
     (set-face-attribute 'mode-line-inactive nil
                         :box nil
                         :background "#000000")
@@ -2530,6 +2506,13 @@ Emacs expects you to write them.
                         :box nil)
     (set-face-attribute 'fringe nil
                         :background 'unspecified)
+    (set-face-attribute 'tab-bar-tab-inactive nil
+                        :inherit nil
+                        :box nil
+                        :foreground "#7d738c")
+    (set-face-attribute 'tab-bar-tab nil
+                        :inherit nil
+                        :foreground "#F3C969")
     (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
     (set-face-attribute 'font-lock-string-face nil :background "#050505" )
     (set-face-attribute 'font-lock-keyword-face nil :background "#050505" ))
@@ -2540,6 +2523,14 @@ Emacs expects you to write them.
 
     (load-theme 'flatui t)
 
+    (set-face-attribute 'tab-bar-tab nil
+                        :box nil
+                        :foreground "#16A085"
+                        :background 'unspecified)
+    (set-face-attribute 'tab-bar-tab-inactive nil
+                        :box nil
+                        :foreground "#BDC3C7"
+                        :background 'unspecified)
     (set-face-attribute 'font-lock-string-face nil
                         :background nil
                         :foreground "#0a74b9")
@@ -2550,19 +2541,21 @@ Emacs expects you to write them.
                         :box nil)
     (set-face-attribute 'mode-line-inactive nil
                         :box nil
-                        :background "#ecf0f1"))
-
-  (hbournis/load-dark-theme)
+                        :background "#ecf0f1")
+    (set-face-attribute 'magit-section-highlight nil
+                        :background "#dfe4ea")
+    (set-face-attribute 'magit-section-heading nil
+                        :foreground "#8E44AD")
+    (set-face-attribute 'magit-branch-local nil
+                        :foreground "#2980B9")
+    (set-face-attribute 'magit-branch-remote nil
+                        :foreground "#27AE60")
+    (set-face-attribute 'magit-diff-context nil
+                        :background "grey20"))
 #+end_src
-** Mode line
+** Load theme
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/lisp/custom-mode-line")
-
-  (use-package custom-mode-line
-    :straight '(:type built-in)
-    :defer 2
-    :config
-    (custom-mode-line-mode))
+  (hbournis/load-dark-theme)
 #+end_src
 * Custom Functions
 ** DISABLED set-face-attribute
