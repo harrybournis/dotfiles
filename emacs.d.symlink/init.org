@@ -290,23 +290,23 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
 
     ;; Copy link to clipboard on right click
     (define-key org-mouse-map (kbd "<mouse-3>")
-      (lambda (event)
-        (interactive "e")
-        (goto-char (posn-point (event-start event)))
-        (let* ((context
-                (org-element-lineage (org-element-context) '(link) t))
-               (type (org-element-type context))
-               (value (org-element-property :value context)))
-          (cond
-           ((not type) (user-error "No link found"))
-           ((>= (point)
-                (save-excursion
-                  (goto-char (org-element-property :end context))
-                  (skip-chars-backward " \t")
-                  (point)))
-            (user-error "No link found"))
-           ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
-           (t (user-error "No link found"))))))
+                (lambda (event)
+                  (interactive "e")
+                  (goto-char (posn-point (event-start event)))
+                  (let* ((context
+                          (org-element-lineage (org-element-context) '(link) t))
+                         (type (org-element-type context))
+                         (value (org-element-property :value context)))
+                    (cond
+                     ((not type) (user-error "No link found"))
+                     ((>= (point)
+                          (save-excursion
+                            (goto-char (org-element-property :end context))
+                            (skip-chars-backward " \t")
+                            (point)))
+                      (user-error "No link found"))
+                     ((eq type 'link) (hbournis/copy-to-clipboard (org-element-property :raw-link context)))
+                     (t (user-error "No link found"))))))
 
     (require 'ob-R)
     (require 'ob-sql)
@@ -383,12 +383,12 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
           (set-face-attribute 'org-agenda-structure     nil :height 1.1)
           (set-face-attribute 'org-level-1 nil
                               :foreground "#5c9ead")
-          (set-face-attribute 'org-level-4 nil
-                              :foreground "#f0a202")
           (set-face-attribute 'org-level-2 nil
                               :foreground "#bbbdf6")
           (set-face-attribute 'org-level-3 nil
-                              :foreground "#f3b3a6")
+                              :foreground "#88B89E")
+          (set-face-attribute 'org-level-4 nil
+                              :foreground "#D3B99F")
           (set-face-attribute 'org-level-5 nil
                               :foreground "#cae7b9")
           (set-face-attribute 'org-level-6 nil
