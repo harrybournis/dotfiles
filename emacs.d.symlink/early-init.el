@@ -1,13 +1,19 @@
 (setq package-enable-at-startup nil
       frame-inhibit-implied-resize t
       inhibit-startup-message t
+      inhibit-splash-screen t
+      inhibit-startup-screen t
       load-prefer-newer noninteractive
       gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
       initial-major-mode 'fundamental-mode
       initial-scratch-message nil
+      menu-bar-mode nil
+      tool-bar-mode nil
+      scroll-bar-mode nil
       default-frame-alist '((menu-bar-lines . 0)
                             (tool-bar-lines . 0)
+                            (tab-bar-lines . 0)
                             (vertical-scroll-bars)))
 
 ;; max memory available for gc on startup

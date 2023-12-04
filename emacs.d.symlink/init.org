@@ -96,35 +96,23 @@ Variables are set here that are used in the configuration below
 * Built-in Settings
 ** General
 #+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-screen t
-        inhibit-startup-message t
-        initial-scratch-message nil
-        visible-bell nil
+  (setq visible-bell nil
         apropos-do-all t                        ;; apropos commands perform more extensive searches than default
         large-file-warning-threshold 100000000  ;; warn only when opening files bigger than 100mb
         scroll-bar-mode nil
-        ring-bell-function
-        ;; load-prefer-newer t
-        (lambda ()
-          (let ((orig-fg (face-foreground 'mode-line)))
-            (set-face-foreground 'mode-line "#F2804F")
-            (run-with-idle-timer 0.1 nil
-                                 (lambda (fg) (set-face-foreground 'mode-line fg))
-                                 orig-fg))))
+        ring-bell-function 'ignore
+        mouse-wheel-tilt-scroll t
+        display-line-numbers-type 'relative
+        mac-command-modifier 'control
+        frame-title-format '("%b - Emacs"))
 
-  ;; have your emacs window always show your system-name and the full
-  ;; path of the buffer you're currently editing
-  (setq frame-title-format (list (format "%s %%s: %%j " (system-name)) '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-
-  (defun contextual-menubar (&optional frame)
-    "Display the menubar in FRAME (default: selected frame) if on a
-      graphical display, but hide it if in terminal."
-    (interactive)
-    (set-frame-parameter frame 'menu-bar-lines
-                         (if (display-graphic-p frame)
-                             1 0)))
-
-  (add-hook 'after-make-frame-functions 'contextual-menubar)
+  ;; always indent with spaces and 2 spaces
+  (setq-default indent-tabs-mode  nil
+                default-tab-width 2
+                c-default-style "linux"
+                c-basic-offset 2
+                fill-column 80
+                line-spacing 0.2)
 
   ;; replace yes/no questions with y/n
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -135,54 +123,24 @@ Variables are set here that are used in the configuration below
   ;; disable blinking cursor
   (blink-cursor-mode -1)
 
-  ;; make sure that utf-8 is used everywhere.
-  (set-terminal-coding-system  'utf-8)
-  (set-keyboard-coding-system  'utf-8)
-  (set-language-environment    'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (setq locale-coding-system   'utf-8)
-  (prefer-coding-system        'utf-8)
+  ;; taken from doom emacs, set utf-8 everywhere
+  (set-language-environment "UTF-8")
+  (setq default-input-method nil)
+  (if IS-WINDOWS (setq selection-coding-system 'utf-8))
   (set-input-method nil)
 
-  ;; always indent with spaces and 2 spaces
-  (setq-default indent-tabs-mode  nil
-                default-tab-width 2
-                c-default-style "linux"
-                c-basic-offset 2)
-
-  ;; Scroll horizontally using mouse, touchpad and trackbar
-  (setq mouse-wheel-tilt-scroll t)
-  (setq display-line-numbers-type 'relative)
   (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
 
-  ;; set column number mode to true
-  (column-number-mode t)
-
-  ;; set cmd to control in mac
-  (setq mac-command-modifier 'control)
+  (column-number-mode nil)
 
   ;; Open .symlink files in sh-mode
   (add-to-list 'auto-mode-alist '("\\.symlink\\'" . sh-mode))
 
   ;; text wrapping at 80 columns by default (only text)
   (add-hook 'text-mode-hook 'auto-fill-mode)
-  (setq-default fill-column 80)
 
   ;; cleanup whitespace on save
   ;; (add-hook 'before-save-hook 'whitespace-cleanup)
-
-  ;; set line spacing
-  (setq-default line-spacing 0.2)
-
-  ;; set the calendar to my country and city's calendar standards
-  (setq-default calendar-week-start-day  1
-                calendar-latitude        40.6
-                calendar-longitude       22.9
-                calendar-location-name   "Thessaloniki, Greece")
-
-  ;; sets the default user's information properly.
-  (setq user-full-name    "harry bournis"
-        user-mail-address "harrybournis@gmail.com")
 
   ;; set a custom file for customize to keep init.el clean
   (setq custom-file "~/.emacs.d/custom.el")
