@@ -111,6 +111,10 @@ fi
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
 
+# Zsh vi mode cursor settings
+ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK
+
 # ------------------------------
 # Post-init module configuration
 # ------------------------------

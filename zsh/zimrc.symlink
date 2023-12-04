@@ -24,6 +24,8 @@ zmodule archive
 zmodule ruby
 # Initialize asdf package manager
 zmodule asdf
+# better vi mode
+zmodule jeffreytse/zsh-vi-mode
 
 #
 # Prompt
