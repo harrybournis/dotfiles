@@ -1,1 +1,50 @@
-source ~/.vimrc
+set number relativenumber
+set idearefactormode=keep
+set ideajoin
+set surround
+packadd matchit
+
+let mapleader = " "
+
+noremap <Esc> <nop>
+" nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
+
+nnoremap <C-j> :m +1<CR>
+nnoremap <C-k> :m -2<CR>
+inoremap <C-j> <Esc>:m +1<CR>gi
+inoremap <C-k> <Esc>:m -2<CR>gi
+
+" Splits
+nmap <leader>v <Action>(MoveTabRight)
+nmap <leader>h <C-w>h
+nmap <leader>j <C-w>j
+nmap <leader>k <C-w>k
+nmap <leader>l <C-w>l
+nmap <leader>L <Action>(SplitVertically)
+nmap <leader>H <Action>(SplitVertically)
+nmap <leader>J <Action>(SplitHorizontally)
+nmap <leader>K <Action>(SplitHorizontally)
+nmap <leader>x <Action>(CloseContent)
+
+" system clipboard
+vmap Y "+y
+nmap Y "+yy
+
+" scrolling
+nmap <leader>d <C-d>
+nmap <leader>u <C-u>
+vmap <leader>d <C-d>
+vmap <leader>u <C-u>
+
+" actions
+nmap <leader><Enter> <C-]>
+nmap <leader>d <action>(QuickJavaDoc)
+nmap <leader><S-Enter> <action>(ShowUsages)
+nmap <leader>tp <action>(PreviousTab)
+nmap <leader>tn <action>(NextTab)
+nmap <leader>bd <action>(CloseEditor)
+nmap <leader>g <action>(Generate)
+nmap <leader>/ <action>(ShowErrorDescription)
+nmap <leader>e <action>(GotoNextError)
+nnoremap <leader><leader> <C-Tab>
