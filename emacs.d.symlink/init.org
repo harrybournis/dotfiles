@@ -169,7 +169,6 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 ** Terminal
 #+BEGIN_SRC emacs-lisp
-  ;; open fish for shell
   (setq explicit-shell-file-name "/usr/local/bin/zsh")
   (setenv "INSIDE_EMACS" "true")
 #+END_SRC
@@ -230,7 +229,14 @@ A modern [[https://github.com/magnars/dash.el][list]] API for Emacs.
 The long lost Emacs string manipulation [[https://github.com/magnars/s.el][library]].
 #+begin_src emacs-lisp
   (use-package s
-    :straight t)
+    :straight t
+    :commands (s-match
+               s-right
+               s-chop-prefix
+               s-chop-suffix
+               s-replace-all
+               s-starts-with?
+               s-suffix?))
 #+end_src
 *** org-mode
 :PROPERTIES:
@@ -529,16 +535,16 @@ aggregate tables
            (org-map-entries (lambda () (org-entry-get nil "URL")) "web_bookmarks" `(,bookmark-file)))
           (progn (message "Link already exists.") (org-capture-kill)))))
 
+  (defun hbournis/extract-host (url)
+    (s-chop-prefix "www." (url-host (url-generic-parse-url url))))
+  (defun hbournis/org-tag-from-host (url)
+    (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host url)))
+
   (defun hbournis/org-capture-bookmark (bookmark-file)
     "Validate that the link does not already exist in bookmarks."
     (interactive)
     (require 's)
     (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
-
-    (defun hbournis/extract-host (url)
-      (s-chop-prefix "www." (url-host (url-generic-parse-url url))))
-    (defun hbournis/org-tag-from-host (url)
-      (s-replace-all '(("." . "_") ("-" . "_")) (hbournis/extract-host url)))
 
     (goto-char (point-min))
     (re-search-forward "Web"))
@@ -873,7 +879,7 @@ Keybindings to allow moving around when writing in Greek
   (define-key evil-normal-state-map "Σ" 'evil-sp-change-whole-line)
   (define-key evil-normal-state-map "ψ" 'evil-sp-change)
   (define-key evil-normal-state-map "Ψ" 'evil-sp-change-line)
-  (define-key evil-normal-state-map "χ" 'evil-sp-delete-char)
+  (define-key evil-normal-state-map "χ" 'evil-org-delete-char)
   (define-key evil-normal-state-map "Χ" 'evil-sp-backward-delete-char)
   (define-key evil-normal-state-map "π" 'evil-paste-after)
   (define-key evil-normal-state-map "Π" 'evil-paste-before)
@@ -924,6 +930,7 @@ Improvement on evil-leader. Specify mutliple leaders.
     (basic-nav-leader
       "" nil
       "f"         'list-buffers
+      "e"         'lsp-execute-code-action
       "F"         'ivy-switch-buffer-other-window
       "ESC"       'keyboard-quit
       "x"         'execute-extended-command
@@ -1134,15 +1141,11 @@ Spell checking. Needs the aspell program installed.
     :demand t
     :diminish (ivy-mode . "")
     :config
-    ;; Required to show the recent commands
+    ;; ;; sort results better
+    ;; (use-package flx
+    ;;   :straight t)
+
     (use-package smex
-      :straight t)
-
-    (use-package wgrep
-      :straight t)
-
-    ;; sort results better
-    (use-package flx
       :straight t)
 
     (use-package counsel
@@ -1189,7 +1192,7 @@ Spell checking. Needs the aspell program installed.
     (setq projectile-completion-system 'ivy
           counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-find-file
           ivy-count-format "(%d/%d) "
-          ivy-use-virtual-buffers t)
+          ivy-use-virtual-buffers 'bookmarks)
 
     (define-key global-map [remap list-buffers] 'ivy-switch-buffer)
     (define-key ivy-minibuffer-map [escape] 'minibuffer-keyboard-quit)
@@ -1412,8 +1415,9 @@ Autocompletion
     (after-init . global-company-mode)
     :config
     ;; Disable autocompletion in org files
-    (setq company-global-modes '(not org-mode)
-          company-idle-delay 1.5 ;; default is 0.2
+    ;; (setq company-global-modes '(not org-mode))
+
+    (setq company-idle-delay 1.5 ;; default is 0.2
           company-minimum-prefix-length 2)
     :bind
     (("C-;" . company-complete)))
@@ -1496,9 +1500,10 @@ Not working currently
     :diminish
     :config
     (require 'smartparens-config)
-    (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
+    (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
     (add-hook 'typescript-mode-hook 'smartparens-mode)
     (add-hook 'web-mode-hook 'smartparens-mode)
+    (add-hook 'java-mode-hook 'smartparens-mode)
     (add-hook 'js-mode-hook 'smartparens-strict-mode)
     ;; (add-hook 'html-mode-hook 'smartparens-strict-mode)
     (add-hook 'ruby-mode-hook 'smartparens-strict-mode)
@@ -1612,7 +1617,7 @@ An Emacs Package for GitHub .gitignore templates
   (use-package gitignore-templates
     :straight t)
 #+END_SRC
-*** ag
+*** DISABLED ag
 
 #+BEGIN_SRC emacs-lisp
   (use-package ag
@@ -1900,13 +1905,22 @@ Redis client
 
     (yas-global-mode 1))
 #+END_SRC
-*** whiteroom-mode
+*** DISABLED whiteroom-mode
 https://github.com/joostkremers/writeroom-mode
 
 #+begin_src emacs-lisp
   (use-package writeroom-mode
-    :straight t)
+    :straight t
+    :commands (writeroom-mode))
 #+end_src
+*** olivetti
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :straight t
+    :config
+    (setq-default olivetti-body-width 100)
+    (setq-default olivetti-hide-mode-line t))
+#+END_SRC
 *** DISABLED nswbuff
 Go to next/previous buffer in a project-aware context
 
@@ -1947,7 +1961,7 @@ see logs easily
   (use-package itail
     :straight t)
 #+end_src
-*** NOT_WORK hledger
+*** DISABLED hledger
 #+begin_src emacs-lisp
   (use-package hledger-mode
     :straight t
@@ -2483,10 +2497,10 @@ Emacs expects you to write them.
     (set-face-attribute 'mode-line-active nil
                         :background "#6a00ff")
     (set-face-attribute 'mode-line-inactive nil
-                        :box nil
                         :background "#000000")
     (set-face-attribute 'mode-line nil
-                        :box nil)
+                        :box '(:line-width 1 :color "#6a00ff"))
+
     (set-face-attribute 'fringe nil
                         :background 'unspecified)
     (set-face-attribute 'tab-bar-tab-inactive nil
@@ -3019,7 +3033,7 @@ Run itail on the currently highlighted file in ranger.
                                            clojure-mode    cider-test-run-ns-tests)))
 
   (setq hbournis/test-all-map
-        #s(hash-table size 6 test eq data (
+        #s(hash-table size 7 test eq data (
                                            rspec-mode      rspec-verify-all
                                            ruby-mode       rspec-verify-all
                                            minitest-mode   minitest-verify-all
@@ -3029,7 +3043,7 @@ Run itail on the currently highlighted file in ranger.
                                            clojure-mode    cider-test-run-project-tests)))
 
   (setq hbournis/find-definition-map
-        #s(hash-table size 2 test eq data (
+        #s(hash-table size 4 test eq data (
                                            ruby-mode       lsp-find-definition
                                            typescript-mode lsp-find-definition
                                            java-mode       dumb-jump-go

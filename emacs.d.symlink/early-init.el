@@ -5,7 +5,7 @@
       inhibit-startup-screen t
       load-prefer-newer noninteractive
       gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6
+      gc-cons-percentage 0.5
       initial-major-mode 'fundamental-mode
       initial-scratch-message nil
       menu-bar-mode nil
@@ -15,16 +15,6 @@
                             (tool-bar-lines . 0)
                             (tab-bar-lines . 0)
                             (vertical-scroll-bars)))
-
-;; max memory available for gc on startup
-;; (defvar me/gc-cons-threshold 16777216)
-
-;; (add-hook 'emacs-startup-hook
-;;           (lambda ()
-;;             (setq gc-cons-threshold me/gc-cons-threshold
-;;                   gc-cons-percentage 0.1)))
-
-;; (setq site-run-file nil)
 
 (when (boundp 'read-process-output-max)
   ;; 1MB in bytes, default 4096 bytes

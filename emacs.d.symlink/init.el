@@ -134,7 +134,6 @@
                        "Clean up gc."
                        (setq gc-cons-threshold  100000000
                              gc-cons-percentage 0.1
-                             debug-on-error nil)
-                       (garbage-collect)))
+                             debug-on-error nil)))
 
 ;;; init.el ends here
