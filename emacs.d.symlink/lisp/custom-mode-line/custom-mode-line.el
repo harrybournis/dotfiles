@@ -122,11 +122,9 @@ Keep the last MAX-LENGTH characters intact."
 
 (defun hbournis/mode-line-format (left right)
   "Format LEFT, RIGHT and space in-between."
-  (let ((reserve (length right)))
-    (concat
-     left
-     (propertize " " 'display `((space :align-to (- right ,reserve))))
-     right)))
+  (format (format "%%s %%%ds" (- (window-total-width) (length left) 2))
+          left
+          right))
 
 (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
 (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)

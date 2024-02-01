@@ -1,9 +1,6 @@
-#+TITLE:     My Emacs Configuration
-#+EMAIL:     harrybournis@gmail.com
 #+AUTHOR:    Harry Bournis
 #+STARTUP: content
 #+TODO: TODO WAITING MAC_ONLY WINDOWS_ONLY LINUX_ONLY UNIX_ONLY NOT_WINDOWS NOT_MAC NOT_LINUX NOT_UNIX WORK_ONLY NOT_WORK DISABLED | DONE
-#+LANGUAGE:  en
 #+PROPERTY: header-args :tangle init.el :comments org
 
 * Prerequisites
@@ -86,11 +83,10 @@ Variables are set here that are used in the configuration below
                                           ,hbournis/recurring-file
                                           ,hbournis/org-work-file)
         hbournis/default-font           "AurulentSansM Nerd Font Mono"
+        hbournis/variable-pitch-font    "AurulentSansM Nerd Font Propo"
         hbournis/fallback-font          "Courier New"
         hbournis/unicode-font           "Unifont"
-        hbournis/mac-font-size          "15"
-        hbournis/windows-font-size      "11"
-        hbournis/alternate-font-size    "11"
+        hbournis/font-size              18
         theme                           'dark)
 #+END_SRC
 * Built-in Settings
@@ -132,6 +128,9 @@ Variables are set here that are used in the configuration below
   (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
 
   (column-number-mode nil)
+
+  ;; remove the fringe indicators at the end of the file
+  (set-fringe-style 0)
 
   ;; Open .symlink files in sh-mode
   (add-to-list 'auto-mode-alist '("\\.symlink\\'" . sh-mode))
@@ -346,16 +345,22 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
           (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
           (set-face-attribute 'org-agenda-structure     nil :height 1.1)
           (set-face-attribute 'org-level-1 nil
+                              :inherit t
                               :foreground "#5c9ead")
           (set-face-attribute 'org-level-2 nil
+                              :inherit t
                               :foreground "#bbbdf6")
           (set-face-attribute 'org-level-3 nil
+                              :inherit t
                               :foreground "#88B89E")
           (set-face-attribute 'org-level-4 nil
+                              :inherit t
                               :foreground "#D3B99F")
           (set-face-attribute 'org-level-5 nil
+                              :inherit t
                               :foreground "#cae7b9")
           (set-face-attribute 'org-level-6 nil
+                              :inherit t
                               :foreground "#3ab795")
 
           (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
@@ -487,6 +492,55 @@ aggregate tables
 #+begin_src emacs-lisp
   (use-package orgtbl-aggregate
     :straight t)
+#+end_src
+***** org-modern
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :straight t
+    :after org
+    :hook (org-mode . org-modern-mode)
+    :hook (org-agenda-finalize . org-modern-agenda)
+    :hook (org-mode . variable-pitch-mode)
+    :config
+    (setq
+     ;; Edit settings
+     org-auto-align-tags nil
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-insert-heading-respect-content t
+
+     ;; Org styling, hide markup etc.
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     org-ellipsis "…"
+     org-modern-star '("")
+     org-indent-indentation-per-level 4
+
+     ;; Agenda styling
+     org-agenda-tags-column 0
+     org-agenda-block-separator ?─
+     org-agenda-time-grid
+     '((daily today require-timed)
+       (800 1000 1200 1400 1600 1800 2000)
+       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+     org-agenda-current-time-string "◀── now ─────────────────────────────────────────────────"
+     )
+
+    (set-face-attribute 'org-level-1 nil
+                        :inherit t
+                        :height (lambda (_x) (+ 150 (* hbournis/font-size 10))))
+
+    (set-face-attribute 'org-level-2 nil
+                        :inherit t
+                        :height (lambda (_x) (+ 100 (* hbournis/font-size 10))))
+
+    (set-face-attribute 'org-level-3 nil
+                        :inherit t
+                        :height (lambda (_x) (+ 50 (* hbournis/font-size 10))))
+
+    (set-face-attribute 'org-level-4 nil
+                        :inherit t
+                        :height (lambda (_x) (+ 30 (* hbournis/font-size 10)))))
 #+end_src
 **** Org custom functions
 #+BEGIN_SRC emacs-lisp
@@ -1885,7 +1939,7 @@ system in order to work.
     ;; show response in fundamental mode only to speed it up
     (setq restclient-response-size-threshold 0.00001))
 #+END_SRC
-*** WORK_ONLY eredis
+*** DISABLED eredis
 Redis client
 #+begin_src emacs-lisp
   (use-package eredis
@@ -1917,6 +1971,7 @@ https://github.com/joostkremers/writeroom-mode
 #+BEGIN_SRC emacs-lisp
   (use-package olivetti
     :straight t
+    :hook (org-mode . olivetti-mode)
     :config
     (setq-default olivetti-body-width 100)
     (setq-default olivetti-hide-mode-line t))
@@ -2422,9 +2477,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 #+end_src
 * Font and Theme
 ** Fonts
-SourceCodePro is my default font.
 Execute ~(print (font-family-list))~ to get a list of all available fonts and how
-Emacs expects you to write them.
 
 #+BEGIN_SRC emacs-lisp
   ;; Turn off antialiasing for BigBlue Terminal Font
@@ -2432,29 +2485,24 @@ Emacs expects you to write them.
 
   (defun hbournis/update-font ()
     "Re-set the font and font size according to the platform."
-    (if (member hbournis/default-font (font-family-list))
-        (cond (IS-MAC
-               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/mac-font-size)))
-              (IS-LINUX
-               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/alternate-font-size)))
-              (IS-WINDOWS
-               (set-face-attribute 'default nil :font (concat hbournis/default-font "-" hbournis/windows-font-size) :weight 'semi-bold)))
+    (let ((font (if (member hbournis/default-font (font-family-list))
+                    hbournis/default-font
+                  hbournis/fallback-font))
+          (fallback (if (member hbournis/variable-pitch-font (font-family-list))
+                        hbournis/variable-pitch-font
+                      hbournis/fallback-font))
+          (unicode hbournis/unicode-font)
+          (font-size hbournis/font-size))
 
-      (cond (IS-WINDOWS
-             (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/windows-font-size)))
-            (t (set-face-attribute 'default nil :font (concat hbournis/fallback-font "-" hbournis/mac-font-size)))))
+      (defun hbournis/format-font (font size)
+        (concat font "-" (number-to-string size)))
 
-    ;; Set a font with great support for Unicode Symbols to fallback in
-    ;; those case where certain Unicode glyphs are missing in the current
-    ;; font.
-    (when (member hbournis/unicode-font (font-family-list))
-      (cond (IS-MAC
-             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
-            (IS-LINUX
-             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/mac-font-size) nil 'prepend))
-            (IS-WINDOWS
-             (set-fontset-font t 'unicode (concat hbournis/unicode-font "-" hbournis/windows-font-size) nil 'prepend))))
-    )
+      (set-face-attribute 'default nil :font (hbournis/format-font font font-size))
+      (set-face-attribute 'fixed-pitch nil :font (hbournis/format-font font font-size))
+      (set-face-attribute 'variable-pitch nil :font (hbournis/format-font font font-size))
+
+      (if (member unicode (font-family-list))
+          (set-fontset-font t 'unicode (hbournis/format-font unicode font-size) nil 'prepend))))
 
   (hbournis/update-font)
 #+END_SRC
@@ -2494,12 +2542,14 @@ Emacs expects you to write them.
                         :foreground "#000000")
     ;; (set-face-attribute 'mode-line-active nil
     ;;                     :background "#5C0AFF")
+
     (set-face-attribute 'mode-line-active nil
-                        :background "#6a00ff")
-    (set-face-attribute 'mode-line-inactive nil
-                        :background "#000000")
-    (set-face-attribute 'mode-line nil
+                        :background "#6a00ff"
                         :box '(:line-width 1 :color "#6a00ff"))
+
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#000000"
+                        :box '(:line-width 1 :color "#000000"))
 
     (set-face-attribute 'fringe nil
                         :background 'unspecified)
@@ -3179,13 +3229,13 @@ Run itail on the currently highlighted file in ranger.
     "Increment font size by."
     (let ((amount (if amount amount 1)))
       (mapcar (lambda (variable)
-                (let* ((current-value (string-to-number (symbol-value variable)))
+                (let* ((current-value (symbol-value variable))
                        (new-value (apply transform-function `(,current-value ,amount))))
-                  (set variable (number-to-string new-value))
+                  (set variable new-value)
                   (message "Font Size: %s" new-value)
                   (hbournis/update-font)
                   (symbol-value variable)))
-              '(hbournis/mac-font-size hbournis/windows-font-size hbournis/alternate-font-size))))
+              '(hbournis/font-size))))
 
   (defun hbournis/increment-font-size (&optional amount)
     "Increment font size by AMOUNT."
