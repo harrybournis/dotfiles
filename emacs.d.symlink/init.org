@@ -513,7 +513,7 @@ aggregate tables
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-ellipsis "…"
-     org-modern-star '("")
+     org-modern-star '("" " ")
      org-indent-indentation-per-level 4
 
      ;; Agenda styling
@@ -528,19 +528,19 @@ aggregate tables
 
     (set-face-attribute 'org-level-1 nil
                         :inherit t
-                        :height (lambda (_x) (+ 150 (* hbournis/font-size 10))))
+                        :height (lambda (_x) (+ 50 (* hbournis/font-size 10))))
 
     (set-face-attribute 'org-level-2 nil
                         :inherit t
-                        :height (lambda (_x) (+ 100 (* hbournis/font-size 10))))
+                        :height (lambda (_x) (+ 40 (* hbournis/font-size 10))))
 
     (set-face-attribute 'org-level-3 nil
                         :inherit t
-                        :height (lambda (_x) (+ 50 (* hbournis/font-size 10))))
+                        :height (lambda (_x) (+ 30 (* hbournis/font-size 10))))
 
     (set-face-attribute 'org-level-4 nil
                         :inherit t
-                        :height (lambda (_x) (+ 30 (* hbournis/font-size 10)))))
+                        :height (lambda (_x) (+ 20 (* hbournis/font-size 10)))))
 #+end_src
 **** Org custom functions
 #+BEGIN_SRC emacs-lisp
