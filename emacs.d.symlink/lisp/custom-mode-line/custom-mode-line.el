@@ -76,28 +76,30 @@ Keep the last MAX-LENGTH characters intact."
 
 (defun hbournis/mode-line-buffer-name ()
   "Return the buffer or file name with the project for the mode-line."
-  (let ((projectile-root (if (fboundp 'projectile-project-root) (projectile-project-root) nil))
-        (max-length hbournis/mode-line-buffer-name-length))
-    (if projectile-root
-        (concat
-         "["
-         (projectile-project-name)
-         "] "
-         (hbournis/abbreviate-long-file-name
-          (string-remove-prefix projectile-root (buffer-file-name))
-          max-length))
-      (hbournis/abbreviate-long-file-name
-       (concat (sml/get-directory) (sml/buffer-name))
-       max-length))))
+  (condition-case err
+      (let ((projectile-root (if (fboundp 'projectile-project-root) (projectile-project-root) nil))
+            (max-length hbournis/mode-line-buffer-name-length))
+        (if projectile-root
+            (concat
+             "["
+             (projectile-project-name)
+             "] "
+             (hbournis/abbreviate-long-file-name
+              (string-remove-prefix projectile-root (buffer-file-name))
+              max-length))
+          (hbournis/abbreviate-long-file-name
+           (concat (sml/get-directory) (sml/buffer-name))
+           max-length)))
+    (error (message (error-message-string err)) "BUFFER NAME ERROR")))
 
 (defun hbournis/mode-line-tab-bar ()
   (when (display-graphic-p) (tab-bar-format-tabs)))
 
 (defun hbournis/mode-line-major-mode ()
   "Return the major mode of the buffer."
-  (let ((mode (if (stringp mode-name) mode-name (car mode-name))))
+  (let ((mode mode-name))
     (when mode
-      (propertize (concat " " mode) 'face 'font-lock-variable-name-face))))
+      (propertize (concat " " (format-mode-line mode)) 'face 'font-lock-variable-name-face))))
 
 (defvar-local hbournis/mode-line-git-text nil)
 
