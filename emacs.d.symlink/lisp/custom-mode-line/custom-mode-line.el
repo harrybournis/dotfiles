@@ -21,17 +21,21 @@
   :group 'custom-mode-line)
 
 (defface hbournis/mode-line-status-info
-  '((t (:inherit (org-level-5))))
+  '((t (:inherit (outline-5))))
   "Face used for generic status indicators in the mode-line."
   :group 'custom-mode-line)
 
 (defface hbournis/mode-line-status-warning
-  '((t (:inherit (org-level-3))))
+  '((t (:inherit (outline-3))))
   "Face for warning status indicators in the mode-line."
   :group 'custom-mode-line)
 
 (defface hbournis/mode-line-status-error
-  '((t (:inherit (org-todo))))
+  '((((class color) (min-colors 16) (background light)) (:foreground "Red1" :bold t))
+    (((class color) (min-colors 16) (background dark))  (:foreground "Pink" :bold t))
+    (((class color) (min-colors 8)  (background light)) (:foreground "red"  :bold t))
+    (((class color) (min-colors 8)  (background dark))  (:foreground "red"  :bold t))
+    (t (:inverse-video t :bold t)))
   "Face for error stauts indicators in the mode-line."
   :group 'custom-mode-line)
 
