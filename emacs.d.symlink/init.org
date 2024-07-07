@@ -168,7 +168,7 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 ** Terminal
 #+BEGIN_SRC emacs-lisp
-  (setq explicit-shell-file-name "/usr/local/bin/zsh")
+  (setq explicit-shell-file-name "/usr/local/bin/fish")
   (setenv "INSIDE_EMACS" "true")
 #+END_SRC
 *** open terminal below
@@ -1819,7 +1819,7 @@ hide specific modes from the modeline
     (diminish 'auto-revert-mode)
     (diminish 'eldoc-mode))
 #+END_SRC
-*** exec-path-from-shell
+*** DISABLED exec-path-from-shell
 Get environment variables from the shell
 
 #+BEGIN_SRC emacs-lisp
@@ -2127,6 +2127,7 @@ see logs easily
     :straight t
     :commands (eat eshell)
     :config
+    (evil-set-initial-state 'eat-mode 'emacs)
     (setq eat-kill-buffer-on-exit t
           eat-enable-mouse t
           eshell-visual-commands '()
