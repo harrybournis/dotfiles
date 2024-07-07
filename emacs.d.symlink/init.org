@@ -693,6 +693,53 @@ aggregate tables
                                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                               (org-agenda-overriding-header agenda-label-priority-c)))))))
 #+END_SRC
+**** DISABLED Org roam
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :straight t
+    :init
+    (use-package emacsql-sqlite-builtin
+      :straight '(:type built-in))
+    (setq org-roam-database-connector 'sqlite-builtin)
+    :commands (org-roam-buffer-toggle
+               org-roam-node-find
+               org-roam-node-insert
+               org-roam-capture)
+    :custom
+    (org-roam-directory (file-truename "~/org-roam/"))
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\*org-roam\\*"
+                   (display-buffer-in-direction)
+                   (direction . right)
+                   (window-width . 0.33)
+                   (window-height . fit-window-to-buffer)))
+
+    (setq org-roam-mode-sections
+          (list #'org-roam-backlinks-section
+                #'org-roam-reflinks-section
+                #'org-roam-unlinked-references-section))
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    ;;(require 'org-roam-protocol)
+    )
+#+end_src
+
+**** DISABLED org roam ui
+#+begin_src emacs-lisp
+  (use-package org-roam-ui
+    :straight t
+    :commands (org-roam-ui-open)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t
+          org-roam-ui-browser-function 'xwidget-webkit-browse-url))
+#+end_src
+
 *** evil-mode
 :PROPERTIES:
 :VISIBILITY: folded
@@ -809,6 +856,7 @@ mode only when it is needed.
             neotree
             info
             man
+            org-roam
             (package-menu package)
             (pdf pdf-view)
             (term term ansi-term multi-term)
@@ -1018,6 +1066,10 @@ Improvement on evil-leader. Specify mutliple leaders.
       "RET"       'hbournis/generic-find-definition
       "w"         'hydra-window-deluxe-custom/body
       "g"         'hbournis/magit-hydra
+      "of"        'org-roam-node-find
+      "oi"        'org-roam-node-insert
+      "ot"        'org-roam-buffer-toggle
+      "og"        'org-roam-ui-open
       "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
       "r"         (lambda () (interactive) (hbournis/call-with-prefix 'lsp-treemacs-references))
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
