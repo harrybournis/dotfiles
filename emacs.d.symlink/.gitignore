@@ -34,3 +34,11 @@ straight/*
 projects
 workspace/
 eclipse.jdt.ls
+org-roam.db
+gptel-crowdsourced-prompts.csv
+multisession/
+lisp/org-fancy-priorities/
+lisp/org-fancy-priorities/
+recentf
+.dap-breakpoints
+local

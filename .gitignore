@@ -16,9 +16,4 @@ ranger/config/ranger.symlink/bookmarks
 ranger/config/ranger.symlink/tagged
 ranger/.config/ranger.symlinkNoDot/history
 
-emacs.d.symlink/lisp/org-fancy-priorities/
-emacs.d.symlink/lisp/org-fancy-priorities/
-emacs.d.symlink/recentf
-emacs.d.symlink/.dap-breakpoints
-emacs.d.symlink/local
 /.DS_Store
