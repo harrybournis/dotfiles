@@ -1464,8 +1464,7 @@ Spell checking. Needs the aspell program installed.
     :diminish " P"
     :commands (projectile-switch-project)
     :config
-    (setq projectile-mode-line (format " [%s]" (projectile-project-name))
-          projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
+    (setq projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
 
     (if IS-WINDOWS
         (setq projectile-indexing-method 'alien))
@@ -1506,7 +1505,8 @@ Autocompletion
           lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
           lsp-eslint-run "onSave"
-          lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"])))
+          lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"]))
+          lsp-eslint-download-url "https://github.com/microsoft/vscode-eslint/releases/download/3.0.5-alpha.1/vscode-eslint-3.0.5.vsix?raw=true")
 
     (use-package lsp-ui
       :straight t
