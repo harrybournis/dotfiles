@@ -6,8 +6,8 @@ alias ls.='ls -a | grep "^\."'
 alias oepn='open'
 alias brwe="brew"
 alias sublime='open -a /Applications/"Sublime Text.app"'
-alias yt='youtube-dl --merge-output-format mkv -o "%(title)s-%(id)s-$(date +%Y%m%d%s).%(ext)s"'
-alias yt-audio="youtube-dl -f 'bestaudio[ext=m4a]'"
+alias yt='yt-dlp'
+alias yt-audio="yt-dlp -x"
 alias youtube-dl-mp3="youtube-dl --extract-audio --audio-format mp3 "
 alias ip_local="ipconfig getifaddr en0"
 alias ip_ext="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -19,6 +19,7 @@ alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"
 alias fix-grey-file='SetFile -c "" -t ""'
+alias gradle='./gradlew'
 
 # tmux
 alias ta='tmux attach -t'
