@@ -75,6 +75,7 @@ cask "emacs-plus", args: ["with-xwidgets"]
 cask "dbeaver-community"
 cask "gpg-suite"
 cask "lulu"
+cask "audio-hijack"
 
 # Fonts
 cask "font-sauce-code-pro-nerd-font"
