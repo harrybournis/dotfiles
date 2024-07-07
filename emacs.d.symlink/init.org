@@ -1528,6 +1528,17 @@ Autocompletion
         (interactive)
         (hbournis/call-with-prefix 'lsp-treemacs-references))))
 #+end_src
+*** tree-sitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :straight t
+    :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
+    :hook (kotlin-mode . tree-sitter-mode)
+    :hook (json-mode . tree-sitter-mode))
+
+  (use-package tree-sitter-langs
+    :straight t)
+#+end_src
 *** DISABLED dap-mode
 debugger
 
@@ -1536,20 +1547,33 @@ Not working currently
 #+begin_src emacs-lisp
   (use-package dap-mode
     :straight t
-    ;; Uncomment the config below if you want all UI panes to be hidden by default!
-    ;; :custom
-    ;; (lsp-enable-dap-auto-configure nil)
-    ;; :config
-    ;; (dap-ui-mode 1)
-    :commands dap-debug
+    :after lsp-mode
     :config
-    ;; Set up Node debugging
-    (require 'dap-node)
-    (dap-node-setup) ;; Automatically installs Node debug adapter if needed
-    (dap-go-setup)
-    (require 'dap-hydra)
-    (require 'dap-gdb-lldb)
-    (dap-gdb-lldb-setup)
+    (dap-mode t)
+    (dap-ui-mode t)
+    (dap-tooltip-mode 1)
+    (tooltip-mode 1)
+    (add-hook 'dap-stopped-hook (lambda (arg) (call-interactively #'dap-hydra)))
+    (dap-register-debug-template
+     "localhost:5005"
+     (list :type "java"
+           :request "attach"
+           :hostName "localhost"
+           :port 5005)
+     )
+     (dap-auto-configure-mode))
+
+  (use-package dap-java
+    :straight nil
+    :after (lsp-java)
+    :bind
+    (("C-c R" . dap-java-run-test-class)
+     ("C-c d" . dap-java-debug-test-method)
+     ("C-c r" . dap-java-run-test-method))
+    :config
+    (global-set-key (kbd "<f7>") 'dap-step-in)
+    (global-set-key (kbd "<f8>") 'dap-next)
+    (global-set-key (kbd "<f9>") 'dap-continue)
     )
 #+end_src
 *** DISABLED editorconfig
@@ -2058,6 +2082,23 @@ see logs easily
 
     (eat-eshell-mode))
 #+end_src
+
+*** gptel
+#+begin_src emacs-lisp
+  (use-package gptel
+    :straight t
+    :config
+    (setq gptel-log-level 'info
+          gptel-default-mode 'org-mode)
+
+    (if (boundp 'gptel-local)
+        (funcall gptel-local)))
+#+end_src
+*** fireplace
+#+begin_src emacs-lisp
+(use-package fireplace
+  :straight t)
+#+end_src
 ** Programming Language Specific
 *** HTML/CSS
 **** DISABLED emmet-mode
@@ -2256,9 +2297,33 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 *** Java
 **** NOT_WINDOWS java-mode (CC mode)
 #+BEGIN_SRC emacs-lisp
-  ;; Set indentation to 4 for java
-  (setq-default c-basic-offset 4)
+  (defun hbournis/java-style-hook ()
+    (setq indent-tabs-mode nil
+          c-basic-offset 4
+          default-tab-width 4
+          c-default-style "linux"))
+
+  (add-hook 'java-mode-hook 'hbournis/java-style-hook)
+  (add-hook 'java-mode-hook 'display-line-numbers-mode)
 #+END_SRC
+**** lsp-java
+#+begin_src emacs-lisp
+  (use-package lsp-java
+    :straight t
+    :hook (java-mode . lsp-deferred)
+    :hook (java-mode . lsp-lens-mode)
+    :hook (java-mode . lsp-java-boot-lens-mode)
+    :config
+    (require 'lsp-java-boot))
+#+end_src
+*** Kotlin
+**** kotlin-mode
+#+begin_src emacs-lisp
+  (use-package kotlin-mode
+    :straight t
+    :config
+    (setq lsp-kotlin-compiler-jvm-target "17"))
+#+end_src
 *** Markdown
 **** markdown-mode
 #+BEGIN_SRC emacs-lisp
