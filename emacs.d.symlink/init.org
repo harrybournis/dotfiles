@@ -900,6 +900,7 @@ Keybindings to allow moving around when writing in Greek
   ;; Vim Movements
   (define-key evil-normal-state-map "κ" 'evil-previous-visual-line)
   (define-key evil-normal-state-map "ξ" 'evil-next-visual-line)
+  (define-key evil-normal-state-map "Ξ" 'evil-join)
   (define-key evil-normal-state-map "λ" 'evil-forward-char)
   (define-key evil-normal-state-map "η" 'evil-backward-char)
   (define-key evil-normal-state-map "ς" 'evil-forward-word-begin)
@@ -978,11 +979,16 @@ Improvement on evil-leader. Specify mutliple leaders.
                         nil
                         #'identity))
 
-    ;; In order for Space to work everywhere. "" nil is used to unbind it first.
-    (general-create-definer basic-nav-leader :prefix "SPC" :keymaps 'override :states '(normal visual motion) :non-normal-prefix "C-SPC")
+    (general-define-key
+     :prefix "SPC"
+     :keymaps 'override
+     :states '(normal visual motion)
+     :non-normal-prefix "C-SPC"
+     :prefix-map 'basic-nav-prefix-map)
 
+    (general-create-definer basic-nav-leader :keymaps 'basic-nav-prefix-map)
     (basic-nav-leader
-      "" nil
+      "" nil ; In order for Space to work everywhere. "" nil is used to unbind it first.
       "f"         'list-buffers
       "e"         'lsp-execute-code-action
       "F"         'ivy-switch-buffer-other-window
@@ -1021,7 +1027,11 @@ Improvement on evil-leader. Specify mutliple leaders.
       "i"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-inbox-file))
       "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
 
-    (general-create-definer extra-tools-leader :prefix "'" :keymaps 'override :states '(normal visual treemacs))
+    (general-define-key
+     :prefix "'" :keymaps 'override :states '(normal visual treemacs)
+     :prefix-map 'extra-tools-prefix-map)
+
+    (general-create-definer extra-tools-leader :keymaps 'extra-tools-prefix-map)
     (extra-tools-leader
       "`"   'hbournis/open-terminal
       "g"   'magit-status
@@ -1042,7 +1052,11 @@ Improvement on evil-leader. Specify mutliple leaders.
       "m"   'hbournis/toggle-modeline
       "*"   (lambda() (interactive) (forward-char 1) (insert " ⭐")))
 
-    (general-create-definer extra-tools-alternate-leader :prefix "' '" :keymaps 'override :states '(normal visual))
+    (general-define-key
+     :prefix "' '" :keymaps 'override :states '(normal visual)
+     :prefix-map 'extra-tools-alternate-prefix-map)
+
+    (general-create-definer extra-tools-alternate-leader :keymaps 'extra-tools-alternate-prefix-map)
     (extra-tools-alternate-leader
       "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
       "lv"  'org-cliplink
@@ -1957,6 +1971,7 @@ Redis client
     (use-package yasnippet-snippets
       :straight t)
 
+    (define-key evil-insert-state-map "\C-j" 'yas-expand)
     (yas-global-mode 1))
 #+END_SRC
 *** DISABLED whiteroom-mode
