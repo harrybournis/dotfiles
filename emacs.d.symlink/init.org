@@ -1,4 +1,4 @@
-#+AUTHOR:    Harry Bournis
+#+AUTHOR: Harry Bournis
 #+STARTUP: content
 #+TODO: TODO WAITING MAC_ONLY WINDOWS_ONLY LINUX_ONLY UNIX_ONLY NOT_WINDOWS NOT_MAC NOT_LINUX NOT_UNIX WORK_ONLY NOT_WORK DISABLED | DONE
 #+PROPERTY: header-args :tangle init.el :comments org
@@ -512,8 +512,8 @@ aggregate tables
      ;; Org styling, hide markup etc.
      org-hide-emphasis-markers t
      org-pretty-entities t
-     org-ellipsis "…"
-     org-modern-star '("" " ")
+     org-ellipsis "↯"
+     org-modern-star '(" ")
      org-indent-indentation-per-level 4
 
      ;; Agenda styling
@@ -1973,7 +1973,7 @@ https://github.com/joostkremers/writeroom-mode
     :straight t
     :hook (org-mode . olivetti-mode)
     :config
-    (setq-default olivetti-body-width 100)
+    (setq-default olivetti-body-width 110)
     (setq-default olivetti-hide-mode-line t))
 #+END_SRC
 *** DISABLED nswbuff
@@ -2512,7 +2512,7 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 
   (use-package custom-mode-line
     :straight '(:type built-in)
-    :defer 2
+    :demand t
     :config
     (custom-mode-line-mode))
 #+end_src
@@ -2545,11 +2545,11 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 
     (set-face-attribute 'mode-line-active nil
                         :background "#6a00ff"
-                        :box '(:line-width 1 :color "#6a00ff"))
+                        :box '(:line-width (1 . 3) :color "#6a00ff"))
 
     (set-face-attribute 'mode-line-inactive nil
                         :background "#000000"
-                        :box '(:line-width 1 :color "#000000"))
+                        :box '(:line-width (1 . 3) :color "#000000"))
 
     (set-face-attribute 'fringe nil
                         :background 'unspecified)
@@ -3152,7 +3152,7 @@ Run itail on the currently highlighted file in ranger.
     (interactive)
     (hbournis/call-interactively-generic-func hbournis/show-repl-map))
 #+end_src
-** TDD mode
+** DISABLED TDD mode
 #+begin_src emacs-lisp
   (defun hbournis/ruby-test-file-p (&optional file)
     "Returns true if file is a ruby spec file"
