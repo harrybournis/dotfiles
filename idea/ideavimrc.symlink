@@ -2,6 +2,7 @@ set number relativenumber
 set idearefactormode=keep
 set ideajoin
 set surround
+set ignorecase
 packadd matchit
 
 let mapleader = " "

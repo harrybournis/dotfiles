@@ -20,6 +20,8 @@ alias emacs-tangle-init "emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --ev
 alias fix-grey-file 'SetFile -c "" -t ""'
 alias gradle './gradlew'
 alias lazy "lazydocker"
+alias vi "vim"
+alias vimf "vim -o (fzf)"
 
 # tmux
 alias ta 'tmux attach -t'
@@ -35,7 +37,7 @@ alias rspec "bundle exec rspec"
 
 # in docker
 alias docker-stats "docker ps -q | xargs docker stats --no-stream"
-alias dockerc "docker-compose"
+alias dockerc "docker compose"
 
 if [ $INSIDE_EMACS ]
     function emacsfindfile

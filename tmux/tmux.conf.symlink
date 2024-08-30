@@ -16,6 +16,9 @@ set-option -g repeat-time 0
 set -g base-index 1
 setw -g pane-base-index 1
 
+# change status bar for emamux
+set-option -g status-right '[#h###S:#I:#P]'
+
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
 bind J split-window -v -c "#{pane_current_path}"
