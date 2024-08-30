@@ -1053,10 +1053,12 @@ Improvement on evil-leader. Specify mutliple leaders.
       "L"         'split-window-right-and-switch
       "0"         'delete-window
       "1"         'delete-other-windows
-      "2"         'split-window-below-and-switch
-      "3"         'split-window-right-and-switch
       "d"         'delete-window
       "|"         'toggle-window-split
+      "w"         'delete-window
+      "W"         'delete-other-windows
+      "/"         'dirvish-side
+      "?"         'hydra-window-deluxe-custom/body
       "p"         'projectile-find-file
       "P"         'projectile-switch-project
       "s"         'counsel-rg
@@ -1065,14 +1067,13 @@ Improvement on evil-leader. Specify mutliple leaders.
       "ns"        'hbournis/create-scratch-buffer
       "c"         'hbournis/copy-filename-to-clipboard
       "RET"       'hbournis/generic-find-definition
-      "w"         'hydra-window-deluxe-custom/body
       "g"         'hbournis/magit-hydra
       "of"        'org-roam-node-find
       "oi"        'org-roam-node-insert
       "ot"        'org-roam-buffer-toggle
       "og"        'org-roam-ui-open
       "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
-      "r"         (lambda () (interactive) (hbournis/call-with-prefix 'lsp-treemacs-references))
+      "r"         'lsp-find-references
       "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
@@ -1081,7 +1082,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
 
     (general-define-key
-     :prefix "'" :keymaps 'override :states '(normal visual treemacs)
+     :prefix "'" :keymaps 'override :states '(normal visual)
      :prefix-map 'extra-tools-prefix-map)
 
     (general-create-definer extra-tools-leader :keymaps 'extra-tools-prefix-map)
@@ -1571,15 +1572,7 @@ Autocompletion
             lsp-ui-sideline-enable nil
             lsp-line-ignore-duplicate t))
 
-    (use-package lsp-treemacs
-      :straight t
-      :defer t
-      :after treemacs lsp
-      :commands (lsp-treemacs-errors-list lsp-treemacs-references)
-      :config
-      (defun hbournis/lsp-treemacs-references ()
-        (interactive)
-        (hbournis/call-with-prefix 'lsp-treemacs-references))))
+    )
 #+end_src
 *** tree-sitter
 #+begin_src emacs-lisp
@@ -1844,33 +1837,45 @@ Calendar framework
     :config
     (require 'calfw-org))
 #+END_SRC
-*** ranger
-Emulates ranger in emacs. Replaces dired when browsing folders.
+*** dirvish
+Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]].
 
-#+BEGIN_SRC emacs-lisp
-  (use-package ranger
+#+begin_src emacs-lisp
+  (use-package dirvish
     :straight t
-    :defer 1
+    :init
+    (dirvish-override-dired-mode)
+    :bind (:map global-map ([f8] . dirvish-side))
     :config
-    (setq ranger-override-dired 'ranger
-          ranger-show-hidden t
-          ranger-modify-header t
-          ranger-preview-file nil
-          ranger-show-literal t
-          ranger-max-preview-size 10
-          ranger-dont-show-binary t
-          ranger-cleanup-on-disable t
-          ranger-excluded-extensions '("mkv" "iso" "mp4" "mp3" "avi" "log"))
-    (ranger-override-dired-mode t)
-    ;; Remap C-h to its normal functionality
-    (define-key ranger-mode-map "\C-h k" 'describe-key)
-    ;; Create directory with "cd" like in Treemacs
-    (define-key ranger-mode-map "cd" (lambda () (interactive) (progn (call-interactively #'dired-create-directory) (ranger-refresh))))
-    ;; Create file with "cf" like in Treemacs
-    (define-key ranger-mode-map "cf" (lambda () (interactive) (progn (call-interactively #'hbournis/dired-create-file) (ranger-refresh))))
-
-    (set-face-attribute 'hl-line nil :background "#7550ed"))
-#+END_SRC
+    (dirvish-side-follow-mode)
+    (setq dirvish-mode-line-format '(:left
+                                     (sort file-name " " file-user " " file-link-number symlink)
+                                     :right
+                                     (omit index))
+          dirvish-attributes '(file-size)
+          delete-by-moving-to-trash nil
+          dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
+          insert-directory-program "gls")
+    (evil-collection-define-key 'normal 'dirvish-mode-map
+      "q"   'dirvish-quit
+      "."   'dirvish-layout-toggle
+      "h"   'dired-up-directory
+      "j"   'dired-next-line
+      "k"   'dired-previous-line
+      "l"   'dired-find-file
+      "a"   'dirvish-quick-access
+      "f"   'dirvish-fd
+      "s"   'dirvish-quicksort
+      "y"   'dired-do-copy
+      "d"   'dired-do-delete
+      "m"   'dired-move
+      "t"   'hbournis/dired-toggle-mark
+      [tab] 'dirvish-subtree-toggle
+      "gh"  'dirvish-subtree-up
+      "cd"  'dired-create-directory
+      "cf"  'hbournis/dired-create-file
+      "ww"  'wdired-change-to-wdired-mode))
+#+end_src
 *** DISABLED pdf-tools
 Disabled for now because it requires extra packages to be installed in the
 system in order to work.
@@ -1887,53 +1892,6 @@ system in order to work.
     :config
     (evil-define-minor-mode-key 'normal 'git-timemachine-mode
       (kbd "<return>")  'git-timemachine-show-commit))
-#+END_SRC
-*** treemacs
-#+BEGIN_SRC emacs-lisp
-  (use-package treemacs
-    :straight t
-    :init
-    (with-eval-after-load 'winum
-      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-    :bind (:map global-map ([f8] . treemacs))
-    :config
-    (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
-          treemacs-python-executable          "python3"
-          treemacs-file-event-delay           5000
-          treemacs-follow-after-init          t
-          treemacs-follow-recenter-distance   0.1
-          treemacs-goto-tag-strategy          'refetch-index
-          treemacs-indentation                2
-          treemacs-indentation-string         " "
-          treemacs-is-never-other-window      nil
-          treemacs-no-png-images              nil
-          treemacs-project-follow-cleanup     nil
-          treemacs-recenter-after-file-follow nil
-          treemacs-recenter-after-tag-follow  nil
-          treemacs-show-hidden-files          t
-          treemacs-silent-filewatch           nil
-          treemacs-silent-refresh             nil
-          treemacs-sorting                    'alphabetic-case-insensitive-asc
-          treemacs-tag-follow-cleanup         t
-          treemacs-tag-follow-delay           1.5
-          treemacs-width                      35)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
-      (`(t . t)
-       (treemacs-git-mode 'extended))
-      (`(t . _)
-       (treemacs-git-mode 'simple)))
-
-    (use-package treemacs-evil
-      :after treemacs evil
-      :straight t)
-
-    (use-package treemacs-projectile
-      :after treemacs projectile
-      :straight t))
 #+END_SRC
 *** dumb-jumb
 #+begin_src emacs-lisp
@@ -3163,30 +3121,31 @@ Just a simple function for when I want the current time stamp inside an org file
         (dired-add-file new)
         (dired-move-to-filename))))
 #+END_SRC
+** dired-toggle-mark
+#+begin_src emacs-lisp
+  (defun hbournis/dired-toggle-mark ()
+    "If current line is marked then unmark it, otherwise mark it"
+    (interactive)
+    (let ((marked-files-exist (if (dired-remember-marks (point-min) (point-max)) t nil))
+          (file-marked-p (if (member (dired-get-filename) (dired-get-marked-files)) t nil)))
+      (if (and marked-files-exist file-marked-p)
+          (dired-unmark 1)
+        dired-mark 1)))
+#+end_src
 ** ssh
 :PROPERTIES:
 :VISIBILITY: folded
 :END:
 *** ssh to osmc
 #+begin_src emacs-lisp
-(defun hbournis/ssh-ranger-omsc ()
-  "open ranger through ssh to local osmc"
+(defun hbournis/ssh-dired-omsc ()
+  "Open dired through ssh to local osmc."
   (interactive)
-  (ranger "/scp:osmc:~"))
+  (dired "/scp:osmc:~"))
 #+end_src
 ** read-only .log files
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.log\\'" . read-only-mode))
-#+end_src
-** Tail current ranger file
-Run itail on the currently highlighted file in ranger.
-
-#+begin_src emacs-lisp
-  (defun hbournis/tail-file-at-point ()
-    "Run itail on the current ranger file."
-    (interactive)
-    (let ((file-path (ranger-copy-absolute-file-paths)))
-      (itail file-path)))
 #+end_src
 ** Open org-file if not at work
 #+begin_src emacs-lisp
@@ -3448,7 +3407,7 @@ global shortcuts
   (global-set-key   (kbd "C-S-k")  (lambda () (interactive) (kill-this-buffer) (delete-other-windows)))
   (global-set-key   (kbd "C-c a")  'org-agenda)
 #+END_SRC
-* ENV variables
+* DISABLED ENV variables
 
 #+BEGIN_SRC emacs-lisp
   ;; For pdf-tools to work in mac
@@ -3464,8 +3423,6 @@ emacsclient
   (require 'server)
   (unless (server-running-p)
     (server-start))
-
-  ;; (require 'org-protocol)
 #+END_SRC
 * DISABLED Autostart Org Agenda
 Reload all agenda files before before showing the agenda, since they might
