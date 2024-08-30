@@ -1,6 +1,6 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: rest-client
-# key: rest
+# key: init
 # --
 :url = http://localhost:8080
 

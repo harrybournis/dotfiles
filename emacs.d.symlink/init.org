@@ -185,7 +185,7 @@ Variables are set here that are used in the configuration below
               (other-window 1)
               (split-window-below)))
           (other-window 1)))
-    (eshell))
+    (eat))
 #+END_SRC
 *** Kill the buffer when term exits
 #+BEGIN_SRC emacs-lisp
@@ -796,6 +796,7 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     ;; Scroll faster with C-e and C-y
     (define-key evil-normal-state-map "\C-e" (lambda () (interactive) (evil-scroll-line-down 2)))
     (define-key evil-normal-state-map "\C-y" (lambda () (interactive) (evil-scroll-line-up 2)))
+    (evil-set-initial-state 'sqlite-mode 'emacs)
 
     ;; g h takes you to the previous heading and
     ;; g H takes you to one heading up
