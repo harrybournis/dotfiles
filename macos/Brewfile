@@ -10,6 +10,7 @@ brew "zsh"
 brew "fish"
 
 # brew
+brew "coreutils"
 brew "asdf"
 brew "openjpeg"
 brew "diff-so-fancy"
@@ -35,6 +36,8 @@ brew "htop"
 brew "lazydocker"
 brew "tmux"
 brew "tree-sitter"
+brew "jq"
+brew "fd"
 
 # Cask
 cask "google-chrome"
