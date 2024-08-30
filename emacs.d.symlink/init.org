@@ -21,6 +21,8 @@
 ** straight.el
 
 #+BEGIN_SRC emacs-lisp
+  ; (setq use-package-compute-statistics t)
+
   (setq straight-use-package-by-default t
         use-package-expand-minimally t
         use-package-always-ensure nil
@@ -883,8 +885,7 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :straight t
-    :demand t
-    :after evil
+    :commands (evil-lion-left evil-lion-right)
     :config
     (evil-lion-mode))
 #+END_SRC
@@ -893,8 +894,7 @@ Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :straight t
-    :demand t
-    :after (evil)
+    :commands (evilmi-jump-items)
     :config
     (global-evil-matchit-mode t))
 #+END_SRC
@@ -923,15 +923,13 @@ Org mode key bindings for evil mode
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
     :straight t
+    :after org
     :hook (org-mode . evil-org-mode)
     :diminish
     :config
-    ;; (add-hook 'org-mode-hook 'evil-org-mode)
-    (add-hook 'evil-org-mode-hook
-              (lambda ()
-                (evil-org-set-key-theme '(return))
-                (require 'evil-org-agenda)
-                (evil-org-agenda-set-keys))))
+    (evil-org-set-key-theme '(return))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
 #+END_SRC
 **** DISABLED evil-string-inflection
 Changes case of variables (camelCase, kebab-case, snake_case and UPPER_CASE)
@@ -1134,6 +1132,7 @@ Improvement on evil-leader. Specify mutliple leaders.
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :straight t
+    :commands (magit-status magit-blame-echo magit-log-buffer-file)
     :config
     (with-eval-after-load 'magit (evil-collection-magit-init))
 
@@ -1260,7 +1259,7 @@ Spell checking. Needs the aspell program installed.
   (use-package ivy
     :straight t
     :demand t
-    :diminish (ivy-mode . "")
+    :diminish
     :config
     ;; ;; sort results better
     ;; (use-package flx
@@ -1268,18 +1267,22 @@ Spell checking. Needs the aspell program installed.
 
     (use-package smex
       :straight t)
-
+  
     (use-package counsel
-      :straight t)
+      :straight t
+      :demand t)
+
+    (use-package ivy-rich
+      :straight t
+      :after ivy
+      :config
+      (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
     (use-package counsel-projectile
       :straight t
+      :after ivy-rich
       :config
       (counsel-projectile-mode))
-
-    (use-package lsp-ivy
-      :straight t
-      :commands lsp-ivy-workspace-symbol)
 
     (use-package orderless
       :straight t
@@ -1291,10 +1294,6 @@ Spell checking. Needs the aspell program installed.
             completion-category-defaults nil
             completion-category-overrides '((file (styles partial-completion)))))
 
-    (use-package ivy-rich
-      :straight t
-      :config
-      (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
     ;; configure regexp engine.
     ;; (setq ivy-re-builders-alist
@@ -1508,7 +1507,8 @@ Spell checking. Needs the aspell program installed.
 *** wgrep
 #+begin_src emacs-lisp
   (use-package wgrep
-    :straight t)
+    :straight t
+    :commands (wgrep-change-to-wgrep-mode))
 #+end_src
 *** projectile
 #+BEGIN_SRC emacs-lisp
@@ -1663,7 +1663,7 @@ Not working currently
 
 #+BEGIN_SRC emacs-lisp
   (use-package windmove
-    :straight t
+    :straight '(:type built-in)
     :commands (windmove-up windmove-down windmove-left windmove-right))
 #+END_SRC
 
@@ -1842,6 +1842,7 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
 #+begin_src emacs-lisp
   (use-package dirvish
     :straight t
+    :defer 1
     :init
     (dirvish-override-dired-mode)
     :bind (:map global-map ([f8] . dirvish-side))
@@ -1896,6 +1897,7 @@ system in order to work.
 #+begin_src emacs-lisp
   (use-package dumb-jump
     :straight t
+    :commands (dumb-jump-go)
     :config
     (setq dumb-jump-selector 'ivy))
 #+end_src
@@ -2327,6 +2329,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+begin_src emacs-lisp
   (use-package lsp-java
     :straight t
+    :after lsp-mode
     :hook (java-mode . lsp-deferred)
     :hook (java-mode . lsp-lens-mode)
     :hook (java-mode . lsp-java-boot-lens-mode)
@@ -3470,4 +3473,5 @@ the last opened window config.
                          (setq gc-cons-threshold (* 16 1024 1024)
                                gc-cons-percentage 0.1)
                          (garbage-collect)))
+  ; (use-package-report)
 #+end_src
