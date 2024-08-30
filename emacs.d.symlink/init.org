@@ -801,8 +801,9 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     ;; g h takes you to the previous heading and
     ;; g H takes you to one heading up
     (evil-define-key 'motion org-mode-map
-      (kbd "g h") 'org-previous-visible-heading
-      (kbd "g H") 'outline-up-heading)
+      (kbd "gh") 'org-previous-visible-heading
+      (kbd "gH") 'outline-up-heading
+      (kbd "gn") 'org-next-visible-heading)
 
     ;; Save and quit ingoring mistakes from keeping shift pressed down
     (evil-ex-define-cmd "Q"  'evil-quit)
@@ -853,7 +854,6 @@ mode only when it is needed.
             image
             image+
             magit
-            magit-todos
             neotree
             info
             man
@@ -871,7 +871,6 @@ mode only when it is needed.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :straight t
-    :demand t
     :commands (global-evil-surround-mode
                evil-surround-edit
                evil-Surround-edit
@@ -2064,7 +2063,13 @@ see logs easily
 
 #+begin_src emacs-lisp
   (use-package itail
-    :straight t)
+    :straight t
+    :config
+    (defun hbournis/tail-file-at-point ()
+      "Run itail on the current file in dired."
+      (interactive)
+      (let ((file-path (dirvish-copy-file-path)))
+        (itail file-path))))
 #+end_src
 *** DISABLED hledger
 #+begin_src emacs-lisp
@@ -2086,7 +2091,7 @@ see logs easily
     :straight t
     :commands (eat eshell)
     :config
-    (evil-set-initial-state 'eat-mode 'emacs)
+    ;;(evil-set-initial-state 'eat-mode 'emacs)
     (setq eat-kill-buffer-on-exit t
           eat-enable-mouse t
           eshell-visual-commands '()
@@ -2617,8 +2622,6 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
     (use-package doom-themes
       :straight t
       :config
-      (use-package all-the-icons
-        :straight t)
       (setq doom-themes-enable-bold t
             doom-themes-enable-italic t
             doom-themes-treemacs-line-spacing 2
