@@ -92,6 +92,10 @@ nnoremap <C-l> <C-w>l
 :command WQ wq
 :command Wq wq
 
+" Copy to clipboard
+" vmap <C-C> "+y
+vmap Y "+y
+
 "-------Indentation Stuff-------"
 "<----------------------------->"
 " Set Global Indentation
