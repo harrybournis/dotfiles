@@ -276,7 +276,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
           org-enforce-todo-dependencies t          ;; Parent can't be DONE until all children are
 
           org-startup-indented t                   ;; indent on startup
-          org-indent-indentation-per-level 2       ;; indent each level by 2
+          org-indent-indentation-per-level 4       ;; indent each level by
           org-list-indent-offset 2                 ;; indent lists by 2
           org-display-inline-images t              ;; display images in org by default
           org-hide-emphasis-markers t              ;; hide bold, italics etc markers
@@ -506,8 +506,8 @@ aggregate tables
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-ellipsis "↯"
-     org-modern-star '(" ")
-     org-indent-indentation-per-level 4
+     org-modern-star 'replace
+     org-modern-replace-stars " "
 
      ;; Agenda styling
      org-agenda-tags-column 0
