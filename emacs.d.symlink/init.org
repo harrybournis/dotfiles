@@ -824,7 +824,6 @@ mode only when it is needed.
     (setq evil-collection-mode-list
           `(eshell
             calendar
-            company
             custom
             cus-theme
             deadgrep
@@ -1293,6 +1292,15 @@ Spell checking. Needs the aspell program installed.
     ;; mode.  Vertico commands are hidden in normal buffers. This setting is
     ;; useful beyond Vertico.
     (read-extended-command-predicate #'command-completion-default-include-p)
+
+    ;; For confu
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (tab-always-indent 'complete)
+
+    ;; Emacs 30 and newer: Disable Ispell completion function. As an alternative,
+    ;; try `cape-dict'.
+    (text-mode-ispell-word-completion nil)
     :init
     ;; Add prompt indicator to `completing-read-multiple'.
     ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -1344,7 +1352,7 @@ Spell checking. Needs the aspell program installed.
 
     (consult-customize
      consult-buffer :group nil)
-  
+
     ;; By default `consult-project-function' uses `project-root' from project.el.
     ;; Optionally configure a different project root function.
     ;;;; 1. project.el (the default)
@@ -1359,6 +1367,44 @@ Spell checking. Needs the aspell program installed.
     ;;;; 5. No project support
     ;; (setq consult-project-function nil)
     )
+#+end_src
+*** corfu
+#+begin_src emacs-lisp
+  (defun hbournis/set-corfu-terminal-for-frame (&optional frame)
+    (corfu-terminal-mode (if (display-graphic-p frame) -1 1)))
+
+  (use-package corfu
+    :straight t
+    :hook ((ruby-mode . corfu-mode)
+           (typescript-mode . corfu-mode)
+           (java-mode . corfu-mode)
+           (emacs-lisp-mode . corfu-mode))
+    :bind (("C-;" . corfu-insert))
+    :custom
+    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)                 ;; Enable auto completion
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+    ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
+
+    ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+    ;; be used globally (M-/).  See also the customization variable
+    ;; `global-corfu-modes' to exclude certain modes.
+    ;; :init
+    ;; (global-corfu-mode)
+    :config
+    (use-package corfu-terminal
+      :straight t
+      :after corfu
+      :defer
+      :init
+      (add-hook 'corfu-mode-hook 'hbournis/set-corfu-terminal-for-frame)))
 #+end_src
 *** wgrep
 #+begin_src emacs-lisp
@@ -1379,24 +1425,6 @@ Spell checking. Needs the aspell program installed.
         (setq projectile-indexing-method 'alien))
 
     (projectile-global-mode))
-#+END_SRC
-*** company
-Autocompletion
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :straight t
-    :defer 2
-    :hook
-    (after-init . global-company-mode)
-    :config
-    ;; Disable autocompletion in org files
-    ;; (setq company-global-modes '(not org-mode))
-
-    (setq company-idle-delay 1.5 ;; default is 0.2
-          company-minimum-prefix-length 2)
-    :bind
-    (("C-;" . company-complete)))
 #+END_SRC
 *** lsp-mode
 #+begin_src emacs-lisp
@@ -1941,7 +1969,8 @@ see logs easily
     ;; The default location is too opinionated.
     ;; (setq hledger-jfile "/Users/....hledger.journal")
 
-    (add-to-list 'company-backends 'hledger-company))
+    ;; (add-to-list 'company-backends 'hledger-company)
+    )
 #+end_src
 
 *** eat (emulate a terminal)
@@ -2166,7 +2195,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     (add-hook 'purescript-mode-hook
               (lambda ()
                 (psc-ide-mode)
-                (company-mode)
+                ;; (company-mode)
                 (flycheck-mode)
                 (turn-on-purescript-indentation))))
 #+END_SRC
