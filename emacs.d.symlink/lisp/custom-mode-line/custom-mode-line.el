@@ -10,6 +10,11 @@
 
 (declare-function projectile-project-name "ext:projectile")
 
+(defface hbournis/mode-line-read-only-face
+  '((t (:foreground "#ff8059")))
+  "Face used for neutral or inactive status indicators in the mode-line."
+  :group 'custom-mode-line)
+
 (defface hbournis/mode-line-buffer-name-face
   '((t (:inherit (font-lock-constant-face))))
   "Face used for neutral or inactive status indicators in the mode-line."
@@ -135,7 +140,7 @@ Keep the last MAX-LENGTH characters intact."
 (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
 (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
 (advice-add #'vc-refresh-state :after #'hbournis/mode-line-update-vc-segment)
-
+;; 
 ;;;###autoload
 (define-minor-mode custom-mode-line-mode
   "Custom mode-line."
@@ -152,7 +157,7 @@ Keep the last MAX-LENGTH characters intact."
                          ;; Left
                          (format-mode-line
                           (list
-                           (list 'buffer-read-only (propertize " READ-ONLY " 'face 'org-todo))
+                           (list 'buffer-read-only (propertize " READ-ONLY " 'face 'hbournis/mode-line-read-only-face))
                            (propertize (hbournis/mode-line-buffer-name) 'face 'hbournis/mode-line-buffer-name-face)))
                          ;; Right
                          (format-mode-line
