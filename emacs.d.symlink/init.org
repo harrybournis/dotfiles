@@ -1889,12 +1889,29 @@ Redis client
   (use-package yasnippet
     :straight t
     :diminish yas-minor-mode
+    :commands (yas-minor-mode-on
+               yas-expand
+               yas-expand-snippet
+               yas-lookup-snippet
+               yas-insert-snippet
+               yas-new-snippet
+               yas-visit-snippet-file
+               yas-activate-extra-mode
+               yas-deactivate-extra-mode
+               yas-maybe-expand-abbrev-key-filter)
+    :hook ((emacs-lisp-mode
+            typescript-mode
+            js-mode
+            ruby-mode)
+           . yas-minor-mode)
+    :init
+    (defvar yas-verbosity 2)
     :config
-    (use-package yasnippet-snippets
-      :straight t)
-
     (define-key evil-insert-state-map "\C-j" 'yas-expand)
-    (yas-global-mode 1))
+    (yas-reload-all))
+
+  (use-package yasnippet-snippets
+    :straight t)
 #+END_SRC
 *** DISABLED whiteroom-mode
 https://github.com/joostkremers/writeroom-mode
