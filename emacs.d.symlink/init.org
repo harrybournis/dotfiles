@@ -906,7 +906,8 @@ Nerd commenter emulation
     :straight t
     :commands (evilnc-comment-operator
                evilnc-inner-commenter
-               evilnc-outer-commenter))
+               evilnc-outer-commenter
+               evilnc-comment-or-uncomment-lines))
 #+END_SRC
 **** evil-org
 Org mode key bindings for evil mode
@@ -1078,8 +1079,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "g"   'magit-status
       "/"   'evilnc-comment-or-uncomment-lines             ; Un/Comment current line
       "["   'sp-wrap-round
-      "]"   'sp-unwrap-sexp
-      "\\"  'org-align-all-tags-right
+      "]"   'org-align-all-tags-right
+      "\\"  'sp-unwrap-sexp
       "fn"  'flycheck-next-error
       "fp"  'flycheck-previous-error
       "fl"  'flycheck-list-errors
@@ -1099,7 +1100,6 @@ Improvement on evil-leader. Specify mutliple leaders.
 
     (general-create-definer extra-tools-alternate-leader :keymaps 'extra-tools-alternate-prefix-map)
     (extra-tools-alternate-leader
-      "/c"  'evilnc-copy-and-comment-lines                 ; Copy down and comment line
       "lv"  'org-cliplink
       "lp"  'hbournis/insert-url-as-org-link
       "ll"  'hbournis/org-make-word-link-from-clipboard
@@ -1773,6 +1773,7 @@ system in order to work.
 #+BEGIN_SRC emacs-lisp
   (use-package git-timemachine
     :straight t
+    :commands (git-timemachine-toggle)
     :config
     (evil-define-minor-mode-key 'normal 'git-timemachine-mode
       (kbd "<return>")  'git-timemachine-show-commit))
@@ -1932,7 +1933,7 @@ Go to next/previous buffer in a project-aware context
     :config
     (setq aggressive-indent-sit-for-time 0.2)
     (global-aggressive-indent-mode t)
-    (add-to-list 'aggressive-indent-excluded-modes '(elisp-mode web-mode typescript-mode sql-mode)))
+    (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode)))
 #+end_src
 *** csv-mode
 #+begin_src emacs-lisp
