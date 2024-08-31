@@ -1631,22 +1631,6 @@ Save emacs session
 
     (global-git-gutter-mode t))
 #+END_SRC
-*** DISABLED gitignore-templates
-An Emacs Package for GitHub .gitignore templates
-
-#+BEGIN_SRC emacs-lisp
-  (use-package gitignore-templates
-    :straight t)
-#+END_SRC
-*** DISABLED ag
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ag
-    :straight t
-    :config
-    (setq ag-highlight-search t
-          ag-reuse-window t))
-#+END_SRC
 *** which-key
 Display the keys available after pressing C-x for example.
 
@@ -1706,19 +1690,6 @@ Get environment variables from the shell
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
-#+END_SRC
-*** DISABLED calfw
-Calendar framework
-
-#+BEGIN_SRC emacs-lisp
-  (use-package calfw
-    :straight t
-    :init
-    (use-package calfw-org
-      :straight t)
-
-    :config
-    (require 'calfw-org))
 #+END_SRC
 *** dirvish
 Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]].
@@ -1913,14 +1884,6 @@ Redis client
   (use-package yasnippet-snippets
     :straight t)
 #+END_SRC
-*** DISABLED whiteroom-mode
-https://github.com/joostkremers/writeroom-mode
-
-#+begin_src emacs-lisp
-  (use-package writeroom-mode
-    :straight t
-    :commands (writeroom-mode))
-#+end_src
 *** olivetti
 #+BEGIN_SRC emacs-lisp
   (use-package olivetti
