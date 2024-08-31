@@ -54,15 +54,6 @@
         gnutls-algorithm-priority "normal:-vers-tls1.3"
         url-cookie-untrusted-urls '(".*"))
 #+END_SRC
-** IS-MAC/IS-LINUX
-Determine whether the system is mac or linux
-
-#+BEGIN_SRC emacs-lisp
-  (defconst IS-MAC     (eq system-type 'darwin))
-  (defconst IS-LINUX   (eq system-type 'gnu/linux))
-  (defconst IS-WINDOWS (eq system-type 'windows-nt))
-  (defconst WORK?      (if (getenv "WORK") t nil))
-#+END_SRC
 * Variables
 Variables are set here that are used in the configuration below
 
