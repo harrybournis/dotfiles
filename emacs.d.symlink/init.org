@@ -1517,31 +1517,31 @@ Not working currently
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :straight t
-    :defer 2
+    :hook ((typescript-mode
+            web-mode
+            java-mode)
+           . smartparens-mode)
+    :hook ((js-mode
+            ruby-mode
+            python-mode
+            sh-mode
+            emacs-lisp-mode
+            clojure-mode
+            clojurescript-mode
+            go-mode
+            svelte-mode)
+           . smartparens-strict-mode) 
     :diminish
     :config
     (require 'smartparens-config)
-    (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
-    (add-hook 'typescript-mode-hook 'smartparens-mode)
-    (add-hook 'web-mode-hook 'smartparens-mode)
-    (add-hook 'java-mode-hook 'smartparens-mode)
-    (add-hook 'js-mode-hook 'smartparens-strict-mode)
-    ;; (add-hook 'html-mode-hook 'smartparens-strict-mode)
-    (add-hook 'ruby-mode-hook 'smartparens-strict-mode)
-    (add-hook 'python-mode-hook 'smartparens-strict-mode)
-    (add-hook 'sh-mode-hook 'smartparens-strict-mode)
-    (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
-    (add-hook 'clojurescript-mode-hook 'smartparens-strict-mode)
-    (add-hook 'go-mode-hook 'smartparens-strict-mode)
-    (add-hook 'svelte-mode-hook 'smartparens-mode)
+    (show-smartparens-global-mode t))
 
-    (show-smartparens-global-mode t)
-
-    (use-package evil-smartparens
-      :straight t
-      :diminish
-      :config
-      (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode)))
+  (use-package evil-smartparens
+    :straight t
+    :after smartparens
+    :diminish
+    :init
+    (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 #+END_SRC
 *** windmove
 
