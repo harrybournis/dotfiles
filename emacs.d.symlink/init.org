@@ -1915,11 +1915,6 @@ Go to next/previous buffer in a project-aware context
     (global-aggressive-indent-mode t)
     (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode)))
 #+end_src
-*** csv-mode
-#+begin_src emacs-lisp
-  (use-package csv-mode
-    :straight t)
-#+end_src
 *** deadgrep
 #+begin_src emacs-lisp
   (use-package deadgrep
@@ -1986,6 +1981,49 @@ see logs easily
   :straight t)
 #+end_src
 ** Programming Language Specific
+*** File Formats
+**** jsonian-mode
+#+begin_src emacs-lisp
+  (use-package jsonian
+    :straight t
+    :custom
+    (jsonian-no-so-long-mode)
+    :config
+    (evil-define-key '(normal visual) jsonian-mode-map
+      "gh" 'jsonian-enclosing-item))
+#+end_src
+**** csv-mode
+#+begin_src emacs-lisp
+  (use-package csv-mode
+    :straight t)
+#+end_src
+**** markdown-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :straight t
+    :hook (markdown-mode . flyspell-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+**** yaml-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode
+    :straight t
+    :mode
+    (("\\.yml?\\'" . yaml-mode)
+     ("\\.yaml\\'" . yaml-mode))
+    :hook
+    (yaml-mode . display-line-numbers-mode)
+    :config
+    ;;  Unlike python-mode, this mode follows the Emacs convention of not
+    ;; binding the ENTER key to `newline-and-indent'.  To get this
+    ;; behavior, add the key definition to `yaml-mode-hook':
+    (add-hook 'yaml-mode-hook
+              #'(lambda ()
+                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+#+END_SRC
 *** HTML/CSS
 **** DISABLED emmet-mode
 Use C-j to expand.
@@ -2070,11 +2108,6 @@ Some guides:
   (add-hook 'js-mode-hook 'display-line-numbers-mode)
 #+end_src
 
-**** json-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package json-mode
-    :straight t)
-#+END_SRC
 **** typescript-mode
 #+BEGIN_SRC emacs-lisp
   (use-package typescript-mode
@@ -2211,36 +2244,6 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :config
     (setq lsp-kotlin-compiler-jvm-target "17"))
 #+end_src
-*** Markdown
-**** markdown-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package markdown-mode
-    :straight t
-    :commands (markdown-mode gfm-mode)
-    :hook (markdown-mode . flyspell-mode)
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown"))
-#+END_SRC
-*** YAML
-**** yaml-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package yaml-mode
-    :straight t
-    :mode
-    (("\\.yml?\\'" . yaml-mode)
-     ("\\.yaml\\'" . yaml-mode))
-    :hook
-    (yaml-mode . display-line-numbers-mode)
-    :config
-    ;;  Unlike python-mode, this mode follows the Emacs convention of not
-    ;; binding the ENTER key to `newline-and-indent'.  To get this
-    ;; behavior, add the key definition to `yaml-mode-hook':
-    (add-hook 'yaml-mode-hook
-              #'(lambda ()
-                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
-#+END_SRC
 *** Ruby
 **** ruby-mode
 #+BEGIN_SRC emacs-lisp
