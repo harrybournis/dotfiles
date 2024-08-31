@@ -1461,12 +1461,19 @@ Spell checking. Needs the aspell program installed.
 #+begin_src emacs-lisp
   (use-package tree-sitter
     :straight t
-    :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
-    :hook (kotlin-mode . tree-sitter-mode)
-    :hook (json-mode . tree-sitter-mode))
+    :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
 
   (use-package tree-sitter-langs
     :straight t)
+
+  (use-package treesit-auto
+    :straight t
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (setq treesit-auto-langs '(yaml))
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
 #+end_src
 *** DISABLED dap-mode
 debugger
@@ -1982,7 +1989,7 @@ see logs easily
 #+end_src
 ** Programming Language Specific
 *** File Formats
-**** jsonian-mode
+**** JSON
 #+begin_src emacs-lisp
   (use-package jsonian
     :straight t
@@ -1992,12 +1999,12 @@ see logs easily
     (evil-define-key '(normal visual) jsonian-mode-map
       "gh" 'jsonian-enclosing-item))
 #+end_src
-**** csv-mode
+**** CSV
 #+begin_src emacs-lisp
   (use-package csv-mode
     :straight t)
 #+end_src
-**** markdown-mode
+**** Markdown
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
     :straight t
@@ -2007,7 +2014,7 @@ see logs easily
            ("\\.markdown\\'" . markdown-mode))
     :init (setq markdown-command "multimarkdown"))
 #+END_SRC
-**** yaml-mode
+**** YAML
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :straight t
@@ -2015,7 +2022,8 @@ see logs easily
     (("\\.yml?\\'" . yaml-mode)
      ("\\.yaml\\'" . yaml-mode))
     :hook
-    (yaml-mode . display-line-numbers-mode)
+    ((yaml-mode . display-line-numbers-mode)
+    (yaml-mode . tree-sitter-mode))
     :config
     ;;  Unlike python-mode, this mode follows the Emacs convention of not
     ;; binding the ENTER key to `newline-and-indent'.  To get this
@@ -2023,6 +2031,22 @@ see logs easily
     (add-hook 'yaml-mode-hook
               #'(lambda ()
                   (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+
+  (use-package yaml-pro
+    :straight t
+    :after yaml-mode
+    :hook ((yaml-mode . yaml-pro-ts-mode))
+    :bind (:map yaml-pro-ts-mode-map
+                ("M-<right>" . 'yaml-pro-ts-indent-subtree)
+                ("M-<left>" . 'yaml-pro-ts-unindent-subtree)
+                ("M-<up>" . 'yaml-pro-ts-move-subtree-up)
+                ("M-<down>" . 'yaml-pro-ts-move-subtree-down))
+    :config
+    (evil-define-key '(normal motion) yaml-pro-ts-mode-map
+      "gH" 'yaml-pro-ts-up-level
+      "gh" 'yaml-pro-ts-up-level
+      "gn" 'yaml-pro-ts-next-subtree
+      "gp" 'yaml-pro-ts-prev-subtree))
 #+END_SRC
 *** HTML/CSS
 **** DISABLED emmet-mode
@@ -2241,6 +2265,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+begin_src emacs-lisp
   (use-package kotlin-mode
     :straight t
+    :hook
+    (kotlin-mode . tree-sitter-mode)
     :config
     (setq lsp-kotlin-compiler-jvm-target "17"))
 #+end_src
