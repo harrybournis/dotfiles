@@ -1650,7 +1650,7 @@ Display the keys available after pressing C-x for example.
     ;;(which-key-setup-side-window-right-bottom)
     (which-key-mode))
 #+END_SRC
-*** dtrt-indent
+*** DISABLED dtrt-indent
 guesses the correct indentation
 
 #+BEGIN_SRC emacs-lisp
@@ -1659,6 +1659,10 @@ guesses the correct indentation
     :hook (diminish 'dtrt-indent-mode)
     :config
     (dtrt-indent-mode t))
+
+  ;; (add-hook 'prog-mode-hook #'(lambda ()
+  ;;                               (dtrt-indent-mode)
+  ;;                               (dtrt-indent-adapt)))
 #+END_SRC
 *** rainbow-mode
 shows the color of hex color codes as their background
@@ -1674,7 +1678,7 @@ shows the color of hex color codes as their background
     ;; (add-hook 'org-mode-hook 'rainbow-mode-hook)
     )
 #+END_SRC
-*** diminish
+*** DISABLED diminish
 hide specific modes from the modeline
 
 #+begIN_SRC emacs-lisp
@@ -1853,6 +1857,11 @@ system in order to work.
     ;; show response in fundamental mode only to speed it up
     (setq restclient-response-size-threshold 0.00001))
 #+END_SRC
+*** websocket
+#+begin_src emacs-lisp
+  (use-package websocket
+    :straight t)
+#+end_src
 *** DISABLED eredis
 Redis client
 #+begin_src emacs-lisp
@@ -1926,6 +1935,7 @@ Go to next/previous buffer in a project-aware context
 #+begin_src emacs-lisp
   (use-package deadgrep
     :straight t
+    :commands deadgrep
     :bind (("<f5>" . deadgrep)))
 #+end_src
 *** DISABLED itail
@@ -1975,6 +1985,7 @@ see logs easily
 #+begin_src emacs-lisp
   (use-package gptel
     :straight t
+    :commands (gptel gptel-menu gptel-send)
     :config
     (setq gptel-log-level 'info
           gptel-default-mode 'org-mode)
