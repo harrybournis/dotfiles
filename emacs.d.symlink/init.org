@@ -1604,6 +1604,12 @@ Save emacs session
 
     (global-git-gutter-mode t))
 #+END_SRC
+*** highlight-indentation
+#+begin_src emacs-lisp
+  (use-package highlight-indentation
+    :straight t
+    :hook (yaml-mode . highlight-indentation-current-column-mode))
+#+end_src
 *** which-key
 Display the keys available after pressing C-x for example.
 
@@ -1672,13 +1678,27 @@ Get environment variables from the shell
 Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]].
 
 #+begin_src emacs-lisp
+  (use-package dired
+    :straight '(:type built-in)
+    :commands dired-jump)
+
+  (use-package dired-x
+    :straight '(:type built-in)
+    :hook (dired-mode . dired-omit-mode)
+    :config
+    (setq dired-omit-verbose nil
+          dired-omit-files (concat dired-omit-files "\\|^\\.DS_Store\\'")))
+
   (use-package dirvish
     :straight t
-    :defer 1
+    :commands dirvish-find-entry-a dirvish-dired-noselect-a
     :init
-    (dirvish-override-dired-mode)
+    ;; HACK from doomemacs for lazy load
+    (advice-add #'dired-find-file :override #'dirvish-find-entry-a)
+    (advice-add #'dired-noselect :around #'dirvish-dired-noselect-a)
     :bind (:map global-map ([f8] . dirvish-side))
     :config
+    (dirvish-override-dired-mode)
     (dirvish-side-follow-mode)
     (setq dirvish-mode-line-format '(:left
                                      (sort file-name " " file-user " " file-link-number symlink)
@@ -1688,6 +1708,9 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
           delete-by-moving-to-trash nil
           dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
           insert-directory-program "gls")
+
+    (set-face-attribute 'dirvish-hl-line nil :background "#7550ed")
+
     (evil-collection-define-key 'normal 'dirvish-mode-map
       "q"   'dirvish-quit
       "."   'dirvish-layout-toggle
@@ -2191,9 +2214,9 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package lsp-java
     :straight t
     :after lsp-mode
-    :hook (java-mode . lsp-deferred)
-    :hook (java-mode . lsp-lens-mode)
-    :hook (java-mode . lsp-java-boot-lens-mode)
+    :hook ((java-mode . lsp-deferred)
+           (java-mode . lsp-lens-mode)
+           (java-mode . lsp-java-boot-lens-mode))
     :config
     (require 'lsp-java-boot))
 #+end_src
