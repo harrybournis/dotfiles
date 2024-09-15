@@ -477,7 +477,11 @@ Some defaults:
 #+begin_src emacs-lisp
   (use-package org-kanban
     :straight t
-    :hook (org-after-todo-state-change . org-update-all-dblocks))
+    :hook (org-after-todo-state-change . hbournis/update-kanban-block)
+    :config
+    (defun hbournis/update-kanban-block ()
+      (if (org-find-dblock "kanban")
+          (org-update-dblock))))
 #+end_src
 
 ***** orgtbl-aggregate
