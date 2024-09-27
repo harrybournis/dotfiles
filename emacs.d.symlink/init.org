@@ -1727,8 +1727,9 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
       "s"   'dirvish-quicksort
       "y"   'dired-do-copy
       "d"   'dired-do-delete
-      "m"   'dired-move
+      "m"   'dired-do-rename
       "t"   'hbournis/dired-toggle-mark
+      "<S-return>" 'dired-find-file-other-window
       [tab] 'dirvish-subtree-toggle
       "gh"  'dirvish-subtree-up
       "cd"  'dired-create-directory
@@ -2993,9 +2994,10 @@ Just a simple function for when I want the current time stamp inside an org file
     (interactive)
     (let ((marked-files-exist (if (dired-remember-marks (point-min) (point-max)) t nil))
           (file-marked-p (if (member (dired-get-filename) (dired-get-marked-files)) t nil)))
-      (if (and marked-files-exist file-marked-p)
-          (dired-unmark 1)
-        dired-mark 1)))
+      (call-interactively
+       (if (and marked-files-exist file-marked-p)
+           'dired-unmark
+         'dired-mark))))
 #+end_src
 ** ssh
 :PROPERTIES:
