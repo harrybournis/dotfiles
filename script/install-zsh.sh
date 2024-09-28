@@ -4,8 +4,6 @@ install_zsh () {
     # Test to see if zshell is installed. If it is:
     # *Does not take into account if the default zsh in mac exists
     if [ -f /usr/local/bin/zsh -o -f /usr/bin/zsh ]; then
-        curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
-
         # Set the default shell to zsh if it isn't currently set to zsh
         if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
             chsh -s $(which zsh)

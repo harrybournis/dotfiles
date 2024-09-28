@@ -161,7 +161,7 @@ Variables are set here that are used in the configuration below
 #+END_SRC
 ** Terminal
 #+BEGIN_SRC emacs-lisp
-  (setq explicit-shell-file-name "/usr/local/bin/fish")
+  ;; (setq explicit-shell-file-name "/usr/local/bin/zsh")
   (setenv "INSIDE_EMACS" "true")
 #+END_SRC
 *** open terminal below

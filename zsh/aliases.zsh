@@ -20,6 +20,7 @@ alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"
 alias fix-grey-file='SetFile -c "" -t ""'
 alias gradle='./gradlew'
+alias lazy="lazydocker"
 
 # tmux
 alias ta='tmux attach -t'
