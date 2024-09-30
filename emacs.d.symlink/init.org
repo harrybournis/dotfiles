@@ -1952,13 +1952,6 @@ see logs easily
     :demand t
     :load-path "lisp/my-hydras")
 #+end_src
-*** bookmark+
-#+begin_src emacs-lisp
-  (use-package bookmark+
-    :straight '(:type built-in)
-    :load-path "~/.emacs.d/lisp/bookmark-plus"
-    :commands (bmkp-jump-dired))
-#+end_src
 ** Programming Language Specific
 *** File Formats
 **** JSON
