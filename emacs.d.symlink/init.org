@@ -178,35 +178,7 @@ Variables are set here that are used in the configuration below
               (other-window 1)
               (split-window-below)))
           (other-window 1)))
-    (eat))
-#+END_SRC
-*** Kill the buffer when term exits
-#+BEGIN_SRC emacs-lisp
-  ;; Kill window when ansi term exits
-  ;; Source: https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-term-mode.el
-  ;; {{ @see http://emacs-journey.blogspot.com.au/2012/06/improving-ansi-term.html
-  ;; kill the buffer when terminal is exited
-  (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
-    (if (memq (process-status proc) '(signal exit))
-        (let ((buffer (process-buffer proc)))
-          ad-do-it
-            (kill-buffer-and-its-windows buffer))
-      ad-do-it))
-  (ad-activate 'term-sentinel)
-
-  ;; Kill eshell window on exit
-  ;; Source: https://stackoverflow.com/a/51867960
-  (defun hbournis/delete-window ()
-    (when (not (one-window-p))
-      (delete-window)))
-
-  (advice-add 'eshell-life-is-too-much :after 'hbournis/delete-window)
-#+END_SRC
-*** kill ansiterm without asking on exit
-[[https://www.reddit.com/r/emacs/comments/9weic5/how_can_i_disable_ansiterm_prompt/e9k1ggd][Source]]
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'term-exec-hook
-        (lambda () (set-process-query-on-exit-flag (get-buffer-process (current-buffer)) nil)))
+    (vterm))
 #+END_SRC
 * Packages
 ** Common
@@ -859,6 +831,7 @@ mode only when it is needed.
             (term term ansi-term multi-term)
             vdiff
             vc-annotate
+            vterm
             xref))
     :config
     (evil-collection-init))
@@ -1912,7 +1885,7 @@ see logs easily
     )
 #+end_src
 
-*** eat (emulate a terminal)
+*** WINDOWS_ONLY eat (emulate a terminal)
 #+begin_src emacs-lisp
   (use-package eat
     :straight t
@@ -1927,6 +1900,11 @@ see logs easily
     (eat-eshell-mode))
 #+end_src
 
+*** UNIX_ONLY vterm
+#+begin_src emacs-lisp
+  (use-package vterm
+    :straight t)
+#+end_src
 *** gptel
 #+begin_src emacs-lisp
   (use-package gptel
