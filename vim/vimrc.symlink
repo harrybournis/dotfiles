@@ -10,7 +10,6 @@ endif
 call plug#begin()
   Plug 'itchyny/lightline.vim'
   Plug 'tpope/vim-sensible'
-  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'darfink/vim-plist'                               " Add plist editing support to Vim
   Plug 'tpope/vim-surround'                              "Changes surrounding ('{ etc.
   Plug 'scrooloose/nerdcommenter'                        "Comments/out stuff
@@ -19,6 +18,8 @@ call plug#begin()
   Plug 'tommcdo/vim-lion'                                "Align text
   Plug 'jceb/vim-orgmode'
   Plug 'tpope/vim-speeddating'
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
 call plug#end()
 
 
@@ -95,6 +96,11 @@ nnoremap <C-l> <C-w>l
 " Copy to clipboard
 " vmap <C-C> "+y
 vmap Y "+y
+
+" fzf
+nnoremap <leader>p :Files<CR>
+nnoremap <leader>s :RG<CR>
+nnoremap <leader>: :Commands<CR>
 
 "-------Indentation Stuff-------"
 "<----------------------------->"
