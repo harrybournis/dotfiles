@@ -1320,6 +1320,7 @@ Spell checking. Needs the aspell program installed.
     :straight t
     :hook ((ruby-mode . corfu-mode)
            (typescript-mode . corfu-mode)
+           (python-mode . corfu-mode)
            (java-mode . corfu-mode)
            (emacs-lisp-mode . corfu-mode))
     :bind (("C-;" . corfu-insert))
@@ -1377,6 +1378,7 @@ Spell checking. Needs the aspell program installed.
     :hook (js-mode . lsp)
     :hook (typescript-mode . lsp)
     :hook (go-mode . lsp)
+    :hook (python-mode . lsp)
     :commands (lsp lsp-deferred)
     :config
     (setq lsp-prefer-flymake nil
@@ -1848,7 +1850,7 @@ Go to next/previous buffer in a project-aware context
     :config
     (setq aggressive-indent-sit-for-time 0.2)
     (global-aggressive-indent-mode t)
-    (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode)))
+    (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode python-mode)))
 #+end_src
 *** deadgrep
 #+begin_src emacs-lisp
@@ -2284,6 +2286,45 @@ Interact with bundler with Emacs
     ;; Use Gemfile's Rubocop if it exists, otherwise use global
     (setq rubocopfmt-use-bundler-when-possible nil))
 #+END_SRC
+
+*** Python
+**** python-mode
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :straight '(:type built-in)
+    :custom
+    (python-shell-interpreter "ipython")
+    (python-shell-interpreter-args "-i --simple-prompt")
+    (python-indent-guess-indent-offset-verbose nil)
+    :bind
+    (:map python-mode-map
+          ("M-<left>" . python-indent-shift-left)
+          ("M-<right>" . python-indent-shift-right))
+    :config
+    (setopt python-indent-guess-indent-offset-verbose nil)
+    (setq python-ts-mode-hook python-mode-hook))
+#+end_src
+
+**** lsp-pyright
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+    :straight t
+    :after lsp-mode
+    :custom
+    ;; (lsp-pyright-auto-import-completions nil)
+    (lsp-pyright-typechecking-mode "off")
+    :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp-deferred))))
+  ;; (fk/async-process
+  ;;  "npm outdated -g | grep pyright | wc -l" nil
+  ;;  (lambda (process output)
+  ;;    (pcase output
+  ;;      ("0\n" (message "Pyright is up to date."))
+  ;;      ("1\n" (message "A pyright update is available.")))))
+
+#+end_src
 *** Haskell
 **** DISABLED intero
 [[https://github.com/chrisdone/intero][Deprecated]]
