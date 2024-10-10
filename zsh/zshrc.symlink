@@ -25,9 +25,10 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Load sync plugins
 zinit lucid light-mode for \
       pick"async.zsh" src"pure.zsh" \
+      atload"zstyle :prompt:pure:path color white" \
       sindresorhus/pure \
       depth"1" \
-      atload"ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLOCK; ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK" \
+      atload"ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLOCK; ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK" \
       jeffreytse/zsh-vi-mode
 
 # Load async plugins
