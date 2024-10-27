@@ -93,6 +93,7 @@ Variables are set here that are used in the configuration below
         mouse-wheel-tilt-scroll t
         display-line-numbers-type 'relative
         mac-command-modifier 'control
+        history-delete-duplicates t
         frame-title-format '("%b - Emacs"))
 
   ;; always indent with spaces and 2 spaces
@@ -187,7 +188,8 @@ A modern [[https://github.com/magnars/dash.el][list]] API for Emacs.
 
 #+begin_src emacs-lisp
   (use-package dash
-    :straight t)
+    :straight t
+    :commands (-flatten -map --map))
 #+end_src
 *** s
 The long lost Emacs string manipulation [[https://github.com/magnars/s.el][library]].
@@ -196,6 +198,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
     :straight t
     :commands (s-match
                s-right
+               s-split
                s-chop-prefix
                s-chop-suffix
                s-replace-all
@@ -209,7 +212,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
 **** Org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :straight (:type built-in)
+    :straight '(:type built-in)
     :config
     ;; Element cache makes it slow for some reason
     (setq org-element-cache-persistent nil)
@@ -1139,6 +1142,17 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     (set-face-attribute 'smerge-upper nil
                         :background "#402626"))
 #+END_SRC
+*** savehist
+#+begin_src emacs-lisp
+  (use-package savehist
+    :straight '(:type built-in)
+    :custom
+    (savehist-save-minibuffer-history nil)
+    (savehist-autosave-interval nil)
+    (savehist-file "~/.emacs.d/etc/savehist")
+    (savehist-ignored-variables '(evil-jumps-history projectile-project-command-history))
+    (savehist-additional-variables '(corfu-history)))
+#+end_src
 *** flycheck
 Syntax checking
 
@@ -1323,15 +1337,20 @@ Spell checking. Needs the aspell program installed.
            (python-mode . corfu-mode)
            (java-mode . corfu-mode)
            (emacs-lisp-mode . corfu-mode))
-    :bind (("C-;" . corfu-insert))
+    :bind (("C-;" . corfu-insert)
+           :map corfu-map
+           ("TAB" . corfu-next)
+           ([tab] . corfu-next)
+           ("S-TAB" . corfu-previous)
+           ([backtab] . corfu-previous))
     :custom
     (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
     (corfu-auto t)                 ;; Enable auto completion
+    (corfu-preselect 'prompt)      ;; Preselect the prompt
     ;; (corfu-separator ?\s)          ;; Orderless field separator
     ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
     ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
     ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
     ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
     ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
@@ -1343,12 +1362,15 @@ Spell checking. Needs the aspell program installed.
     ;; :init
     ;; (global-corfu-mode)
     :config
-    (use-package corfu-terminal
-      :straight t
-      :after corfu
-      :defer
-      :init
-      (add-hook 'corfu-mode-hook 'hbournis/set-corfu-terminal-for-frame)))
+    (corfu-history-mode)
+    (savehist-mode))
+
+  (use-package corfu-terminal
+    :straight t
+    :after corfu
+    :defer
+    :init
+    (add-hook 'corfu-mode-hook 'hbournis/set-corfu-terminal-for-frame))
 #+end_src
 *** wgrep
 #+begin_src emacs-lisp
