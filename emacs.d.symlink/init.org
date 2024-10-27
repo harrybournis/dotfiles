@@ -1031,7 +1031,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
       "c"         'hbournis/copy-filename-to-clipboard
-      "RET"       'hbournis/generic-find-definition
+      "RET"       'xref-find-definitions
       "g"         'hbournis/magit-hydra
       "of"        'org-roam-node-find
       "oi"        'org-roam-node-insert
@@ -1753,10 +1753,13 @@ system in order to work.
 #+begin_src emacs-lisp
   (use-package dumb-jump
     :straight t
-    :commands (dumb-jump-go)
+    :commands (dumb-jump-go dumb-jump-result-follow)
+    :init
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
     :config
-    ; (setq dumb-jump-selector 'ivy)
-    )
+    (setq dumb-jump-prefer-searcher 'rg
+          dumb-jump-aggressive nil
+          dumb-jump-selector 'popup))
 #+end_src
 *** hydra
 #+BEGIN_SRC emacs-lisp
