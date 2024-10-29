@@ -1332,9 +1332,7 @@ Spell checking. Needs the aspell program installed.
 
   (use-package corfu
     :straight t
-    :hook ((ruby-mode . corfu-mode)
-           (python-mode . corfu-mode)
-           (java-mode . corfu-mode)
+    :hook ((java-mode . corfu-mode)
            (emacs-lisp-mode . corfu-mode))
     :bind (("C-;" . corfu-insert)
            :map corfu-map
@@ -1395,9 +1393,6 @@ Spell checking. Needs the aspell program installed.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :straight t
-    :hook (ruby-mode . lsp)
-    :hook (go-mode . lsp)
-    :hook (python-mode . lsp)
     :commands (lsp lsp-deferred)
     :config
     (setq lsp-prefer-flymake nil
@@ -1496,14 +1491,8 @@ Not working currently
     :hook ((web-mode
             java-mode)
            . smartparens-mode)
-    :hook ((ruby-mode
-            python-mode
-            sh-mode
-            emacs-lisp-mode
-            clojure-mode
-            clojurescript-mode
-            go-mode
-            svelte-mode)
+    :hook ((sh-mode
+            emacs-lisp-mode)
            . smartparens-strict-mode)
     :diminish
     :config
@@ -1865,10 +1854,7 @@ Redis client
                yas-activate-extra-mode
                yas-deactivate-extra-mode
                yas-maybe-expand-abbrev-key-filter)
-    :hook ((emacs-lisp-mode
-            js-mode
-            ruby-mode)
-           . yas-minor-mode)
+    :hook (emacs-lisp-mode . yas-minor-mode)
     :init
     (defvar yas-verbosity 2)
     :config
@@ -2168,7 +2154,7 @@ Some guides:
     :straight t
     :hook (js-ts-mode . nodejs-repl-minor-mode))
 #+end_src
-**** jest-test-mode
+**** DISABLED jest-test-mode
 #+begin_src emacs-lisp
   (use-package jest-test-mode
     :ensure t
@@ -2242,7 +2228,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+begin_src emacs-lisp
   (use-package svelte-mode
     :straight t
-    :hook (svelte-mode . lsp-deferred)
+    :hook ((svelte-mode . lsp-deferred)
+           (svelte-mode . smartparens-strict-mode))
     :mode (("\\.svelte\\'" . svelte-mode)))
 #+end_src
 *** PureScript
@@ -2302,10 +2289,13 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   (use-package ruby-mode
     :straight t
-    :mode
-    (("\\.rbi?\\'" . ruby-mode))
+    :mode (("\\.rbi?\\'" . ruby-mode))
+    :hook ((ruby-mode . display-line-numbers-mode)
+           (ruby-mode . lsp)
+           (ruby-mode . yas-minor-mode)
+           (ruby-mode . smartparens-strict-mode)
+           (ruby-mode . corfu-mode))
     :config
-    (add-hook 'ruby-mode-hook 'display-line-numbers-mode)
     (setq ruby-insert-encoding-magic-comment nil))
 #+END_SRC
 **** MAC_ONLY inf-ruby
@@ -2374,6 +2364,9 @@ Interact with bundler with Emacs
 #+begin_src emacs-lisp
   (use-package python-mode
     :straight '(:type built-in)
+    :hook ((python-mode . lsp)
+           (python-mode . corfu-mode)
+           (python-mode . smartparens-strict-mode))
     :custom
     (python-shell-interpreter "ipython")
     (python-shell-interpreter-args "-i --simple-prompt")
@@ -2456,8 +2449,9 @@ Org-babel support for prolog.
 #+BEGIN_SRC emacs-lisp
   (use-package clojure-mode
     :straight t
-    :hook
-    (clojure-mode . display-line-numbers-mode)
+    :hook ((clojure-mode . display-line-numbers-mode)
+           (clojure-mode . smartparens-strict-mode)
+           (clojurescript-mode . smartparens-strict-mode))
     :config
     ;; (require 'flycheck-clj-kondo)
 
@@ -2523,8 +2517,9 @@ CIDER extends Emacs with support for interactive programming in Clojure.
 #+begin_src emacs-lisp
   (use-package go-mode
     :straight t
-    :hook
-    (go-mode . display-line-numbers-mode)
+    :hook ((go-mode . display-line-numbers-mode)
+           (go-mode . lsp)
+           (go-mode . smartparens-strict-mode))
     :config
     (add-hook 'go-mode-hook
               (lambda ()
