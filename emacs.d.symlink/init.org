@@ -1783,6 +1783,19 @@ system in order to work.
           dumb-jump-aggressive nil
           dumb-jump-selector 'popup))
 #+end_src
+*** zoxide
+#+begin_src emacs-lisp
+  (use-package zoxide
+    :straight t
+    :init
+    (evil-define-key 'normal 'global
+      "gz"   'dired-jump-with-zoxide)
+    :commands (zoxide-open-with))
+
+  (defun dired-jump-with-zoxide (&optional other-window)
+    (interactive "P")
+    (zoxide-open-with nil (lambda (file) (dired-jump other-window file)) t))
+#+end_src
 *** hydra
 #+BEGIN_SRC emacs-lisp
   (use-package hydra
