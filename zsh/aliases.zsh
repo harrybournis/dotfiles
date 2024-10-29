@@ -48,6 +48,8 @@ else
     alias e="emacsclient -t"
 fi
 
+alias eg="emacsclient -t --eval '(progn (magit-status) (delete-other-windows))'"
+
 noderepl() {
     FILE_CONTENTS="$(< $1 )"
     node -i -e "$FILE_CONTENTS"
