@@ -1333,7 +1333,6 @@ Spell checking. Needs the aspell program installed.
   (use-package corfu
     :straight t
     :hook ((ruby-mode . corfu-mode)
-           (typescript-mode . corfu-mode)
            (python-mode . corfu-mode)
            (java-mode . corfu-mode)
            (emacs-lisp-mode . corfu-mode))
@@ -1397,8 +1396,6 @@ Spell checking. Needs the aspell program installed.
   (use-package lsp-mode
     :straight t
     :hook (ruby-mode . lsp)
-    :hook (js-mode . lsp)
-    :hook (typescript-mode . lsp)
     :hook (go-mode . lsp)
     :hook (python-mode . lsp)
     :commands (lsp lsp-deferred)
@@ -1428,17 +1425,22 @@ Spell checking. Needs the aspell program installed.
 #+begin_src emacs-lisp
   (use-package tree-sitter
     :straight t
-    :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
+    :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
+    :config
+    (setq tree-sitter-debug-jump-buttons t
+          tree-sitter-debug-highlight-jump-region t))
 
   (use-package tree-sitter-langs
-    :straight t)
+    :straight t
+    :after tree-sitter)
 
   (use-package treesit-auto
     :straight t
+    :defer 1
     :custom
     (treesit-auto-install 'prompt)
+    (treesit-auto-langs '(yaml javascript typescript tsx))
     :config
-    (setq treesit-auto-langs '(yaml))
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
@@ -1491,12 +1493,10 @@ Not working currently
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :straight t
-    :hook ((typescript-mode
-            web-mode
+    :hook ((web-mode
             java-mode)
            . smartparens-mode)
-    :hook ((js-mode
-            ruby-mode
+    :hook ((ruby-mode
             python-mode
             sh-mode
             emacs-lisp-mode
@@ -1853,7 +1853,6 @@ Redis client
                yas-deactivate-extra-mode
                yas-maybe-expand-abbrev-key-filter)
     :hook ((emacs-lisp-mode
-            typescript-mode
             js-mode
             ruby-mode)
            . yas-minor-mode)
@@ -1892,8 +1891,9 @@ Go to next/previous buffer in a project-aware context
   (use-package aggressive-indent
     :straight t
     :defer 4
+    :custom
+    (aggressive-indent-sit-for-time 0.2)
     :config
-    (setq aggressive-indent-sit-for-time 0.2)
     (global-aggressive-indent-mode t)
     (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode python-mode)))
 #+end_src
@@ -2087,7 +2087,8 @@ Use C-j to expand.
     (set-face-attribute 'web-mode-function-name-face nil
                         :foreground "#de935f")
 
-    (flycheck-add-mode 'javascript-eslint 'web-mode))
+    ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+    )
 #+END_SRC
 
 **** DISABLED Improving the JSX syntax-hightlighting in web-mode
@@ -2118,8 +2119,18 @@ Some guides:
 
 **** js-mode
 #+begin_src emacs-lisp
-  (setq js-indent-level 2)
-  (add-hook 'js-mode-hook 'display-line-numbers-mode)
+  (use-package js2-mode
+    :straight t
+    :mode (("\\.js[mx]?\\'" . js2-mode))
+    :hook
+    (js-ts-mode . display-line-numbers-mode)
+    (js-ts-mode . lsp-deferred)
+    (js-ts-mode . corfu-mode)
+    (js-ts-mode . smartparens-strict-mode)
+    (js-ts-mode . yas-minor-mode)
+    :config
+    (setq js-indent-level 2
+          js-ts-mode-hook js-mode-hook))
 #+end_src
 
 **** typescript-mode
@@ -2127,10 +2138,23 @@ Some guides:
   (use-package typescript-mode
     :straight t
     :hook
-    (typescript-mode . display-line-numbers-mode)
+    (typescript-ts-mode . display-line-numbers-mode)
+    (typescript-ts-mode . lsp-deferred)
+    (typescript-ts-mode . corfu-mode)
+    (typescript-ts-mode . smartparens-strict-mode)
+    (typescript-ts-mode . yas-minor-mode)
     :config
-    (setq typescript-indent-level 2))
+    (add-to-list 'aggressive-indent-excluded-modes '(typescript-ts-mode))
+    (setq typescript-ts-mode-hook typescript-mode-hook
+          typescript-indent-level 2))
 #+END_SRC
+
+**** nodejs-repl
+#+begin_src emacs-lisp
+  (use-package nodejs-repl
+    :straight t
+    :hook (js-ts-mode . nodejs-repl-minor-mode))
+#+end_src
 **** jest-test-mode
 #+begin_src emacs-lisp
   (use-package jest-test-mode
