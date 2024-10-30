@@ -22,11 +22,18 @@ source "${ZINIT_HOME}/zinit.zsh"
 # autoload -Uz _zinit
 # (( ${+_comps} )) && _comps[zinit]=_zinit
 
+# Load theme
+if [ $INSIDE_EMACS ]; then
+    PROMPT='%~$ '
+else
+    zinit lucid light-mode for \
+          pick"async.zsh" src"pure.zsh" \
+          atload"zstyle :prompt:pure:path color white" \
+          sindresorhus/pure
+fi
+
 # Load sync plugins
 zinit lucid light-mode for \
-      pick"async.zsh" src"pure.zsh" \
-      atload"zstyle :prompt:pure:path color white" \
-      sindresorhus/pure \
       depth"1" \
       atload"ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLOCK; ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK" \
       jeffreytse/zsh-vi-mode
