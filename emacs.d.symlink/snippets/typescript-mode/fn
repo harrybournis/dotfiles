@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: anonymousFunction
+# key: fn
+# --
+
+(${1:params}) => ${2}
