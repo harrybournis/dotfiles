@@ -1,11 +1,10 @@
 alias reload!='. ~/.zshrc'
 
 alias c='clear'
+alias ls='ls -G --color=auto'
 alias lsa='ls -a'
-alias ls.='ls -a | grep "^\."'
 alias oepn='open'
 alias brwe="brew"
-alias sublime='open -a /Applications/"Sublime Text.app"'
 alias yt='yt-dlp'
 alias yt-audio="yt-dlp -x"
 alias youtube-dl-mp3="youtube-dl --extract-audio --audio-format mp3 "
@@ -19,16 +18,7 @@ alias log="git log --oneline --decorate --color --graph"
 alias rm_ds_store="find . -type f -name '*.DS_Store' -ls -delete"
 alias emacs-tangle-init="emacs ~/.dotfiles/emacs.d.symlink/init.org --batch --eval='(org-babel-tangle)'"
 alias fix-grey-file='SetFile -c "" -t ""'
-alias gradle='./gradlew'
 alias lazy="lazydocker"
-
-# tmux
-alias ta='tmux attach -t'
-alias tad='tmux attach -d -t'
-alias ts='tmux new-session -s'
-alias tl='tmux list-sessions'
-alias tksv='tmux kill-server'
-alias tkss='tmux kill-session -t'
 
 # ruby
 alias railskill="cat tmp/pids/server.pid | xargs -n1 -J pid kill -9 pid"
