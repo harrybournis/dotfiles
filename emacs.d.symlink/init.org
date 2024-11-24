@@ -582,8 +582,9 @@ aggregate tables
     (hbournis/org-capture-bookmark hbournis/private-bookmarks-file))
 
   ;; Bookmarks for Browser
-  ;; Bookmark url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'l',url: window.location.href,title: document.title,body: window.getSelection() }); })();
-  ;; Bookmark private url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'L',url: window.location.href,title: document.title,body: window.getSelection() }); })();
+  ;; Bookmark url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'l', url: window.location.href, title: document.title.replace(/[^a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=% ]/g, '') || window.location.href, body: window.getSelection() }); })();
+  ;; Bookmark private url: javascript: (() => { window.location.href = 'org-protocol://capture?' + new URLSearchParams({ template: 'L', url: window.location.href, title: document.title.replace(/[^a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=% ]/g, '') || window.location.href, body: window.getSelection() }); })();
+  ;; Copy to clipboard:  javascript: (() => { navigator.clipboard.writeText('org-protocol://capture?' + new URLSearchParams({ template: 'L', url: window.location.href, title: document.title.replace(/[^a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=% ]/g, '') || window.location.href, body: window.getSelection() })).then(() => { console.log('Text copied to clipboard:', text); }).catch(err => { console.error('Failed to copy text: ', err);});})();
   (setq org-capture-templates
         `(
           ("l" "Link" entry
@@ -602,7 +603,7 @@ aggregate tables
            (file+headline hbournis/org-book-file ,(format "%s" (format-time-string "%Y")))
            (file "~/.emacs.d/org-templates/book.orgtemplate") :prepend t)
           ("w" "Work Note" entry
-           (file+datetree hbournis/org-work-file)
+           (file+olp+datetree hbournis/org-work-file "Notes")
            "** %U - %?")))
 #+END_SRC
 **** Org Agenda
@@ -943,16 +944,14 @@ Keybindings to allow moving around when writing in Greek
   (define-key evil-normal-state-map "ο" 'evil-open-below)
   (define-key evil-normal-state-map "Ο" 'evil-open-above)
   (define-key evil-normal-state-map "ρ" 'evil-replace)
-  (define-key evil-normal-state-map "υ" 'evil-sp-yank)
-  (define-key evil-normal-state-map "Υ" 'evil-sp-yank-line)
-  (define-key evil-normal-state-map "δ" 'evil-sp-delete)
-  (define-key evil-normal-state-map "Δ" 'evil-sp-delete-line)
-  (define-key evil-normal-state-map "σ" 'evil-sp-substitute)
-  (define-key evil-normal-state-map "Σ" 'evil-sp-change-whole-line)
-  (define-key evil-normal-state-map "ψ" 'evil-sp-change)
-  (define-key evil-normal-state-map "Ψ" 'evil-sp-change-line)
+  (define-key evil-normal-state-map "υ" 'evil-yank)
+  (define-key evil-normal-state-map "Υ" 'evil-yank-line)
+  (define-key evil-normal-state-map "δ" 'evil-org-delete)
+  (define-key evil-normal-state-map "Δ" 'evil-delete-line)
+  (define-key evil-normal-state-map "ψ" 'evil-change)
+  (define-key evil-normal-state-map "Ψ" 'evil-change-line)
   (define-key evil-normal-state-map "χ" 'evil-org-delete-char)
-  (define-key evil-normal-state-map "Χ" 'evil-sp-backward-delete-char)
+  (define-key evil-normal-state-map "Χ" 'evil-org-delete-backward-char)
   (define-key evil-normal-state-map "π" 'evil-paste-after)
   (define-key evil-normal-state-map "Π" 'evil-paste-before)
 
@@ -1414,7 +1413,11 @@ Spell checking. Needs the aspell program installed.
             lsp-ui-sideline-enable nil
             lsp-line-ignore-duplicate t))
 
-    )
+    (use-package consult-lsp
+      :straight t
+      :after lsp-mode
+      :config
+      (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols)))
 #+end_src
 *** tree-sitter
 #+begin_src emacs-lisp
@@ -1718,9 +1721,11 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
       "a"   'dirvish-quick-access
       "f"   'dirvish-fd
       "s"   'dirvish-quicksort
-      "y"   'dired-do-copy
+      "y"   'dirvish-yank-menu
+      "Y"   'dired-do-copy
       "d"   'dired-do-delete
-      "m"   'dired-do-rename
+      "m"   'dirvish-yank-menu
+      "M"   'dired-do-rename
       "t"   'hbournis/dired-toggle-mark
       "<S-return>" 'dired-find-file-other-window
       [tab] 'dirvish-subtree-toggle
@@ -1889,12 +1894,12 @@ Go to next/previous buffer in a project-aware context
 #+begin_src emacs-lisp
   (use-package aggressive-indent
     :straight t
-    :defer 4
     :custom
     (aggressive-indent-sit-for-time 0.2)
     :config
-    (global-aggressive-indent-mode t)
-    (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode python-mode)))
+    ;; (global-aggressive-indent-mode t)
+    ;; (add-to-list 'aggressive-indent-excluded-modes '(emacs-lisp-mode web-mode typescript-mode sql-mode python-mode))
+    )
 #+end_src
 *** deadgrep
 #+begin_src emacs-lisp
@@ -2143,7 +2148,7 @@ Some guides:
     (typescript-ts-mode . smartparens-strict-mode)
     (typescript-ts-mode . yas-minor-mode)
     :config
-    (add-to-list 'aggressive-indent-excluded-modes '(typescript-ts-mode))
+    ;; (add-to-list 'aggressive-indent-excluded-modes '(typescript-ts-mode))
     (setq typescript-ts-mode-hook typescript-mode-hook
           typescript-indent-level 2))
 #+END_SRC
