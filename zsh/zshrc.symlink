@@ -1,14 +1,10 @@
-### General env variables
-export LANG=en_US
-export EDITOR=vim
-export KEYTIMEOUT=1 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
-
 ### History
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000
 SAVEHIST=1000
 setopt SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
+setopt autocd
 
 ### zinit
 declare -A ZINIT
@@ -23,9 +19,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 # (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load theme
-if [ $INSIDE_EMACS ]; then
-    PROMPT='%~$ '
-else
+if [[ ! $INSIDE_EMACS ]]; then
     zinit lucid light-mode for \
           pick"async.zsh" src"pure.zsh" \
           atload"zstyle :prompt:pure:path color white" \
@@ -64,4 +58,5 @@ zinit lucid wait for \
 
 ### My zsh files
 source $HOME/.dotfiles/zsh/aliases.zsh
+source $HOME/.dotfiles/zsh/emacs.zsh
 [[ -a $HOME/.local.zsh ]] && source $HOME/.local.zsh
