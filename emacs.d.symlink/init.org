@@ -199,6 +199,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
     :commands (s-match
                s-right
                s-split
+               s-lines
                s-chop-prefix
                s-chop-suffix
                s-replace-all
@@ -1704,15 +1705,15 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
     (dirvish-override-dired-mode)
     (dirvish-side-follow-mode)
     (setq dirvish-mode-line-format '(:left
-                                     (sort file-name " " file-user " " file-link-number symlink)
+                                     (sort file-time " " symlink)
                                      :right
-                                     (omit index))
+                                     (omit yank index))
           dirvish-attributes '(file-size)
           delete-by-moving-to-trash nil
           dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
           insert-directory-program "gls")
 
-    (set-face-attribute 'dirvish-hl-line nil :background "#7a33b3")
+    ;; (set-face-attribute 'dirvish-hl-line nil :background "#7a33b3")
 
     (evil-collection-define-key 'normal 'dirvish-mode-map
       "q"   'dirvish-quit
