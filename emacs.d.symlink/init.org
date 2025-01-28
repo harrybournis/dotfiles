@@ -303,55 +303,6 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
     ;; Show only the time when a note is added, instead of 'Note taken on..'
     (setq org-log-note-headings (assq-delete-all 'note org-log-note-headings))
     (add-to-list 'org-log-note-headings '(note . "%t"))
-
-    (set-face-attribute 'org-hide nil :background "#000000")
-
-    ;; (if (and nil (eq theme 'dark))
-    ;;     (progn
-    ;;       (set-face-attribute 'org-agenda-date-weekend nil
-    ;;                           :weight 'normal)
-    ;;       (set-face-attribute 'org-agenda-date          nil :height 1.1)
-    ;;       (set-face-attribute 'org-agenda-date-today    nil :height 1.1)
-    ;;       (set-face-attribute 'org-agenda-date-weekend  nil :height 1.1)
-    ;;       (set-face-attribute 'org-agenda-structure     nil :height 1.1)
-    ;;       (set-face-attribute 'org-level-1 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#5c9ead")
-    ;;       (set-face-attribute 'org-level-2 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#bbbdf6")
-    ;;       (set-face-attribute 'org-level-3 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#88B89E")
-    ;;       (set-face-attribute 'org-level-4 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#D3B99F")
-    ;;       (set-face-attribute 'org-level-5 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#cae7b9")
-    ;;       (set-face-attribute 'org-level-6 nil
-    ;;                           :inherit t
-    ;;                           :foreground "#3ab795")
-
-    ;;       (setq org-priority-faces '((?A . (:foreground "#ff6c6b" :weight bold))
-    ;;                                  (?B . (:foreground "orange"))
-    ;;                                  (?C . (:foreground "yellow"))
-    ;;                                  (?D . (:foreground "green")))))
-    ;;   (progn
-    ;;     (setq org-todo-keyword-faces '(("TODO"        . (:foreground "#e74c3c" :weight bold))
-    ;;                                    ("DOING"       . (:foreground "#2980b9" :weight bold))
-    ;;                                    ("WAITING"     . (:foreground "#8e44ad" :weight bold))
-    ;;                                    ("DONE"        . (:foreground "green" :weight bold))))
-    ;;     (set-face-attribute 'org-checkbox nil
-    ;;                         :box nil
-    ;;                         :bold 'normal
-    ;;                         :background nil)
-    ;;     (set-face-attribute 'org-property-value nil
-    ;;                         :foreground "white")
-    ;;     (set-face-attribute 'org-agenda-date-weekend nil
-    ;;                         :weight 'normal)
-    ;;     )
-    ;;   )
     )
 #+END_SRC
 **** Org-related packages
@@ -500,22 +451,7 @@ aggregate tables
        " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
      org-agenda-current-time-string "◀── now ─────────────────────────────────────────────────"
      )
-
-    (set-face-attribute 'org-level-1 nil
-                        :inherit t
-                        :height (lambda (_x) (+ 50 (* hbournis/font-size 10))))
-
-    (set-face-attribute 'org-level-2 nil
-                        :inherit t
-                        :height (lambda (_x) (+ 40 (* hbournis/font-size 10))))
-
-    (set-face-attribute 'org-level-3 nil
-                        :inherit t
-                        :height (lambda (_x) (+ 30 (* hbournis/font-size 10))))
-
-    (set-face-attribute 'org-level-4 nil
-                        :inherit t
-                        :height (lambda (_x) (+ 20 (* hbournis/font-size 10)))))
+    )
 #+end_src
 **** Org custom functions
 #+BEGIN_SRC emacs-lisp
@@ -1134,15 +1070,7 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     :hook (magit-diff-visit-file . (lambda ()
                                      (when smerge-mode
                                        (unpackaged/smerge-hydra/body))))
-    :config
-    (set-face-attribute 'smerge-refined-added nil
-                        :background "#335533")
-    (set-face-attribute 'smerge-lower nil
-                        :background "#264026")
-    (set-face-attribute 'smerge-refined-removed nil
-                        :background "#553333")
-    (set-face-attribute 'smerge-upper nil
-                        :background "#402626"))
+    )
 #+END_SRC
 *** savehist
 #+begin_src emacs-lisp
@@ -1226,7 +1154,7 @@ Spell checking. Needs the aspell program installed.
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
 
-    (set-face-attribute 'vertico-current nil :background "#7a33b3")
+    ;; (set-face-attribute 'vertico-current nil :background "#7a33b3")
 
     ;; Configure directory extension.
     (use-package vertico-directory
@@ -1584,20 +1512,6 @@ Save emacs session
     :config
     (setq git-gutter:update-interval 2
           git-gutter:hide-gutter t)
-
-    (set-face-attribute 'git-gutter:added nil
-                             :background "#000000"
-                             :foreground "#338533")
-    (set-face-attribute 'git-gutter:modified nil
-                             :background "#000000"
-                             :foreground "#8B7233")
-    (set-face-attribute 'git-gutter:deleted nil
-                             :background "#000000"
-                             :foreground "#A54B6F")
-    (set-face-attribute 'git-gutter:separator nil
-                             :background "#000000"
-                             :foreground "#3372A5")
-
     (global-git-gutter-mode t))
 #+END_SRC
 *** highlight-indentation
@@ -2090,11 +2004,6 @@ Use C-j to expand.
           web-mode-code-indent-offset 2
           web-mode-block-padding 2
           web-mode-comment-style 2)
-
-    (set-face-attribute 'web-mode-function-name-face nil
-                        :foreground "#de935f")
-
-    ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
     )
 #+END_SRC
 
@@ -2586,79 +2495,27 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
     "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
         Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
 
-    (use-package spaceink-theme
-      :straight '(:type git :host github :repo "bcardoso/spaceink-theme")
+    (use-package hasliberg-theme
+      :straight '(:type git :host github :repo "rytswd/hasliberg-theme")
       :demand t
-      :init
-      (add-to-list 'custom-theme-load-path (concat user-emacs-directory
-      "/straight/build/spaceink-theme/")))
+      :custom
+      (hasliberg-theme-dark-or-light 'dark)
+      :config
+      (set-face-attribute 'tab-bar-tab-inactive nil
+                          :box nil
+                          :background 'unspecified
+                          :foreground (hasliberg-theme-hex-for 'subtle-200))
 
-    (load-theme 'spaceink t)
+    (load-theme 'hasliberg t))
 
+    ;; (use-package spaceink-theme
+    ;;   :straight '(:type git :host github :repo "bcardoso/spaceink-theme")
+    ;;   :demand t
+    ;;   :init
+    ;;   (add-to-list 'custom-theme-load-path (concat user-emacs-directory
+    ;;   "/straight/build/spaceink-theme/")))
 
-    (set-face-attribute 'default nil
-                        :background "#000000")
-    (set-face-attribute 'mode-line-active nil
-                        :background "#7a33b3"
-                        :box '(:line-width (1 . 3) :color "#7a33b3"))
-    (set-face-attribute 'mode-line-inactive nil
-                        :background "#000000"
-                        :box '(:line-width (1 . 3) :color "#000000"))
-    (set-face-attribute 'line-number nil
-                        :background "#000000")
-    (set-face-attribute 'fringe nil
-                        :background 'unspecified)
-    (set-face-attribute 'vertical-border nil
-                        :background "#000000"
-                        :foreground "#000000")
-    (set-face-attribute 'tab-bar-tab-inactive nil
-                        :inherit nil
-                        :box nil
-                        :background 'unspecified
-                        :foreground "#d698ef")
-    (set-face-attribute 'tab-bar-tab nil
-                        :inherit nil
-                        :box nil
-                        :background 'unspecified
-                        :foreground "white")
-
-    ;; (use-package doom-themes
-    ;;   :straight t
-    ;;   :config
-    ;;   (setq doom-themes-enable-bold t
-    ;;         doom-themes-enable-italic t
-    ;;         doom-themes-treemacs-line-spacing 2
-    ;;         doom-themes-treemacs-theme "doom-colors")
-    ;;   (doom-themes-treemacs-config))
-
-    ;; (load-theme 'modus-vivendi t)
-
-    ;; (set-face-attribute 'line-number nil
-    ;;                     :background "#000000")
-    ;; (set-face-attribute 'vertical-border nil
-    ;;                     :background "#000000"
-    ;;                     :foreground "#000000")
-
-    ;; (set-face-attribute 'mode-line-active nil
-    ;;                     :background "#6a00ff"
-    ;;                     :box '(:line-width (1 . 3) :color "#6a00ff"))
-
-    ;; (set-face-attribute 'mode-line-inactive nil
-    ;;                     :background "#000000"
-    ;;                     :box '(:line-width (1 . 3) :color "#000000"))
-
-    ;; (set-face-attribute 'fringe nil
-    ;;                     :background 'unspecified)
-    ;; (set-face-attribute 'tab-bar-tab-inactive nil
-    ;;                     :inherit nil
-    ;;                     :box nil
-    ;;                     :foreground "#7d738c")
-    ;; (set-face-attribute 'tab-bar-tab nil
-    ;;                     :inherit nil
-    ;;                     :foreground "#F3C969")
-    ;; (set-face-attribute 'font-lock-comment-face nil :foreground "#7D7F81" )
-    ;; (set-face-attribute 'font-lock-string-face nil :background "#050505" )
-    ;; (set-face-attribute 'font-lock-keyword-face nil :background "#050505" )
+    ;; (load-theme 'spaceink t)
     )
 
   (defun hbournis/load-light-theme ()
@@ -2702,12 +2559,6 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
   (hbournis/load-dark-theme)
 #+end_src
 * Custom Functions
-** DISABLED set-face-attribute
-#+begin_src emacs-lisp
-  (defun set-face-attribute (&rest attributes)
-    (if (facep (car attributes))
-        (apply 'set-face-attribute attributes)))
-#+end_src
 ** Call with prefix
 #+begin_src emacs-lisp
   (defun hbournis/call-with-prefix (func &optional prefix)
