@@ -7,7 +7,7 @@ alias oepn='open'
 alias brwe="brew"
 alias yt='yt-dlp'
 alias yt-audio="yt-dlp -x"
-alias youtube-dl-mp3="youtube-dl --extract-audio --audio-format mp3 "
+alias yt-m4a='yt-dlp -f "bestaudio[ext=m4a]"'
 alias ip_local="ipconfig getifaddr en0"
 alias ip_ext="dig +short myip.opendns.com @resolver1.opendns.com"
 alias vimrc="vim ~/.vimrc"
