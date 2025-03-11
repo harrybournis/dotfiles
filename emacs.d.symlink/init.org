@@ -197,7 +197,7 @@ A modern [[https://github.com/magnars/dash.el][list]] API for Emacs.
 #+begin_src emacs-lisp
   (use-package dash
     :straight t
-    :commands (-flatten -map --map))
+    :commands (-flatten -map --map --any? -contains?))
 #+end_src
 *** s
 The long lost Emacs string manipulation [[https://github.com/magnars/s.el][library]].
