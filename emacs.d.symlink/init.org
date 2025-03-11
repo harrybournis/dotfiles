@@ -139,10 +139,18 @@ Variables are set here that are used in the configuration below
   (setq custom-file "~/.emacs.d/custom.el")
   (load custom-file 'no-error t)
 
-  ;; save all backups to a single folder to avoid clutter
-  (setq backup-directory-alist '(("." . "~/.emacs.d/etc/backups")))
-  ;; disable backups for tramp
-  (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
+  ;; Disable backups, enable auto-save
+  (setq create-lockfiles nil
+        make-backup-files nil
+        version-control t
+        backup-by-copying t
+        delete-old-versions t
+        kept-old-versions 5
+        kept-new-versions 5
+        auto-save-default t
+        auto-save-include-big-deletions t
+        backup-directory-alist '(("." . "~/.emacs.d/etc/backups"))
+        auto-save-list-file-prefix "~/.emacs.d/etc/auto-save/.saves-")
 
   ;; Automatically refresh buffers that changed on disk
   (run-with-idle-timer 4 nil (lambda () (global-auto-revert-mode t)))
@@ -1573,13 +1581,13 @@ hide specific modes from the modeline
     (diminish 'auto-revert-mode)
     (diminish 'eldoc-mode))
 #+END_SRC
-*** DISABLED exec-path-from-shell
+*** exec-path-from-shell
 Get environment variables from the shell
 
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
     :straight t
-    :defer 2
+    :demand t
     :if (memq window-system '(mac ns x))
     :config
     (exec-path-from-shell-initialize))
