@@ -2,7 +2,7 @@ export LANG=en_US
 export EDITOR=vim
 export KEYTIMEOUT=1 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 
-export RIPGREP_CONFIG_PATH='/Users/korkolis/.ripgreprc'
+export RIPGREP_CONFIG_PATH='$HOME/.ripgreprc'
 
 export FZF_DEFAULT_OPTS="--height 40% --tmux bottom,40% --layout reverse --border top"
 export FZF_DEFAULT_OPTS="--tmux"
@@ -16,3 +16,5 @@ export FZF_CTRL_R_OPTS="
 if [[ "$INSIDE_EMACS" ]]; then
     export TERM="dumb"
 fi
+
+export PATH="$HOME/.asdf/shims:$PATH"

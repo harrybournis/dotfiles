@@ -5,7 +5,7 @@ alias ls='ls -G --color=auto'
 alias lsa='ls -a'
 alias oepn='open'
 alias brwe="brew"
-alias yt='yt-dlp'
+alias yt='yt-dlp -f "bestvideo[height<=?1080]+bestaudio/best"'
 alias yt-audio="yt-dlp -x"
 alias yt-m4a='yt-dlp -f "bestaudio[ext=m4a]"'
 alias ip_local="ipconfig getifaddr en0"
