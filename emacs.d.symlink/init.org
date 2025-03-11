@@ -1620,10 +1620,10 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
 
   (use-package dirvish
     :straight t
-    :commands (dirvish-find-entry-a dirvish-dired-noselect-a)
+    :commands (dired--find-entry dirvish-dired-noselect-a)
     :init
     ;; HACK from doomemacs for lazy load
-    (advice-add #'dired-find-file :override #'dirvish-find-entry-a)
+    (advice-add #'dired--find-file :override #'dirvish--find-entry)
     (advice-add #'dired-noselect :around #'dirvish-dired-noselect-a)
     :bind (:map global-map ([f8] . dirvish-side))
     :config
