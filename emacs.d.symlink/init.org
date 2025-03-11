@@ -221,7 +221,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
 **** Org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :straight '(:type built-in)
+    :straight '(:type git :host github :branch "main" :depth 1 :repo "emacs-straight/org-mode")
     :config
     ;; Element cache makes it slow for some reason
     (setq org-element-cache-persistent nil)
@@ -1905,6 +1905,23 @@ see logs easily
     :straight '(:type built-in)
     :demand t
     :load-path "lisp/my-hydras")
+#+end_src
+*** pomidor
+#+begin_src emacs-lisp
+  (use-package pomidor
+    ; :bind (("<f12>" . pomidor))
+    :hook (pomidor-mode . (lambda ()
+                            (display-line-numbers-mode -1) ; Emacs 26.1+
+                            (setq left-fringe-width 0 right-fringe-width 0)
+                            (setq left-margin-width 2 right-margin-width 0)
+                            ;; force fringe update
+                            (set-window-buffer nil (current-buffer))))
+    :config (setq pomidor-sound-tick nil
+                  pomidor-sound-tack nil
+                  pomidor-play-sound-file (lambda (file)
+                                            (start-process "my-pomidor-play-sound"
+                                                           nil
+                                                           "say" "ding"))))
 #+end_src
 ** Programming Language Specific
 *** File Formats
