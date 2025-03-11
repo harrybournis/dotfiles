@@ -1335,11 +1335,15 @@ Spell checking. Needs the aspell program installed.
     :config
     (setq lsp-prefer-flymake nil
           lsp-headerline-breadcrumb-enable nil
+          lsp-completion-provider :none
           lsp-modeline-diagnostics-enable t
           lsp-idle-delay 1.000 ; performance
           lsp-log-io nil  ; if set to true can cause a performance hit
           lsp-eslint-run "onSave"
+          lsp-eslint-auto-fix-on-save nil
+          lsp-typescript-preferences-import-module-specifier "relative"
           lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"]))
+          lsp-ruby-lsp-use-bundler nil
           lsp-eslint-download-url "https://github.com/microsoft/vscode-eslint/releases/download/3.0.5-alpha.1/vscode-eslint-3.0.5.vsix?raw=true")
 
     (use-package lsp-ui
@@ -2004,6 +2008,8 @@ Use C-j to expand.
     :straight t
     :mode
     (("\\.html?\\'" . web-mode)
+     ("\\.html?\\'" . yas-minor-mode)
+     ("\\.html?\\'" . corfu-mode)
      ("\\.tsx\\'" . web-mode)
      ("\\.vue\\'" . web-mode)
      ("\\.jsx\\'" . web-mode)
@@ -2064,6 +2070,7 @@ Some guides:
     :straight t
     :mode (("\\.js[mx]?\\'" . js2-mode))
     :hook
+    (js-ts-mode . js2-mode)
     (js-ts-mode . display-line-numbers-mode)
     (js-ts-mode . lsp-deferred)
     (js-ts-mode . corfu-mode)
@@ -2071,6 +2078,7 @@ Some guides:
     (js-ts-mode . yas-minor-mode)
     :config
     (setq js-indent-level 2
+          js-jsx-indent-level 2
           js-ts-mode-hook js-mode-hook))
 #+end_src
 
@@ -2079,11 +2087,11 @@ Some guides:
   (use-package typescript-mode
     :straight t
     :hook
-    (typescript-ts-mode . display-line-numbers-mode)
-    (typescript-ts-mode . lsp-deferred)
-    (typescript-ts-mode . corfu-mode)
-    (typescript-ts-mode . smartparens-strict-mode)
-    (typescript-ts-mode . yas-minor-mode)
+    ((typescript-ts-mode tsx-ts-mode) . display-line-numbers-mode)
+    ((typescript-ts-mode tsx-ts-mode) . lsp-deferred)
+    ((typescript-ts-mode tsx-ts-mode) . corfu-mode)
+    ((typescript-ts-mode tsx-ts-mode) . smartparens-strict-mode)
+    ((typescript-ts-mode tsx-ts-mode) . yas-minor-mode)
     :config
     ;; (add-to-list 'aggressive-indent-excluded-modes '(typescript-ts-mode))
     (setq typescript-ts-mode-hook typescript-mode-hook
@@ -2205,7 +2213,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (add-hook 'java-mode-hook 'hbournis/java-style-hook)
   (add-hook 'java-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-**** lsp-java
+**** DISABLED lsp-java
 #+begin_src emacs-lisp
   (use-package lsp-java
     :straight t
@@ -2231,11 +2239,13 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+BEGIN_SRC emacs-lisp
   (use-package ruby-mode
     :straight t
-    :mode (("\\.rbi?\\'" . ruby-mode))
+    :mode "\\.\\(?:a?rb\\|aslsx\\)\\'"
+    :mode "/\\(?:Brew\\|Fast\\)file\\'"
     :hook ((ruby-mode . display-line-numbers-mode)
            (ruby-mode . lsp)
            (ruby-mode . yas-minor-mode)
            (ruby-mode . smartparens-strict-mode)
+           (ruby-mode . aggressive-indent-mode)
            (ruby-mode . corfu-mode))
     :config
     (setq ruby-insert-encoding-magic-comment nil))
@@ -2253,9 +2263,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package projectile-rails
     :straight t
     :after projectile
-    :diminish
-    :config
-    (projectile-rails-global-mode))
+    :hook ((ruby-mode inf-ruby-mode projectile-rails-server-mode) . projectile-rails-mode)
+    :diminish)
 #+END_SRC
 **** MAC_ONLY rspec-mode
 Enhancements to ruby-mode for RSpec files.
@@ -2263,6 +2272,7 @@ Enhancements to ruby-mode for RSpec files.
 #+BEGIN_SRC emacs-lisp
   (use-package rspec-mode
     :straight t
+    :hook ruby-mode
     :general (:keymaps 'rspec-compilation-mode-map "r" 'rspec-rerun)
     :config
     (setq compilation-scroll-output t
@@ -2285,22 +2295,23 @@ Interact with bundler with Emacs
 
 #+BEGIN_SRC emacs-lisp
   (use-package bundler
-    :straight t)
+    :straight t
+    :after ruby-mode)
 #+END_SRC
 **** MAC_ONLY rubocop
 #+BEGIN_SRC emacs-lisp
   (use-package rubocop
     :straight t
-    :config
-    ;; Load rubocopfmt
-    (add-to-list 'load-path "~/.emacs.d/lisp/rubocopfmt.el")
-    (require 'rubocopfmt)
-    ;; (add-hook 'ruby-mode-hook #'rubocopfmt-mode)
-    (diminish 'rubocopfmt-mode)
-    ;; Use Gemfile's Rubocop if it exists, otherwise use global
-    (setq rubocopfmt-use-bundler-when-possible nil))
+    :hook (ruby-mode . rubocop-mode)
+    :config)
 #+END_SRC
 
+**** MAC_ONLY ruby-json-to-hash
+#+begin_src emacs-lisp
+  (use-package ruby-json-to-hash
+    :straight t
+    :after ruby-mode)
+#+end_src
 *** Python
 **** python-mode
 #+begin_src emacs-lisp
@@ -2468,11 +2479,6 @@ CIDER extends Emacs with support for interactive programming in Clojure.
                 (add-hook 'before-save-hook
                           #'gofmt-before-save
                           nil t))))
-#+end_src
-**** DISABLED go-guru
-#+begin_src emacs-lisp
-  (use-package go-guru
-    :straight t)
 #+end_src
 * Font and Theme
 ** Fonts
