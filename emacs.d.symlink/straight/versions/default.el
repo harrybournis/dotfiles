@@ -14,7 +14,7 @@
  ("csv-mode" . "6979fc18ebe133cfe2fca02efda9a9f0cd13428a")
  ("dash.el" . "1de9dcb83eacfb162b6d9a118a4770b1281bcd84")
  ("deadgrep" . "bb555790c6f404572d537e1e4adec8b4ff0515f5")
- ("dirvish" . "c3363b77cb7fee1c0e0c95118c71312650cf402e")
+ ("dirvish" . "622996fb41def424d888266a89b4677440b55aef")
  ("docker-compose-mode" . "abaa4f3aeb5c62d7d16e186dd7d77f4e846e126a")
  ("dockerfile-mode" . "7ce17e054eca4d56ca8bc1e4a6a0dbf58efd8d52")
  ("dumb-jump" . "93665381d94a468e3fe965e3688995c1290e92b7")
