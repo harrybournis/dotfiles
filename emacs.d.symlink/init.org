@@ -721,9 +721,13 @@ checkbox, if it is a checklist.. I found the rest of the keybindings distracting
     ;; g h takes you to the previous heading and
     ;; g H takes you to one heading up
     (evil-define-key 'motion org-mode-map
+      (kbd "%")  'evilmi-jump-items
       (kbd "gh") 'org-previous-visible-heading
       (kbd "gH") 'outline-up-heading
       (kbd "gn") 'org-next-visible-heading)
+
+    (evil-define-minor-mode-key 'normal evil-mode "gl" 'evil-lion-left)
+    (evil-define-minor-mode-key 'visual evil-mode "gl" 'evil-lion-left)
 
     ;; Save and quit ingoring mistakes from keeping shift pressed down
     (evil-ex-define-cmd "Q"  'evil-quit)
@@ -803,7 +807,7 @@ Indents to a similar level elements on similar lines e.g. all '=' in variable as
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lion
     :straight t
-    :commands (evil-lion-left evil-lion-right)
+    :commands (evil-lion-left)
     :config
     (evil-lion-mode))
 #+END_SRC
@@ -812,6 +816,7 @@ Press % to move between opening and closing tag in any language
 #+BEGIN_SRC emacs-lisp
   (use-package evil-matchit
     :straight t
+    :after evil
     :commands (evilmi-jump-items)
     :config
     (global-evil-matchit-mode t))
