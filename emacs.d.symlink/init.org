@@ -516,7 +516,6 @@ aggregate tables
   (defun hbournis/org-capture-bookmark (bookmark-file)
     "Validate that the link does not already exist in bookmarks."
     (interactive)
-    (require 's)
     (hbournis/validate-bookmark-link (plist-get org-store-link-plist :link) bookmark-file)
 
     (goto-char (point-min))
@@ -1230,15 +1229,17 @@ Spell checking. Needs the aspell program installed.
 #+end_src
 *** orderless
 #+begin_src emacs-lisp
-(use-package orderless
-    :straight t
-    :init
-    ;; Configure a custom style dispatcher (see the Consult wiki)
-    ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
-    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-    (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles partial-completion)))))
+  (use-package orderless
+      :straight t
+      :init
+      ;; Configure a custom style dispatcher (see the Consult wiki)
+      ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+      ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+      (setq completion-styles '(orderless basic)
+            completion-category-defaults nil
+            completion-category-overrides '((file (styles partial-completion))
+                                            (eglot (styles orderless))
+                                            (eglot-capf (styles orderless)))))
 #+end_src
 
 *** consult
@@ -1286,6 +1287,7 @@ Spell checking. Needs the aspell program installed.
     :custom
     (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
     (corfu-auto t)                 ;; Enable auto completion
+    (corfu-auto-delay 0.5)
     (corfu-preselect 'prompt)      ;; Preselect the prompt
     ;; (corfu-separator ?\s)          ;; Orderless field separator
     ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
@@ -1302,6 +1304,7 @@ Spell checking. Needs the aspell program installed.
     ;; :init
     ;; (global-corfu-mode)
     :config
+    (keymap-unset corfu-map "RET")
     (corfu-history-mode)
     (savehist-mode))
 
@@ -1311,6 +1314,18 @@ Spell checking. Needs the aspell program installed.
     :defer
     :init
     (add-hook 'corfu-mode-hook 'hbournis/set-corfu-terminal-for-frame))
+
+  (use-package cape
+    :straight t
+    :defer t
+    :commands (cape-dabbrev cape-file cape-elisp-block)
+    :bind ("C-c p" . cape-prefix-map)
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+end_src
 *** wgrep
 #+begin_src emacs-lisp
@@ -1366,6 +1381,28 @@ Spell checking. Needs the aspell program installed.
       :after lsp-mode
       :config
       (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols)))
+#+end_src
+
+*** eglot
+#+begin_src emacs-lisp
+  (use-package eglot
+    :straight t
+    :custom
+    (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
+    :commands eglot eglot-ensure)
+
+  (use-package flycheck-eglot
+    :straight t
+    :after (flycheck eglot)
+    :hook (eglot-managed-mode . flycheck-eglot-mode))
+
+  (use-package eglot-booster
+    :straight '(:type git :host github :repo "jdtsmith/eglot-booster")
+    :after eglot
+    :hook (eglot-connect . eglot-booster-mode)
+    :config
+    ;; use native json since it is faster in emacs 30
+    (setq eglot-booster-io-only t))
 #+end_src
 *** tree-sitter
 #+begin_src emacs-lisp
