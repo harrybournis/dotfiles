@@ -34,9 +34,6 @@ zinit lucid light-mode for \
 
 # Load async plugins
 zinit wait lucid light-mode for \
-      CurryEleison/zsh-asdf-prompt \
-      atinit". ~/.asdf/plugins/java/set-java-home.zsh" \
-      "@asdf-vm/asdf" \
       atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
       zdharma-continuum/fast-syntax-highlighting \
       blockf \
@@ -59,4 +56,5 @@ zinit lucid wait for \
 ### My zsh files
 source $HOME/.dotfiles/zsh/aliases.zsh
 source $HOME/.dotfiles/zsh/emacs.zsh
+source $HOME/.dotfiles/zsh/path.zsh
 [[ -a $HOME/.local.zsh ]] && source $HOME/.local.zsh
