@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: kanban-init
+# key: kanban-init
+# --
+#+BEGIN: kanban :layout ("..." . 50) :range ("TODO" . "DELIVERED") :match "todos" :depth 2
+#+END:
