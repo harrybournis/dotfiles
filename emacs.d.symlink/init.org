@@ -264,6 +264,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
           org-list-indent-offset 2                 ;; indent lists by 2
           org-display-inline-images t              ;; display images in org by default
           org-hide-emphasis-markers t              ;; hide bold, italics etc markers
+          org-use-sub-superscripts nil
           org-tags-column (- (window-total-width)) ;; make tags align at right window width
           org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
           org-log-into-drawer t                    ;; save logs in the drawer of current item
@@ -1422,7 +1423,7 @@ Spell checking. Needs the aspell program installed.
     :defer 1
     :custom
     (treesit-auto-install 'prompt)
-    (treesit-auto-langs '(yaml javascript typescript tsx))
+    (treesit-auto-langs '(yaml javascript typescript tsx html))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
@@ -1676,6 +1677,7 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
                                      :right
                                      (omit yank index))
           dirvish-attributes '(file-size)
+          dirvish-side-attributes nil
           delete-by-moving-to-trash nil
           dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
           insert-directory-program "gls")
@@ -2288,6 +2290,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
            (ruby-mode . yas-minor-mode)
            (ruby-mode . smartparens-strict-mode)
            (ruby-mode . aggressive-indent-mode)
+           (ruby-mode . evil-matchit-mode)
            (ruby-mode . corfu-mode))
     :config
     (setq ruby-insert-encoding-magic-comment nil))
@@ -2317,6 +2320,8 @@ Enhancements to ruby-mode for RSpec files.
     :hook ruby-mode
     :general (:keymaps 'rspec-compilation-mode-map "r" 'rspec-rerun)
     :config
+    (inf-ruby-switch-setup)
+
     (setq compilation-scroll-output t
           rspec-use-spring-when-possible nil
           rspec-allow-multiple-compilation-buffers t
