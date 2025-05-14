@@ -2033,6 +2033,51 @@ see logs easily
       "gp" 'yaml-pro-ts-prev-subtree))
 #+END_SRC
 *** HTML/CSS
+**** html-ts-mode
+#+begin_src emacs-lisp
+  (use-package html-ts-mode
+    :straight nil
+    :hook
+    (html-ts-mode . lsp)
+    (html-ts-mode . yas-minor-mode)
+    (html-ts-mode . corfu-mode))
+#+end_src
+**** web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :straight t
+    :init
+    (define-derived-mode astro-mode web-mode "astro")
+    :mode
+    (("\\.tsx\\'" . web-mode)
+     ("\\.vue\\'" . web-mode)
+     ("\\.jsx\\'" . web-mode)
+     ("\\.phtml\\'" . web-mode)
+     ("\\.tpl\\.php\\'" . web-mode)
+     ("\\.[agj]sp\\'" . web-mode)
+     ("\\.as[cp]x\\'" . web-mode)
+     ("\\.erb\\'" . web-mode)
+     ("\\.mustache\\'" . web-mode)
+     ("\\.astro\\'" . astro-mode)
+     ("\\.djhtml\\'" . web-mode))
+    :hook
+    (web-mode . display-line-numbers-mode)
+    (html-mode . display-line-numbers-mode)
+    (astro-mode . lsp)
+    :config
+    (setq web-mode-enable-css-colorization t
+          web-mode-enable-auto-pairing t
+          web-mode-enable-comment-keywords t
+          web-mode-enable-current-element-highlight t
+          web-mode-enable-auto-indentation nil
+
+          web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-block-padding 2
+          web-mode-comment-style 2))
+#+END_SRC
+
 **** DISABLED emmet-mode
 Use C-j to expand.
 
@@ -2046,42 +2091,6 @@ Use C-j to expand.
     (add-hook 'web-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook 'emmet-mode))
 #+END_SRC
-**** web-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package web-mode
-    :straight t
-    :mode
-    (("\\.html?\\'" . web-mode)
-     ("\\.html?\\'" . yas-minor-mode)
-     ("\\.html?\\'" . corfu-mode)
-     ("\\.tsx\\'" . web-mode)
-     ("\\.vue\\'" . web-mode)
-     ("\\.jsx\\'" . web-mode)
-     ("\\.phtml\\'" . web-mode)
-     ("\\.tpl\\.php\\'" . web-mode)
-     ("\\.[agj]sp\\'" . web-mode)
-     ("\\.as[cp]x\\'" . web-mode)
-     ("\\.erb\\'" . web-mode)
-     ("\\.mustache\\'" . web-mode)
-     ("\\.djhtml\\'" . web-mode))
-    :hook
-    (web-mode . display-line-numbers-mode)
-    (html-mode . display-line-numbers-mode)
-    :config
-    (setq web-mode-enable-css-colorization t
-          web-mode-enable-auto-pairing t
-          web-mode-enable-comment-keywords t
-          web-mode-enable-current-element-highlight t
-          web-mode-enable-auto-indentation nil
-
-          web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-block-padding 2
-          web-mode-comment-style 2)
-    )
-#+END_SRC
-
 **** DISABLED Improving the JSX syntax-hightlighting in web-mode
 I don't even remember what this is
 
@@ -2112,7 +2121,7 @@ Some guides:
 #+begin_src emacs-lisp
   (use-package js2-mode
     :straight t
-    :mode (("\\.js[mx]?\\'" . js2-mode))
+    :mode (("\\.js[mx]?\\'" . js-ts-mode))
     :hook
     (js-ts-mode . js2-mode)
     (js-ts-mode . display-line-numbers-mode)
@@ -2300,8 +2309,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package inf-ruby
     :straight t
     :config
-    (setq inf-ruby-console-environment "development")
-    (add-hook 'after-init-hook 'inf-ruby-switch-setup))
+    (setq inf-ruby-console-environment "development"))
 #+END_SRC
 **** MAC_ONLY projectile-rails
 #+BEGIN_SRC emacs-lisp
