@@ -19,6 +19,7 @@
       default-frame-alist '((menu-bar-lines . 0)
                             (tool-bar-lines . 0)
                             (tab-bar-lines . 0)
+                            (undecorated . t)
                             (vertical-scroll-bars)))
 
 ;; menu bar hack from doom emacs
