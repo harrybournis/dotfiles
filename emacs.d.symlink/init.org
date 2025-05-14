@@ -993,7 +993,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "og"        'org-roam-ui-open
       "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
       "r"         'lsp-find-references
-      "SPC"       (lambda () (interactive) (hbournis/open-org-file  hbournis/org-main-file))
+      "SPC"       'hbournis/open-create-main-org-file
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
       "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
@@ -3062,6 +3062,12 @@ Just a simple function for when I want the current time stamp inside an org file
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
 #+END_SRC
+** Write file
+#+begin_src emacs-lisp
+  (defun hbournis/write-file (filename content)
+    "Write content to file."
+    (with-temp-file filename (insert content)))
+#+end_src
 ** dired create file
 [[https://stackoverflow.com/a/18885461][Source]]
 
@@ -3121,6 +3127,27 @@ Just a simple function for when I want the current time stamp inside an org file
     (cond ((not WORK?)
            (find-file file))
           ((and WORK? (eq file hbournis/org-work-file)) (find-file file))))
+#+end_src
+** Open/create main org-file
+#+begin_src emacs-lisp
+  (defun hbournis/open-create-main-org-file ()
+    "Open org file conditionally. Avoid opening them by mistake."
+    (interactive)
+    (cond ((not WORK?)
+           (find-file hbournis/org-main-file))
+          (WORK?
+           (if (file-exists-p hbournis/org-work-file)
+               (find-file hbournis/org-work-file)
+             (hbournis/write-file
+              hbournis/org-work-file
+              (string-join
+               '("#+STARTUP: show2levels"
+                 "#+TODO: BAKCLOG(b) TODO(t) IN_PROGRESS(i!) CODE_REVIEW(c!) DELIVERED(d!) | DONE(o!) CANCELLED(a@)\n"
+                 "#+BEGIN: kanban :layout (\"...\" . 50) :range (\"TODO\" . \"DELIVERED\") :match \"todos\" :depth 2"
+                 "#+END:\n"
+                 "* Todos :todos:"
+                 "* Notes")
+               "\n"))))))
 #+end_src
 ** Call Language-function according to file_extension
 #+begin_src emacs-lisp
@@ -3315,12 +3342,6 @@ Just a simple function for when I want the current time stamp inside an org file
       (progn
         (tab-bar-new-tab)
         (tab-bar-rename-tab name))))
-#+end_src
-** Write file
-#+begin_src emacs-lisp
-  (defun hbournis/write-file (filename content)
-    "Write content to file."
-    (with-temp-file filename (insert content)))
 #+end_src
 ** magit-hydra
 #+begin_src emacs-lisp
