@@ -436,6 +436,8 @@ aggregate tables
     :hook (org-mode . org-modern-mode)
     :hook (org-agenda-finalize . org-modern-agenda)
     :hook (org-mode . variable-pitch-mode)
+    :custom-face
+    (org-modern-todo ((t (:background "#C17C00"))))
     :config
     (setq
      ;; Edit settings
@@ -458,9 +460,7 @@ aggregate tables
      '((daily today require-timed)
        (800 1000 1200 1400 1600 1800 2000)
        " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string "◀── now ─────────────────────────────────────────────────"
-     )
-    )
+     org-agenda-current-time-string "◀── now ─────────────────────────────────────────────────"))
 #+end_src
 **** Org custom functions
 #+BEGIN_SRC emacs-lisp
@@ -1365,6 +1365,7 @@ Spell checking. Needs the aspell program installed.
           lsp-typescript-preferences-import-module-specifier "relative"
           lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"]))
           lsp-ruby-lsp-use-bundler nil
+          lsp-disabled-clients '(rubocop-ls)
           lsp-eslint-download-url "https://github.com/microsoft/vscode-eslint/releases/download/3.0.5-alpha.1/vscode-eslint-3.0.5.vsix?raw=true")
 
     (use-package lsp-ui
