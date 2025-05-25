@@ -1,0 +1,4 @@
+clear lock
+keycode 66 = Escape Caps_Lock NoSymbol NoSymbol
+
+keycode  12 = 3 numbersign 3 numbersign numbersign numbersign numbersign
