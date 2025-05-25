@@ -79,7 +79,7 @@ Variables are set here that are used in the configuration below
         hbournis/variable-pitch-font    "AurulentSansM Nerd Font Propo"
         hbournis/fallback-font          "Courier New"
         hbournis/unicode-font           "Unifont"
-        hbournis/font-size              (or hbournis/font-size 18)
+        hbournis/font-size              (if (boundp 'hbournis/font-size) hbournis/font-size 18)
         theme                           'dark)
 #+END_SRC
 * Built-in Settings
