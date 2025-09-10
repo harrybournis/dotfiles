@@ -1823,6 +1823,7 @@ system in order to work.
   (use-package restclient
     :straight t
     :mode (("\\.rest\\'" . restclient-mode))
+    :hook (restclient-mode . yas-minor-mode)
     :config
     ;; show response in fundamental mode only to speed it up
     (setq restclient-response-size-threshold 0.00001))
