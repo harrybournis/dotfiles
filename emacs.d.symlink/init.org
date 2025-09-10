@@ -947,6 +947,7 @@ Improvement on evil-leader. Specify mutliple leaders.
   (use-package general
     :straight t
     :demand t
+    :after evil
     :config
     (setq general-override-states '(emacs
                                     hybrid
