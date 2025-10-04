@@ -1448,7 +1448,7 @@ Spell checking. Needs the aspell program installed.
     :defer 1
     :custom
     (treesit-auto-install 'prompt)
-    (treesit-auto-langs '(yaml javascript typescript tsx html))
+    (treesit-auto-langs '(yaml javascript typescript tsx html typst))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
@@ -2556,7 +2556,8 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :mode (("\\.typ\\'" . typst-ts-mode))
     :hook ((typst-ts-mode . corfu-mode)
            (typst-ts-mode . smartparens-mode)
-           (typst-ts-mode . eglot-ensure))
+           (typst-ts-mode . eglot-ensure)
+           (typst-ts-mode . flyspell-mode))
     :custom
     (typst-ts-watch-options "--open --font-path fonts")
     (typst-ts-compile-options "--font-path fonts")
