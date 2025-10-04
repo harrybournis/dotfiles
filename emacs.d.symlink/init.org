@@ -6,7 +6,7 @@
 * Prerequisites
 - [[http://git-scm.com/][git]]
 - [[https://www.gnupg.org/][gnupg]] for encryption
-- [[http://aspell.net/][GNU aspell]] for spell checking
+- [[https://github.com/hunspell/hunspell][Hunspell]]
 - [[https://github.com/BurntSushi/ripgrep][rigprep]]
 
 * Packages Setup
@@ -1165,7 +1165,7 @@ Spell checking. Needs the aspell program installed.
   (use-package flyspell
     :diminish
     :config
-    (setq ispell-program-name "aspell"))
+    (setq ispell-program-name "hunspell"))
 #+END_SRC
 *** vertico
 #+begin_src emacs-lisp
@@ -1419,6 +1419,7 @@ Spell checking. Needs the aspell program installed.
   (use-package flycheck-eglot
     :straight t
     :after (flycheck eglot)
+    :custom (flycheck-eglot-exclusive nil)
     :hook (eglot-managed-mode . flycheck-eglot-mode))
 
   (use-package eglot-booster
@@ -1703,8 +1704,7 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
           dirvish-attributes '(file-size)
           dirvish-side-attributes nil
           delete-by-moving-to-trash nil
-          dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
-          insert-directory-program "gls")
+          dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group")
 
     ;; (set-face-attribute 'dirvish-hl-line nil :background "#7a33b3")
 
@@ -1952,7 +1952,9 @@ see logs easily
 *** UNIX_ONLY vterm
 #+begin_src emacs-lisp
   (use-package vterm
-    :straight t)
+    :straight t
+    :commands (vterm vterm-other-window)
+    :custom (vterm-kill-buffer-on-exit t))
 #+end_src
 *** gptel
 #+begin_src emacs-lisp

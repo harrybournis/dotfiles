@@ -20,17 +20,6 @@ You can use the `M-x customize` the settings, which will be saved in
 gitignoring it, but I may include it eventually if I start using the GUI
 for visual settings (colors, fonts etc).
 
-## Google Calendar and Org Mode
-
-To enable [org-gcal mode](https://github.com/myuhe/org-gcal.el), copy the `.api-keys-sample` file as `.api-keys` and
-fill in your Google Calendar email, client id and client secret. The first time
-the applications opens you will be prompted to login you browser and copy and
-paste a key in Emacs. I set it up according to this [post](http://cestlaz.github.io/posts/using-emacs-26-gcal/).
-
-``` sh
-$ cp ~/.dotfiles/emacs.d.symlink/.api-keys-sample ~/.dotfiles/emacs.d.symlink/.api-keys
-```
-
 ## Credits
 These configs were important in the conception and execution of this setup:
 
