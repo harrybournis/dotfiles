@@ -44,3 +44,14 @@ noderepl() {
     FILE_CONTENTS="$(< $1 )"
     node -i -e "$FILE_CONTENTS"
 }
+
+clipboard() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    pbcopy
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xclip -selection clipboard
+  else
+    echo "Unsupported OS"
+    return 1
+  fi
+}
