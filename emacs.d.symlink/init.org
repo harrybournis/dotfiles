@@ -1589,6 +1589,7 @@ Save emacs session
     :straight t
     :defer 3
     :diminish
+    :custom (git-gutter:disabled-modes '(asm-mode image-mode pdf-view-mode))
     :config
     (setq git-gutter:update-interval 2
           git-gutter:hide-gutter t)
@@ -1744,14 +1745,13 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
     (setq tramp-chunksize 2000)
     (setq tramp-use-ssh-controlmaster-options nil))
 #+end_src
-*** DISABLED pdf-tools
-Disabled for now because it requires extra packages to be installed in the
-system in order to work.
+*** LINUX_ONLY pdf-tools
 #+BEGIN_SRC emacs-lisp
-    (use-package pdf-tools
-      :straight t
-      :config
-      (pdf-tools-install))
+  (use-package pdf-tools
+    :straight t
+    :mode ("\\.pdf\\'" . pdf-view-mode)
+    :config
+    (pdf-tools-install))
 #+END_SRC
 *** git-timemachine
 #+BEGIN_SRC emacs-lisp
