@@ -785,6 +785,7 @@ mode only when it is needed.
             diff-mode
             dired
             doc-view
+            docker
             edebug
             ediff
             eshell
@@ -1796,15 +1797,10 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
     (global-set-key (kbd "M-#") 'hydra-windows/body))
 #+END_SRC
 *** Docker
-**** DISABLED docker
+**** docker
 #+BEGIN_SRC emacs-lisp
   (use-package docker
-    :straight t
-    :config
-    (setenv "DOCKER_TLS_VERIFY" "1")
-    (setenv "DOCKER_HOST" "tcp://10.11.12.13:2376")
-    (setenv "DOCKER_CERT_PATH" "/Users/foo/.docker/machine/machines/box")
-    (setenv "DOCKER_MACHINE_NAME" "box"))
+    :straight t)
 #+END_SRC
 **** NOT_WINDOWS dockerfile-mode
 #+BEGIN_SRC emacs-lisp
