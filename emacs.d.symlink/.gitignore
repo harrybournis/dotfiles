@@ -46,3 +46,4 @@ request/
 tree-sitter/
 places
 eln-cache/
+session*
