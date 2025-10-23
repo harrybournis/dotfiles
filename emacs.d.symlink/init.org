@@ -1994,6 +1994,11 @@ see logs easily
                                                            nil
                                                            "say" "ding"))))
 #+end_src
+*** mise
+#+begin_src emacs-lisp
+  (use-package mise
+    :straight t)
+#+end_src
 ** Programming Language Specific
 *** File Formats
 **** JSON
@@ -2318,6 +2323,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :mode "\\.\\(?:a?rb\\|aslsx\\)\\'"
     :mode "/\\(?:Brew\\|Fast\\)file\\'"
     :hook ((ruby-mode . display-line-numbers-mode)
+           (ruby-mode . mise-mode)
            (ruby-mode . lsp)
            (ruby-mode . yas-minor-mode)
            (ruby-mode . smartparens-strict-mode)
@@ -2327,14 +2333,14 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :config
     (setq ruby-insert-encoding-magic-comment nil))
 #+END_SRC
-**** MAC_ONLY inf-ruby
+**** UNIX_ONLY inf-ruby
 #+BEGIN_SRC emacs-lisp
   (use-package inf-ruby
     :straight t
     :config
     (setq inf-ruby-console-environment "development"))
 #+END_SRC
-**** MAC_ONLY projectile-rails
+**** UNIX_ONLY projectile-rails
 #+BEGIN_SRC emacs-lisp
   (use-package projectile-rails
     :straight t
@@ -2342,7 +2348,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :hook ((ruby-mode inf-ruby-mode projectile-rails-server-mode) . projectile-rails-mode)
     :diminish)
 #+END_SRC
-**** MAC_ONLY rspec-mode
+**** UNIX_ONLY rspec-mode
 Enhancements to ruby-mode for RSpec files.
 
 #+BEGIN_SRC emacs-lisp
@@ -2360,7 +2366,7 @@ Enhancements to ruby-mode for RSpec files.
 
     (eval-after-load 'rspec-mode '(rspec-install-snippets)))
 #+END_SRC
-**** MAC_ONLY minitest-mode
+**** UNIX_ONLY minitest-mode
 #+BEGIN_SRC emacs-lisp
   (use-package minitest
     :straight t
@@ -2368,7 +2374,7 @@ Enhancements to ruby-mode for RSpec files.
     :config
     (setq minitest-use-rails t))
 #+END_SRC
-**** MAC_ONLY bundler
+**** UNIX_ONLY bundler
 Interact with bundler with Emacs
 
 #+BEGIN_SRC emacs-lisp
@@ -2376,7 +2382,7 @@ Interact with bundler with Emacs
     :straight t
     :after ruby-mode)
 #+END_SRC
-**** MAC_ONLY rubocop
+**** UNIX_ONLY rubocop
 #+BEGIN_SRC emacs-lisp
   (use-package rubocop
     :straight t
@@ -2384,7 +2390,7 @@ Interact with bundler with Emacs
     :config)
 #+END_SRC
 
-**** MAC_ONLY ruby-json-to-hash
+**** UNIX_ONLY ruby-json-to-hash
 #+begin_src emacs-lisp
   (use-package ruby-json-to-hash
     :straight t
