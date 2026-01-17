@@ -94,6 +94,7 @@ Variables are set here that are used in the configuration below
         display-line-numbers-type 'relative
         mac-command-modifier 'control
         history-delete-duplicates t
+        ad-redefinition-action 'accept
         frame-title-format '("%b - Emacs"))
 
   ;; always indent with spaces and 2 spaces
@@ -1389,7 +1390,7 @@ Spell checking. Needs the aspell program installed.
           lsp-typescript-preferences-import-module-specifier "relative"
           lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"]))
           lsp-ruby-lsp-use-bundler nil
-          lsp-disabled-clients '(rubocop-ls)
+          lsp-disabled-clients '(rubocop-ls lsp-volar)
           lsp-eslint-download-url "https://github.com/microsoft/vscode-eslint/releases/download/3.0.5-alpha.1/vscode-eslint-3.0.5.vsix?raw=true")
 
     (use-package lsp-ui
@@ -1558,31 +1559,33 @@ Save emacs session
 #+END_SRC
 *** tab-bar-mode
 #+begin_src emacs-lisp
-  (setq tab-bar-new-button-show nil
-        tab-bar-show nil
-        tab-bar-format '(tab-bar-format-tabs)
-        tab-bar-close-button-show nil)
+  (use-package tab-bar
+    :straight '(:type built-in)
+    :defer
+    :config
+    (setq tab-bar-new-button-show nil
+          tab-bar-show nil
+          tab-bar-format '(tab-bar-format-tabs)
+          tab-bar-close-button-show nil)
 
-  (defun hbournis/tab-exists-p (name)
-    (member name (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
+    (defun hbournis/tab-exists-p (name)
+      (member name (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
 
-  (tab-bar-mode)
-  (tab-bar-rename-tab "1")
+    (tab-bar-mode)
+    (tab-bar-rename-tab "1")
 
-  (mapcar (lambda (tab-name)
-            (unless (hbournis/tab-exists-p tab-name)
-              (progn
-                (tab-bar-new-tab)
-                (tab-bar-rename-tab tab-name))))
-          '("2" "3"))
+    (mapcar (lambda (tab-name)
+              (unless (hbournis/tab-exists-p tab-name)
+                (progn
+                  (tab-bar-new-tab)
+                  (tab-bar-rename-tab tab-name))))
+            '("2" "3"))
 
-  ;; (tab-bar-new-tab)
-  ;; (tab-bar-rename-tab "3")
-  (tab-bar-switch-to-tab "1")
+    (tab-bar-switch-to-tab "1")
 
-  (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
-  (global-set-key   (kbd "C-2")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "2")))
-  (global-set-key   (kbd "C-3")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "3")))
+    (global-set-key   (kbd "C-1")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "1")))
+    (global-set-key   (kbd "C-2")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "2")))
+    (global-set-key   (kbd "C-3")  (lambda () (interactive) (hbournis/switch-to-or-create-tab "3"))))
 #+end_src
 *** git-gutter
 #+BEGIN_SRC emacs-lisp
@@ -1634,13 +1637,7 @@ shows the color of hex color codes as their background
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
     :straight t
-    :diminish
-    :config
-    ;; enable it by default in org mode
-    ;; (defun rainbow-mode-hook ()
-      ;; (rainbow-mode t))
-    ;; (add-hook 'org-mode-hook 'rainbow-mode-hook)
-    )
+    :diminish)
 #+END_SRC
 *** DISABLED diminish
 hide specific modes from the modeline
@@ -2078,7 +2075,6 @@ see logs easily
     (define-derived-mode astro-mode web-mode "astro")
     :mode
     (("\\.tsx\\'" . web-mode)
-     ("\\.vue\\'" . web-mode)
      ("\\.jsx\\'" . web-mode)
      ("\\.phtml\\'" . web-mode)
      ("\\.tpl\\.php\\'" . web-mode)
@@ -2106,6 +2102,25 @@ see logs easily
           web-mode-comment-style 2))
 #+END_SRC
 
+**** NOT_WORK vue-mode
+#+begin_src emacs-lisp
+  (use-package vue-mode
+    :straight t
+    :mode "\\.vue\\'"
+    :hook ((vue-mode . display-line-numbers-mode)
+           (vue-mode . prettier-js-mode)
+           (vue-mode . mise-mode)
+           (vue-mode . lsp-deferred)
+           (vue-mode . yas-minor-mode)
+           (vue-mode . smartparens-strict-mode)
+           (vue-mode . evil-matchit-mode)
+           (vue-mode . corfu-mode))
+    :config
+    (add-hook 'mmm-mode-hook
+              (lambda ()
+                (set-face-background 'mmm-default-submode-face nil)))
+    (setq prettier-js-args '("--parser vue")))
+#+end_src
 **** DISABLED emmet-mode
 Use C-j to expand.
 
@@ -2179,6 +2194,13 @@ Some guides:
           typescript-indent-level 2))
 #+END_SRC
 
+**** prettier-js
+#+begin_src emacs-lisp
+  (use-package prettier-js
+    :straight t
+    :config
+    (setq prettier-js-use-modules-bin t))
+#+end_src
 **** nodejs-repl
 #+begin_src emacs-lisp
   (use-package nodejs-repl
