@@ -1381,7 +1381,7 @@ Spell checking. Needs the aspell program installed.
     :defer 1
     :custom
     (treesit-auto-install 'prompt)
-    (treesit-auto-langs '(yaml javascript typescript tsx html typst))
+    (treesit-auto-langs '(yaml javascript typescript tsx html typst ruby))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
@@ -1787,6 +1787,7 @@ Go to next/previous buffer in a project-aware context
     )
 #+end_src
 *** deadgrep
+ignore ruby tests: !:spec*/**
 #+begin_src emacs-lisp
   (use-package deadgrep
     :straight t
@@ -2232,15 +2233,15 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :straight t
     :mode "\\.\\(?:a?rb\\|aslsx\\)\\'"
     :mode "/\\(?:Brew\\|Fast\\)file\\'"
-    :hook ((ruby-mode . display-line-numbers-mode)
-           (ruby-mode . mise-mode)
-           (ruby-mode . flymake-mode)
-           (ruby-mode . eglot-ensure)
-           (ruby-mode . yas-minor-mode)
-           (ruby-mode . smartparens-strict-mode)
-           (ruby-mode . aggressive-indent-mode)
-           (ruby-mode . evil-matchit-mode)
-           (ruby-mode . corfu-mode))
+    :hook ((ruby-ts-mode . display-line-numbers-mode)
+           (ruby-ts-mode . mise-mode)
+           (ruby-ts-mode . flymake-mode)
+           (ruby-ts-mode . eglot-ensure)
+           (ruby-ts-mode . yas-minor-mode)
+           (ruby-ts-mode . smartparens-strict-mode)
+           (ruby-ts-mode . aggressive-indent-mode)
+           (ruby-ts-mode . evil-matchit-mode)
+           (ruby-ts-mode . corfu-mode))
     :config
     (setq ruby-insert-encoding-magic-comment nil))
 #+END_SRC
@@ -2293,14 +2294,6 @@ Interact with bundler with Emacs
     :straight t
     :after ruby-mode)
 #+END_SRC
-**** UNIX_ONLY rubocop
-#+BEGIN_SRC emacs-lisp
-  (use-package rubocop
-    :straight t
-    :hook (ruby-mode . rubocop-mode)
-    :config)
-#+END_SRC
-
 **** UNIX_ONLY ruby-json-to-hash
 #+begin_src emacs-lisp
   (use-package ruby-json-to-hash
