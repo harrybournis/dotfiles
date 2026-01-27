@@ -8,6 +8,7 @@
 - [[https://www.gnupg.org/][gnupg]] for encryption
 - [[https://github.com/hunspell/hunspell][Hunspell]]
 - [[https://github.com/BurntSushi/ripgrep][rigprep]]
+- [[https://github.com/sharkdp/fd][fd]]
 
 * Packages Setup
 ** Proxy settings
@@ -59,16 +60,17 @@ Variables are set here that are used in the configuration below
 
 #+BEGIN_SRC emacs-lisp
   (setq hbournis/projects-dir           "~/Documents/projects"
-        hbournis/org-main-file          "~/org/stuff.org"
-        hbournis/org-book-file          "~/org/books.org"
-        hbournis/org-mobile-file        "~/org/mobile_notes.org"
-        hbournis/org-album-file         "~/org/album.org"
-        hbournis/org-inbox-file         "~/org/Inbox.org"
         hbournis/org-work-file          "~/Documents/work.org"
-        hbournis/org-journal-file       "~/org/journal.org.gpg"
-        hbournis/recurring-file         "~/org/recurring.org"
-        hbournis/bookmarks-file         "~/org/bookmarks.org"
-        hbournis/private-bookmarks-file "~/org/private-bookmarks.org.gpg"
+        hbournis/org-dir                (if (boundp 'hbournis/org-dir) hbournis/org-dir "~/org")
+        hbournis/org-main-file          (concat hbournis/org-dir "/stuff.org")
+        hbournis/org-book-file          (concat hbournis/org-dir "/books.org")
+        hbournis/org-mobile-file        (concat hbournis/org-dir "/mobile_notes.org")
+        hbournis/org-album-file         (concat hbournis/org-dir "/album.org")
+        hbournis/org-inbox-file         (concat hbournis/org-dir "/Inbox.org")
+        hbournis/org-journal-file       (concat hbournis/org-dir "/journal.org.gpg")
+        hbournis/recurring-file         (concat hbournis/org-dir "/recurring.org")
+        hbournis/bookmarks-file         (concat hbournis/org-dir "/bookmarks.org")
+        hbournis/private-bookmarks-file (concat hbournis/org-dir "/private-bookmarks.org.gpg")
         hbournis/org-agenda-files       `(,hbournis/org-main-file
                                           ,hbournis/org-mobile-file
                                           ,hbournis/org-album-file
@@ -475,6 +477,7 @@ aggregate tables
      org-ellipsis "↯"
      org-modern-star 'replace
      org-modern-replace-stars " "
+     org-modern-table nil
 
      ;; Agenda styling
      org-agenda-tags-column 0
@@ -1881,7 +1884,7 @@ see logs easily
     :demand t
     :load-path "lisp/my-hydras")
 #+end_src
-*** pomidor
+*** DISABLED pomidor
 #+begin_src emacs-lisp
   (use-package pomidor
     ; :bind (("<f12>" . pomidor))
