@@ -1853,8 +1853,18 @@ see logs easily
     (setq gptel-log-level 'info
           gptel-default-mode 'org-mode)
 
+    (setq gptel-model 'claude-sonnet-4.5
+          gptel-backend (gptel-make-gh-copilot "Copilot"))
+
     (if (boundp 'gptel-local)
         (funcall gptel-local)))
+#+end_src
+*** WORK_ONLY copilot
+#+begin_src emacs-lisp
+  (use-package copilot
+    :straight t
+    :general (:keymaps 'copilot-completion-map "<backtab>" 'copilot-accept-completion)
+    :config (setq copilot-version "1.282.0"))
 #+end_src
 *** fireplace
 #+begin_src emacs-lisp
