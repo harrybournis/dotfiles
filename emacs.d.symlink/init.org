@@ -793,7 +793,6 @@ mode only when it is needed.
             elfeed
             emms
             eval-sexp-fu
-            flycheck
             ggtags
             git-timemachine
             help
@@ -1037,9 +1036,9 @@ Improvement on evil-leader. Specify mutliple leaders.
       "["   'sp-wrap-round
       "]"   'org-align-all-tags-right
       "\\"  'sp-unwrap-sexp
-      "fn"  'flycheck-next-error
-      "fp"  'flycheck-previous-error
-      "fl"  'flycheck-list-errors
+      "fn"  'flymake-goto-next-error
+      "fp"  'flymake-goto-prev-error
+      "fl"  'flymake-show-buffer-diagnostics
       "i"   'org-toggle-inline-images
       "l"   'cider-ns-refresh
       "d"   'hbournis/generic-open-doc
@@ -1121,45 +1120,18 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     (savehist-ignored-variables '(evil-jumps-history projectile-project-command-history))
     (savehist-additional-variables '(corfu-history)))
 #+end_src
-*** flycheck
-Syntax checking
-
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :straight t
-    :diminish
-    :defer 3
+*** flymake
+#+begin_src emacs-lisp
+  (use-package flymake
+    :straight '(:type built-in)
     :config
-    (setq flycheck-idle-change-delay 1.0
-          flycheck-buffer-switch-check-intermediate-buffers t
-          flycheck-display-errors-delay 0.25)
+    (setq flymake-fring-indicator-position 'right-fringe))
 
-    (setq-default flycheck-disabled-checkers
-                  (append flycheck-disabled-checkers '(javascript-jshint json-jsonlint scss scss-lint ruby-reek))
-                  flycheck-temp-prefix ".flycheck")
-
-    ;; Set flycheck to only check when saving a file or changin a major mode
-    ;; Done mainly for performance on windows
-    (if IS-WINDOWS
-        (setq flycheck-check-syntax-automatically '(save mode-enable)))
-
-    (if (not (eq theme 'dark))
-        (set-face-attribute 'flycheck-error-list-error nil :foreground "blue" ))
-
-    ;; Use local eslint if available https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
-    ;; (defun my/use-eslint-from-node-modules ()
-    ;;   (let* ((root (locate-dominating-file
-    ;;                 (or (buffer-file-name) default-directory)
-    ;;                 "node_modules"))
-    ;;          (eslint (and root
-    ;;                       (expand-file-name "node_modules/eslint/bin/eslint.js"
-    ;;                                         root))))
-    ;;     (when (and eslint (file-executable-p eslint))
-    ;;       (setq-local flycheck-javascript-eslint-executable eslint))))
-    ;; (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-
-    (global-flycheck-mode))
-#+END_SRC
+  (use-package flymake-popon
+    :straight t
+    :after flymake
+    :hook (flymake-mode . flymake-popon-mode))
+#+end_src
 *** UNIX_ONLY flyspell
 Spell checking. Needs the aspell program installed.
 
@@ -1379,7 +1351,7 @@ Spell checking. Needs the aspell program installed.
     :straight t
     :commands (lsp lsp-deferred)
     :config
-    (setq lsp-prefer-flymake nil
+    (setq lsp-prefer-flymake t
           lsp-headerline-breadcrumb-enable nil
           lsp-completion-provider :none
           lsp-modeline-diagnostics-enable t
@@ -1417,12 +1389,6 @@ Spell checking. Needs the aspell program installed.
     :custom
     (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
     :commands eglot eglot-ensure)
-
-  (use-package flycheck-eglot
-    :straight t
-    :after (flycheck eglot)
-    :custom (flycheck-eglot-exclusive nil)
-    :hook (eglot-managed-mode . flycheck-eglot-mode))
 
   (use-package eglot-booster
     :straight '(:type git :host github :repo "jdtsmith/eglot-booster")
@@ -2064,6 +2030,7 @@ see logs easily
     :straight nil
     :hook
     (html-ts-mode . lsp)
+    (html-ts-mode . flymake-mode)
     (html-ts-mode . yas-minor-mode)
     (html-ts-mode . corfu-mode))
 #+end_src
@@ -2110,6 +2077,7 @@ see logs easily
     :hook ((vue-mode . display-line-numbers-mode)
            (vue-mode . prettier-js-mode)
            (vue-mode . mise-mode)
+           (vue-mode . flymake-mode)
            (vue-mode . lsp-deferred)
            (vue-mode . yas-minor-mode)
            (vue-mode . smartparens-strict-mode)
@@ -2168,6 +2136,7 @@ Some guides:
     :hook
     (js-ts-mode . js2-mode)
     (js-ts-mode . display-line-numbers-mode)
+    (js-ts-mode . flymake-mode)
     (js-ts-mode . lsp-deferred)
     (js-ts-mode . corfu-mode)
     (js-ts-mode . smartparens-strict-mode)
@@ -2184,6 +2153,7 @@ Some guides:
     :straight t
     :hook
     ((typescript-ts-mode tsx-ts-mode) . display-line-numbers-mode)
+    ((typescript-ts-mode tsx-ts-mode) . flymake-mode)
     ((typescript-ts-mode tsx-ts-mode) . lsp-deferred)
     ((typescript-ts-mode tsx-ts-mode) . corfu-mode)
     ((typescript-ts-mode tsx-ts-mode) . smartparens-strict-mode)
@@ -2282,6 +2252,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package svelte-mode
     :straight t
     :hook ((svelte-mode . lsp-deferred)
+           (svelte-mode . flymake-mode)
            (svelte-mode . smartparens-strict-mode))
     :mode (("\\.svelte\\'" . svelte-mode)))
 #+end_src
@@ -2301,7 +2272,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
               (lambda ()
                 (psc-ide-mode)
                 ;; (company-mode)
-                (flycheck-mode)
+                (flymake-mode)
                 (turn-on-purescript-indentation))))
 #+END_SRC
 *** Java
@@ -2322,6 +2293,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :straight t
     :after lsp-mode
     :hook ((java-mode . lsp-deferred)
+           (java-mode . flymake-mode)
            (java-mode . lsp-lens-mode)
            (java-mode . lsp-java-boot-lens-mode))
     :config
@@ -2346,6 +2318,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :mode "/\\(?:Brew\\|Fast\\)file\\'"
     :hook ((ruby-mode . display-line-numbers-mode)
            (ruby-mode . mise-mode)
+           (ruby-mode . flymake-mode)
            (ruby-mode . lsp)
            (ruby-mode . yas-minor-mode)
            (ruby-mode . smartparens-strict-mode)
@@ -2424,6 +2397,7 @@ Interact with bundler with Emacs
   (use-package python-mode
     :straight '(:type built-in)
     :hook ((python-mode . lsp)
+           (python-mode . flymake-mode)
            (python-mode . corfu-mode)
            (python-mode . smartparens-strict-mode))
     :custom
@@ -2512,7 +2486,6 @@ Org-babel support for prolog.
            (clojure-mode . smartparens-strict-mode)
            (clojurescript-mode . smartparens-strict-mode))
     :config
-    ;; (require 'flycheck-clj-kondo)
 
     ;; Start cider in test env in order to run tests
     ;; Source: https://stackoverflow.com/questions/18304271/how-do-i-choose-switch-leiningen-profiles-with-emacs-nrepl
@@ -2532,25 +2505,6 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :straight t
     :config
     (setq cider-repl-history-file "~/.emacs.d/cider-history"))
-#+end_src
-**** DISABLED flycheck-clojure
-#+begin_src emacs-lisp
-  (use-package flycheck-clojure
-    :straight t
-    :config
-    (use-package flycheck-pos-tip
-      :straight t
-      :config
-      (with-eval-after-load 'flycheck
-        (flycheck-pos-tip-mode)))
-    (use-package flycheck-clj-kondo
-      :straight t)
-    (eval-after-load 'flycheck '(flycheck-clojure-setup))
-    (eval-after-load 'flycheck
-      '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
-    (eval-after-load 'flycheck
-      (dolist (checker '(clj-kondo-clj clj-kondo-cljs clj-kondo-cljc clj-kondo-edn))
-        (setq flycheck-checkers (cons checker (delq checker flycheck-checkers))))))
 #+end_src
 **** DISABLED ob-clojurescript
 #+BEGIN_SRC emacs-lisp
@@ -2602,6 +2556,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
   (use-package go-mode
     :straight t
     :hook ((go-mode . display-line-numbers-mode)
+           (go-mode . flymake-mode)
            (go-mode . lsp)
            (go-mode . smartparens-strict-mode))
     :config
