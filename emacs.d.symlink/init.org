@@ -985,7 +985,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "F"         'consult-buffer-other-window
       "s"         'consult-ripgrep
       "x"         'execute-extended-command
-      "e"         'lsp-execute-code-action
+      "e"         'eglot-code-actions
       "ESC"       'keyboard-quit
       "k"         'windmove-up
       "j"         'windmove-down
@@ -1016,7 +1016,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "ot"        'org-roam-buffer-toggle
       "og"        'org-roam-ui-open
       "<S-return>" (lambda () (interactive) (split-window-right-and-switch) (hbournis/generic-find-definition))
-      "r"         'lsp-find-references
+      "r"         'xref-find-references
       "SPC"       'hbournis/open-create-main-org-file
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
@@ -1067,7 +1067,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "gb"  'magit-blame-echo
       "gh"  'magit-log-buffer-file
       "gm"  (lambda () (interactive) (magit-find-file-other-window "master" (format "%s" buffer-file-name)))
-      "rf"  'rubocopfmt
+      "rf"  'eglot-format-buffer
       "rb"  'ruby-toggle-block
       "rr"  'projectile-rails-goto-routes
       "rt"  'projectile-rails-find-current-spec
@@ -1345,58 +1345,23 @@ Spell checking. Needs the aspell program installed.
 
     (projectile-global-mode))
 #+END_SRC
-*** lsp-mode
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :straight t
-    :commands (lsp lsp-deferred)
-    :config
-    (setq lsp-prefer-flymake t
-          lsp-headerline-breadcrumb-enable nil
-          lsp-completion-provider :none
-          lsp-modeline-diagnostics-enable t
-          lsp-idle-delay 1.000 ; performance
-          lsp-log-io nil  ; if set to true can cause a performance hit
-          lsp-eslint-run "onSave"
-          lsp-eslint-auto-fix-on-save nil
-          lsp-typescript-preferences-import-module-specifier "relative"
-          lsp-yaml-schemas '((Kubernetes . ["/k8s/**/*.yml"]))
-          lsp-ruby-lsp-use-bundler nil
-          lsp-disabled-clients '(rubocop-ls lsp-volar)
-          lsp-eslint-download-url "https://github.com/microsoft/vscode-eslint/releases/download/3.0.5-alpha.1/vscode-eslint-3.0.5.vsix?raw=true")
-
-    (use-package lsp-ui
-      :straight t
-      :commands lsp-ui-mode
-      :config
-      (setq lsp-ui-doc-enable nil
-            lsp-ui-imenu-enable nil
-            lsp-ui-peek-enable nil
-            lsp-ui-sideline-enable nil
-            lsp-line-ignore-duplicate t))
-
-    (use-package consult-lsp
-      :straight t
-      :after lsp-mode
-      :config
-      (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols)))
-#+end_src
-
 *** eglot
 #+begin_src emacs-lisp
   (use-package eglot
     :straight t
+    :init
+    (setq eglot-stay-out-of '(flymake))
     :custom
     (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
     :commands eglot eglot-ensure)
 
-  (use-package eglot-booster
-    :straight '(:type git :host github :repo "jdtsmith/eglot-booster")
-    :after eglot
-    :hook (eglot-connect . eglot-booster-mode)
-    :config
-    ;; use native json since it is faster in emacs 30
-    (setq eglot-booster-io-only t))
+  ;; (use-package eglot-booster
+  ;;   :straight '(:type git :host github :repo "jdtsmith/eglot-booster")
+  ;;   :after eglot
+  ;;   :hook (eglot-connect . eglot-booster-mode)
+  ;;   :config
+  ;;   ;; use native json since it is faster in emacs 30
+  ;;   (setq eglot-booster-io-only t))
 #+end_src
 *** tree-sitter
 #+begin_src emacs-lisp
@@ -1420,43 +1385,6 @@ Spell checking. Needs the aspell program installed.
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
-#+end_src
-*** DISABLED dap-mode
-debugger
-
-Not working currently
-
-#+begin_src emacs-lisp
-  (use-package dap-mode
-    :straight t
-    :after lsp-mode
-    :config
-    (dap-mode t)
-    (dap-ui-mode t)
-    (dap-tooltip-mode 1)
-    (tooltip-mode 1)
-    (add-hook 'dap-stopped-hook (lambda (arg) (call-interactively #'dap-hydra)))
-    (dap-register-debug-template
-     "localhost:5005"
-     (list :type "java"
-           :request "attach"
-           :hostName "localhost"
-           :port 5005)
-     )
-     (dap-auto-configure-mode))
-
-  (use-package dap-java
-    :straight nil
-    :after (lsp-java)
-    :bind
-    (("C-c R" . dap-java-run-test-class)
-     ("C-c d" . dap-java-debug-test-method)
-     ("C-c r" . dap-java-run-test-method))
-    :config
-    (global-set-key (kbd "<f7>") 'dap-step-in)
-    (global-set-key (kbd "<f8>") 'dap-next)
-    (global-set-key (kbd "<f9>") 'dap-continue)
-    )
 #+end_src
 *** DISABLED editorconfig
 #+BEGIN_SRC emacs-lisp
@@ -2029,7 +1957,7 @@ see logs easily
   (use-package html-ts-mode
     :straight nil
     :hook
-    (html-ts-mode . lsp)
+    (html-ts-mode . eglot-ensure)
     (html-ts-mode . flymake-mode)
     (html-ts-mode . yas-minor-mode)
     (html-ts-mode . corfu-mode))
@@ -2054,7 +1982,7 @@ see logs easily
     :hook
     (web-mode . display-line-numbers-mode)
     (html-mode . display-line-numbers-mode)
-    (astro-mode . lsp)
+    (astro-mode . eglot-ensure)
     :config
     (setq web-mode-enable-css-colorization t
           web-mode-enable-auto-pairing t
@@ -2078,7 +2006,7 @@ see logs easily
            (vue-mode . prettier-js-mode)
            (vue-mode . mise-mode)
            (vue-mode . flymake-mode)
-           (vue-mode . lsp-deferred)
+           (vue-mode . eglot-ensure)
            (vue-mode . yas-minor-mode)
            (vue-mode . smartparens-strict-mode)
            (vue-mode . evil-matchit-mode)
@@ -2137,7 +2065,7 @@ Some guides:
     (js-ts-mode . js2-mode)
     (js-ts-mode . display-line-numbers-mode)
     (js-ts-mode . flymake-mode)
-    (js-ts-mode . lsp-deferred)
+    (js-ts-mode . eglot-ensure)
     (js-ts-mode . corfu-mode)
     (js-ts-mode . smartparens-strict-mode)
     (js-ts-mode . yas-minor-mode)
@@ -2154,7 +2082,7 @@ Some guides:
     :hook
     ((typescript-ts-mode tsx-ts-mode) . display-line-numbers-mode)
     ((typescript-ts-mode tsx-ts-mode) . flymake-mode)
-    ((typescript-ts-mode tsx-ts-mode) . lsp-deferred)
+    ((typescript-ts-mode tsx-ts-mode) . eglot-ensure)
     ((typescript-ts-mode tsx-ts-mode) . corfu-mode)
     ((typescript-ts-mode tsx-ts-mode) . smartparens-strict-mode)
     ((typescript-ts-mode tsx-ts-mode) . yas-minor-mode)
@@ -2251,7 +2179,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
 #+begin_src emacs-lisp
   (use-package svelte-mode
     :straight t
-    :hook ((svelte-mode . lsp-deferred)
+    :hook ((svelte-mode . eglot-ensure)
            (svelte-mode . flymake-mode)
            (svelte-mode . smartparens-strict-mode))
     :mode (("\\.svelte\\'" . svelte-mode)))
@@ -2287,18 +2215,6 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (add-hook 'java-mode-hook 'hbournis/java-style-hook)
   (add-hook 'java-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-**** DISABLED lsp-java
-#+begin_src emacs-lisp
-  (use-package lsp-java
-    :straight t
-    :after lsp-mode
-    :hook ((java-mode . lsp-deferred)
-           (java-mode . flymake-mode)
-           (java-mode . lsp-lens-mode)
-           (java-mode . lsp-java-boot-lens-mode))
-    :config
-    (require 'lsp-java-boot))
-#+end_src
 *** Kotlin
 **** kotlin-mode
 #+begin_src emacs-lisp
@@ -2319,7 +2235,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :hook ((ruby-mode . display-line-numbers-mode)
            (ruby-mode . mise-mode)
            (ruby-mode . flymake-mode)
-           (ruby-mode . lsp)
+           (ruby-mode . eglot-ensure)
            (ruby-mode . yas-minor-mode)
            (ruby-mode . smartparens-strict-mode)
            (ruby-mode . aggressive-indent-mode)
@@ -2396,7 +2312,7 @@ Interact with bundler with Emacs
 #+begin_src emacs-lisp
   (use-package python-mode
     :straight '(:type built-in)
-    :hook ((python-mode . lsp)
+    :hook ((python-mode . eglot-ensure)
            (python-mode . flymake-mode)
            (python-mode . corfu-mode)
            (python-mode . smartparens-strict-mode))
@@ -2413,26 +2329,6 @@ Interact with bundler with Emacs
     (setq python-ts-mode-hook python-mode-hook))
 #+end_src
 
-**** lsp-pyright
-#+begin_src emacs-lisp
-  (use-package lsp-pyright
-    :straight t
-    :after lsp-mode
-    :custom
-    ;; (lsp-pyright-auto-import-completions nil)
-    (lsp-pyright-typechecking-mode "off")
-    :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp-deferred))))
-  ;; (fk/async-process
-  ;;  "npm outdated -g | grep pyright | wc -l" nil
-  ;;  (lambda (process output)
-  ;;    (pcase output
-  ;;      ("0\n" (message "Pyright is up to date."))
-  ;;      ("1\n" (message "A pyright update is available.")))))
-
-#+end_src
 *** Haskell
 **** DISABLED intero
 [[https://github.com/chrisdone/intero][Deprecated]]
@@ -2557,7 +2453,7 @@ CIDER extends Emacs with support for interactive programming in Clojure.
     :straight t
     :hook ((go-mode . display-line-numbers-mode)
            (go-mode . flymake-mode)
-           (go-mode . lsp)
+           (go-mode . eglot-ensure)
            (go-mode . smartparens-strict-mode))
     :config
     (add-hook 'go-mode-hook
@@ -3188,8 +3084,8 @@ Just a simple function for when I want the current time stamp inside an org file
 
   (setq hbournis/find-definition-map
         #s(hash-table size 4 test eq data (
-                                           ruby-mode       lsp-find-definition
-                                           typescript-mode lsp-find-definition
+                                           ruby-mode       xref-find-definitions
+                                           typescript-mode xref-find-definitions
                                            java-mode       dumb-jump-go
                                            web-mode        dumb-jump-go)))
 
