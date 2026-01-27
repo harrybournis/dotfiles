@@ -1599,6 +1599,8 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
           delete-by-moving-to-trash nil
           dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group")
 
+    (if IS-MAC (setq insert-directory-program "gls" dired-use-ls-dired t))
+
     ;; (set-face-attribute 'dirvish-hl-line nil :background "#7a33b3")
 
     (evil-collection-define-key 'normal 'dirvish-mode-map
