@@ -2272,7 +2272,7 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
   (use-package projectile-rails
     :straight t
     :after projectile
-    :hook ((ruby-mode inf-ruby-mode projectile-rails-server-mode) . projectile-rails-mode)
+    :hook ((ruby-ts-mode inf-ruby-mode projectile-rails-server-mode) . projectile-rails-mode)
     :diminish)
 #+END_SRC
 **** UNIX_ONLY rspec-mode
@@ -2281,7 +2281,7 @@ Enhancements to ruby-mode for RSpec files.
 #+BEGIN_SRC emacs-lisp
   (use-package rspec-mode
     :straight t
-    :hook ruby-mode
+    :hook ruby-ts-mode
     :general (:keymaps 'rspec-compilation-mode-map "r" 'rspec-rerun)
     :config
     (inf-ruby-switch-setup)
@@ -2297,7 +2297,7 @@ Enhancements to ruby-mode for RSpec files.
 #+BEGIN_SRC emacs-lisp
   (use-package minitest
     :straight t
-    :hook (ruby-mode . minitest-mode)
+    :hook ruby-ts-mode
     :config
     (setq minitest-use-rails t))
 #+END_SRC
@@ -2307,13 +2307,13 @@ Interact with bundler with Emacs
 #+BEGIN_SRC emacs-lisp
   (use-package bundler
     :straight t
-    :after ruby-mode)
+    :after ruby-ts-mode)
 #+END_SRC
 **** UNIX_ONLY ruby-json-to-hash
 #+begin_src emacs-lisp
   (use-package ruby-json-to-hash
     :straight t
-    :after ruby-mode)
+    :after ruby-ts-mode)
 #+end_src
 *** Python
 **** python-mode
@@ -3083,7 +3083,7 @@ Just a simple function for when I want the current time stamp inside an org file
   (setq hbournis/test-all-map
         #s(hash-table size 7 test eq data (
                                            rspec-mode      rspec-verify-all
-                                           ruby-mode       rspec-verify-all
+                                           ruby-ts-mode    rspec-verify-all
                                            minitest-mode   minitest-verify-all
                                            js-mode         mocha-test-project
                                            typescript-mode jest-test-run-all-tests
@@ -3092,7 +3092,7 @@ Just a simple function for when I want the current time stamp inside an org file
 
   (setq hbournis/find-definition-map
         #s(hash-table size 4 test eq data (
-                                           ruby-mode       xref-find-definitions
+                                           ruby-ts-mode    xref-find-definitions
                                            typescript-mode xref-find-definitions
                                            java-mode       dumb-jump-go
                                            web-mode        dumb-jump-go)))
@@ -3108,12 +3108,12 @@ Just a simple function for when I want the current time stamp inside an org file
                                            clojure-mode    cider-switch-to-repl-buffer)))
 
   (defun hbournis/get-generic-lookup-mode ()
-    (let ((is-ruby (eq major-mode 'ruby-mode))
+    (let ((is-ruby (eq major-mode 'ruby-ts-mode))
           (filename (buffer-file-name)))
       (if is-ruby
           (cond ((string-match-p ".*_spec\\.rb" filename) 'rspec-mode)
                 ((string-match-p ".*_test\\.rb" filename) 'minitest-mode)
-                (t 'ruby-mode))
+                (t 'ruby-ts-mode))
         major-mode)))
 
   (defun hbournis/call-interactively-generic-func (map)
