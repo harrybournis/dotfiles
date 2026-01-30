@@ -1354,6 +1354,14 @@ Spell checking. Needs the aspell program installed.
     :straight t
     :init
     (setq eglot-stay-out-of '(flymake))
+    (with-eval-after-load 'eglot
+      (add-to-list
+       'eglot-server-programs
+       '((ruby-mode ruby-ts-mode) . ("ruby-lsp"
+         :initializationOptions
+         (:formatter "rubocop"
+                     :linters ["rubocop"]
+                     :enabledFeatures (:codeActions t :diagnostics t :formatting t))))))
     :custom
     (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
     :commands eglot eglot-ensure)
@@ -2236,7 +2244,8 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :straight t
     :mode "\\.\\(?:a?rb\\|aslsx\\)\\'"
     :mode "/\\(?:Brew\\|Fast\\)file\\'"
-    :hook ((ruby-ts-mode . display-line-numbers-mode)
+    :hook ((ruby-mode . ruby-ts-mode)
+           (ruby-ts-mode . display-line-numbers-mode)
            (ruby-ts-mode . mise-mode)
            (ruby-ts-mode . flymake-mode)
            (ruby-ts-mode . eglot-ensure)
