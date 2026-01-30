@@ -1500,7 +1500,7 @@ Save emacs session
 #+begin_src emacs-lisp
   (use-package highlight-indentation
     :straight t
-    :hook (yaml-mode . highlight-indentation-current-column-mode))
+    :hook (yaml-pro-ts-mode . highlight-indentation-current-column-mode))
 #+end_src
 *** which-key
 Display the keys available after pressing C-x for example.
@@ -1935,31 +1935,19 @@ see logs easily
 #+END_SRC
 **** YAML
 #+BEGIN_SRC emacs-lisp
-  (use-package yaml-mode
-    :straight t
-    :mode
-    (("\\.yml?\\'" . yaml-mode)
-     ("\\.yaml\\'" . yaml-mode))
-    :hook
-    ((yaml-mode . display-line-numbers-mode)
-    (yaml-mode . tree-sitter-mode))
-    :config
-    ;;  Unlike python-mode, this mode follows the Emacs convention of not
-    ;; binding the ENTER key to `newline-and-indent'.  To get this
-    ;; behavior, add the key definition to `yaml-mode-hook':
-    (add-hook 'yaml-mode-hook
-              #'(lambda ()
-                  (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
-
   (use-package yaml-pro
     :straight t
-    :after yaml-mode
-    :hook ((yaml-mode . yaml-pro-ts-mode))
+    :mode
+    (("\\.yml?\\'" . yaml-pro-ts-mode)
+     ("\\.yaml\\'" . yaml-pro-ts-mode))
+    :hook (yaml-ts-mode . yaml-pro-ts-mode)
+    :hook (yaml-pro-ts-mode . display-line-numbers-mode)
     :bind (:map yaml-pro-ts-mode-map
                 ("M-<right>" . 'yaml-pro-ts-indent-subtree)
                 ("M-<left>" . 'yaml-pro-ts-unindent-subtree)
                 ("M-<up>" . 'yaml-pro-ts-move-subtree-up)
-                ("M-<down>" . 'yaml-pro-ts-move-subtree-down))
+                ("M-<down>" . 'yaml-pro-ts-move-subtree-down)
+                ("\C-m" . 'newline-and-indent))
     :config
     (evil-define-key '(normal motion) yaml-pro-ts-mode-map
       "gH" 'yaml-pro-ts-up-level
