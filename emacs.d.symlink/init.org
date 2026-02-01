@@ -1006,8 +1006,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "W"         'delete-other-windows
       "/"         'dirvish-side
       "?"         'hydra-window-deluxe-custom/body
-      "p"         'projectile-find-file
-      "P"         'projectile-switch-project
+      "p"         'project-find-file
+      "P"         'project-switch-project
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
@@ -1072,8 +1072,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "gm"  (lambda () (interactive) (magit-find-file-other-window "master" (format "%s" buffer-file-name)))
       "rf"  'eglot-format-buffer
       "rb"  'ruby-toggle-block
-      "rr"  'projectile-rails-goto-routes
-      "rt"  'projectile-rails-find-current-spec
+      "rr"  'project-rails-goto-routes
+      "rt"  'project-rails-find-current-spec
       ))
 #+END_SRC
 *** magit
@@ -1120,7 +1120,7 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     (savehist-save-minibuffer-history nil)
     (savehist-autosave-interval nil)
     (savehist-file "~/.emacs.d/etc/savehist")
-    (savehist-ignored-variables '(evil-jumps-history projectile-project-command-history))
+    (savehist-ignored-variables '(evil-jumps-history))
     (savehist-additional-variables '(corfu-history)))
 #+end_src
 *** flymake
@@ -1134,6 +1134,14 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
     :straight t
     :after flymake
     :hook (flymake-mode . flymake-popon-mode))
+#+end_src
+*** project.el
+#+begin_src emacs-lisp
+  (use-package project
+    :straight '(:type built-in)
+    :config
+    (setq project-vc-extra-root-markers '(".project.el")
+          project-vc-ignores '("./.stversions" "./vendor")))
 #+end_src
 *** UNIX_ONLY flyspell
 Spell checking. Needs the aspell program installed.
@@ -1264,8 +1272,8 @@ Spell checking. Needs the aspell program installed.
     ;;;; 3. locate-dominating-file
     ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
     ;;;; 4. projectile.el (projectile-project-root)
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-function (lambda (_) (projectile-project-root)))
+    ;; (autoload 'projectile-project-root "projectile")
+    ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
     ;;;; 5. No project support
     ;; (setq consult-project-function nil)
     )
@@ -1334,20 +1342,6 @@ Spell checking. Needs the aspell program installed.
     :straight t
     :commands (wgrep-change-to-wgrep-mode))
 #+end_src
-*** projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :straight t
-    :diminish " P"
-    :commands (projectile-switch-project)
-    :config
-    (setq projectile-globally-ignored-directories (append projectile-globally-ignored-directories '(".stversions" "vendor")))
-
-    (if IS-WINDOWS
-        (setq projectile-indexing-method 'alien))
-
-    (projectile-global-mode))
-#+END_SRC
 *** eglot
 #+begin_src emacs-lisp
   (use-package eglot
@@ -1441,7 +1435,6 @@ Save emacs session
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
     :straight t
-    :commands (projectile-switch-project)
     :config
     (setq desktop-path '("~/.emacs.d/etc/")
           desktop-dirname "~/.emacs.d/etc/"
@@ -1783,8 +1776,7 @@ Go to next/previous buffer in a project-aware context
   (use-package nswbuff
     :straight t
     :config
-    (setq nswbuff-buffer-list-function #'nswbuff-projectile-buffer-list
-          nswbuff-clear-delay 0
+    (setq nswbuff-clear-delay 0
           nswbuff-exclude-buffer-regexps '("^ .*" "^\\*.*\\*")))
 
 #+end_src
@@ -2264,14 +2256,12 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :config
     (setq inf-ruby-console-environment "development"))
 #+END_SRC
-**** UNIX_ONLY projectile-rails
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile-rails
-    :straight t
-    :after projectile
-    :hook ((ruby-ts-mode inf-ruby-mode projectile-rails-server-mode) . projectile-rails-mode)
-    :diminish)
-#+END_SRC
+**** UNIX_ONLY project-rails
+#+begin_src emacs-lisp
+  (use-package project-rails
+    :straight (:host github :repo "harrybournis/project.el-rails" :branch "main")
+    :hook ((ruby-ts-mode inf-ruby-mode project-rails-server-mode) . project-rails-mode))
+#+end_src
 **** UNIX_ONLY rspec-mode
 Enhancements to ruby-mode for RSpec files.
 
@@ -3164,9 +3154,9 @@ Just a simple function for when I want the current time stamp inside an org file
           (file-name (rspec-target-file-for (buffer-file-name))))
       (delete-other-windows)
       (if (hbournis/ruby-test-file-p current-file)
-          (projectile-rails-find-current-spec))
+          (project-rails-find-current-spec))
       (split-window-horizontally)
-      (projectile-rails-find-current-spec)
+      (project-rails-find-current-spec)
       (hbournis/generic-run-test-file)
       (other-window 1)
       (split-window-below-and-switch)
