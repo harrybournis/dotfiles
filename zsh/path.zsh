@@ -1,5 +1,6 @@
 export PATH="/usr/local/opt/rustup/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # asdf
 export PATH="$HOME/.asdf/shims:$PATH"
