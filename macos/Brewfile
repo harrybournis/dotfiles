@@ -10,7 +10,7 @@ brew "zsh"
 
 # brew
 brew "coreutils"
-brew "asdf"
+brew "mise"
 brew "openjpeg"
 brew "diff-so-fancy"
 brew "ffmpeg"
