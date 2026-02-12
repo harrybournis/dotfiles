@@ -1143,9 +1143,16 @@ Easily resolve git conflicts [[https://github.com/alphapapa/unpackaged.el#smerge
 #+begin_src emacs-lisp
   (use-package project
     :straight '(:type built-in)
+    :general
+    (:keymaps 'project-prefix-map
+              "r" 'consult-ripgrep
+              "m" 'magit-project-status
+              "t" 'hbournis/open-terminal)
     :config
     (setq project-vc-extra-root-markers '(".project.el")
-          project-vc-ignores '("./.stversions" "./vendor")))
+          project-vc-ignores '("./.stversions" "./vendor")
+          project-switch-commands '((project-find-file "Find file") (consult-ripgrep "Ripgrep")
+                                    (magit-project-status "Magit") (hbournis/open-terminal "Terminal"))))
 #+end_src
 *** UNIX_ONLY flyspell
 Spell checking. Needs the aspell program installed.
@@ -2260,10 +2267,10 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
     :config
     (setq inf-ruby-console-environment "development"))
 #+END_SRC
-**** UNIX_ONLY project-rails
+**** project-rails
 #+begin_src emacs-lisp
   (use-package project-rails
-    :straight (:host github :repo "harrybournis/project.el-rails" :branch "main")
+    :straight t
     :hook ((ruby-ts-mode inf-ruby-mode project-rails-server-mode) . project-rails-mode))
 #+end_src
 **** UNIX_ONLY rspec-mode
