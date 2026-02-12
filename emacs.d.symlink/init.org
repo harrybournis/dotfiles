@@ -1369,6 +1369,7 @@ Spell checking. Needs the aspell program installed.
                      :enabledFeatures (:codeActions t :diagnostics t :formatting t))))))
     :custom
     (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
+    (eglot-code-action-indicator "✳")
     :commands eglot eglot-ensure)
 
   ;; (use-package eglot-booster
@@ -1776,6 +1777,7 @@ Redis client
   (use-package olivetti
     :straight t
     :hook (org-mode . olivetti-mode)
+    :hook (markdown-mode . olivetti-mode)
     :config
     (setq-default olivetti-body-width 110)
     (setq-default olivetti-hide-mode-line t))
@@ -1941,8 +1943,7 @@ see logs easily
     :hook (markdown-mode . flyspell-mode)
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown"))
+           ("\\.markdown\\'" . markdown-mode)))
 #+END_SRC
 **** YAML
 #+BEGIN_SRC emacs-lisp
@@ -2012,6 +2013,11 @@ see logs easily
           web-mode-comment-style 2))
 #+END_SRC
 
+**** slim
+#+begin_src emacs-lisp
+  (use-package slim-mode
+    :straight t)
+#+end_src
 **** NOT_WORK vue-mode
 #+begin_src emacs-lisp
   (use-package vue-mode
