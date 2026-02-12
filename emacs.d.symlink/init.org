@@ -1015,7 +1015,8 @@ Improvement on evil-leader. Specify mutliple leaders.
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
-      "c"         'hbournis/copy-filename-to-clipboard
+      "c"         'hbournis/position-to-kill-ring
+      "C"         'hbournis/copy-filename-to-clipboard
       "RET"       'xref-find-definitions
       "g"         'hbournis/magit-hydra
       "of"        'org-roam-node-find
@@ -1065,7 +1066,6 @@ Improvement on evil-leader. Specify mutliple leaders.
       "lv"  'org-cliplink
       "lp"  'hbournis/insert-url-as-org-link
       "ll"  'hbournis/org-make-word-link-from-clipboard
-      "lc"  'hbournis-position-to-kill-ring
       "c"   'org-capture
       "gt"  'git-timemachine-toggle
       "gr"  'git-gutter:revert-hunk
@@ -2710,7 +2710,7 @@ future.
 #+END_SRC
 ** Copy to clipboard link to current file and current line
 #+BEGIN_SRC emacs-lisp
-  (defun hbournis-position-to-kill-ring ()
+  (defun hbournis/position-to-kill-ring ()
     "Copy to the kill ring a string in the format \"file-name:line-number\"
       for the current buffer's file name, and the line number at point.
       Originally seen: https://stackoverflow.com/a/10682397"
