@@ -845,6 +845,10 @@ Press % to move between opening and closing tag in any language
     :after evil
     :commands (evilmi-jump-items)
     :config
+    (evilmi-load-plugin-rules '(ruby-mode enh-ruby-mode ruby-ts-mode) '(simple ruby))
+    (with-eval-after-load "evil-matchit-ruby"
+      (push '("^[ \t]*\\([a-z]+\\)\\( .*\\| *\\)$" 1) evilmi-ruby-extract-keyword-howtos)
+      (push '(("unless" "if") ("elsif" "else") "end") evilmi-ruby-match-tags))
     (global-evil-matchit-mode t))
 #+END_SRC
 **** DISABLED evil-numbers
