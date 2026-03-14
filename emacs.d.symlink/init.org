@@ -1366,10 +1366,27 @@ Spell checking. Needs the aspell program installed.
          :initializationOptions
          (:formatter "rubocop"
                      :linters ["rubocop"]
-                     :enabledFeatures (:codeActions t :diagnostics t :formatting t))))))
+                     :enabledFeatures (:codeActions t
+                                       :codeLens t
+                                       :completion t
+                                       :definition t
+                                       :diagnostics t
+                                       :documentHighlights t
+                                       :documentLink t
+                                       :documentSymbols t
+                                       :foldingRanges t
+                                       :formatting t
+                                       :hover t
+                                       :inlayHint t
+                                       :onTypeFormatting t
+                                       :selectionRanges t
+                                       :semanticHighlighting t
+                                       :signatureHelp t
+                                       :typeHierarchy t
+                                       :workspaceSymbol t))))))
     :custom
     (eglot-events-buffer-config '(:size 0 :format full)) ; performance improvement
-    (eglot-code-action-indicator "✳")
+    (eglot-code-action-indicator "*")
     :commands eglot eglot-ensure)
 
   ;; (use-package eglot-booster
@@ -1709,7 +1726,8 @@ Improved dired and ranger [[https://github.com/alexluigit/dirvish][replacement]]
 **** docker
 #+BEGIN_SRC emacs-lisp
   (use-package docker
-    :straight t)
+    :straight t
+    :commands docker)
 #+END_SRC
 **** NOT_WINDOWS dockerfile-mode
 #+BEGIN_SRC emacs-lisp
@@ -2508,8 +2526,7 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 ** Mode line
 #+begin_src emacs-lisp
   (use-package custom-mode-line
-    :straight '(:type built-in)
-    :load-path "~/.emacs.d/lisp/custom-mode-line"
+    :straight '(built-in :local-repo "~/.emacs.d/lisp/custom-mode-line")
     :demand t
     :config
     (custom-mode-line-mode))
