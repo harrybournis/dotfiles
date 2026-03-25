@@ -267,6 +267,7 @@ The long lost Emacs string manipulation [[https://github.com/magnars/s.el][libra
           org-list-indent-offset 2                 ;; indent lists by 2
           org-display-inline-images t              ;; display images in org by default
           org-hide-emphasis-markers t              ;; hide bold, italics etc markers
+          org-imenu-depth 3
           org-use-sub-superscripts nil
           org-tags-column (- (window-total-width)) ;; make tags align at right window width
           org-latex-compiler "xelatex"             ;; the only one working for greek (i think?)
@@ -991,6 +992,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "f"         'consult-buffer
       "F"         'consult-buffer-other-window
       "s"         'consult-ripgrep
+      "i"         'consult-imenu
       "x"         'execute-extended-command
       "e"         'eglot-code-actions
       "ESC"       'keyboard-quit
@@ -1015,10 +1017,9 @@ Improvement on evil-leader. Specify mutliple leaders.
       "="         'toggle-light-dark-theme
       "t"         'org-todo
       "ns"        'hbournis/create-scratch-buffer
-      "c"         'hbournis/position-to-kill-ring
+      "c"         'hbournis/project-relative-path-to-clipboard
       "C"         'hbournis/copy-filename-to-clipboard
       "RET"       'xref-find-definitions
-      "g"         'hbournis/magit-hydra
       "of"        'org-roam-node-find
       "oi"        'org-roam-node-insert
       "ot"        'org-roam-buffer-toggle
@@ -1029,7 +1030,6 @@ Improvement on evil-leader. Specify mutliple leaders.
       "a"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-mobile-file))
       "!"         (lambda () (interactive) (load-file "~/.dotfiles/emacs.d.symlink/init.el"))
       "m"         (lambda () (interactive) (find-file "~/.dotfiles/emacs.d.symlink/init.org"))
-      "i"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-inbox-file))
       "z"         (lambda () (interactive) (hbournis/open-org-file hbournis/org-work-file)))
 
     (general-define-key
@@ -1048,7 +1048,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "fp"  'flymake-goto-prev-error
       "fl"  'flymake-show-buffer-diagnostics
       "i"   'org-toggle-inline-images
-      "l"   'cider-ns-refresh
+      "l"   'hbournis/position-to-kill-ring
       "d"   'hbournis/generic-open-doc
       "c"   'hbournis/generic-show-repl
       "tf"  'hbournis/generic-run-test-file
@@ -1067,6 +1067,7 @@ Improvement on evil-leader. Specify mutliple leaders.
       "lp"  'hbournis/insert-url-as-org-link
       "ll"  'hbournis/org-make-word-link-from-clipboard
       "c"   'org-capture
+      "/"   'evilnc-copy-and-comment-lines
       "gt"  'git-timemachine-toggle
       "gr"  'git-gutter:revert-hunk
       "gn"  'git-gutter:next-hunk
@@ -1530,7 +1531,9 @@ Save emacs session
 #+begin_src emacs-lisp
   (use-package highlight-indentation
     :straight t
-    :hook (yaml-pro-ts-mode . highlight-indentation-current-column-mode))
+    :hook (yaml-pro-ts-mode . highlight-indentation-current-column-mode)
+    :config
+    (set-face-attribute 'highlight-indentation-current-column-mode nil :background "#303030"))
 #+end_src
 *** which-key
 Display the keys available after pressing C-x for example.
@@ -1937,6 +1940,15 @@ see logs easily
   (use-package mise
     :straight t)
 #+end_src
+*** emacs-pets
+#+begin_src emacs-lisp
+  ;; (add-to-list 'load-path "lisp/emacs-pets")
+
+  (use-package emacs-pets
+    :straight (:host github :repo "harrybournis/emacs-pets" :files ("*.el" "*.txt"))
+    ;; :straight (:local-repo "~/.emacs.d/lisp/emacs-pets" :files ("*.el" "*.txt"))
+    :hook (custom-mode-line-mode . emacs-pets-mode))
+#+end_src
 ** Programming Language Specific
 *** File Formats
 **** JSON
@@ -1961,15 +1973,15 @@ see logs easily
     :hook (markdown-mode . flyspell-mode)
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode)))
+           ("\\.markdown\\'" . markdown-mode))
+    :general (:states 'motion :keymaps 'markdown-mode-map
+                      "gh" 'markdown-previous-visible-heading
+                      "gn" 'markdown-next-visible-heading))
 #+END_SRC
 **** YAML
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-pro
     :straight t
-    :mode
-    (("\\.yml?\\'" . yaml-pro-ts-mode)
-     ("\\.yaml\\'" . yaml-pro-ts-mode))
     :hook (yaml-ts-mode . yaml-pro-ts-mode)
     :hook (yaml-pro-ts-mode . display-line-numbers-mode)
     :bind (:map yaml-pro-ts-mode-map
@@ -2034,7 +2046,9 @@ see logs easily
 **** slim
 #+begin_src emacs-lisp
   (use-package slim-mode
-    :straight t)
+    :straight t
+    :hook (slim-mode . display-line-numbers-mode)
+    :general (:states 'motion :keymaps 'slim-mode-map "gh" 'slim-up-list))
 #+end_src
 **** NOT_WORK vue-mode
 #+begin_src emacs-lisp
@@ -2281,6 +2295,10 @@ Customized for jest [[https://github.com/scottaj/mocha.el/issues/3#issuecomment-
            (ruby-ts-mode . aggressive-indent-mode)
            (ruby-ts-mode . evil-matchit-mode)
            (ruby-ts-mode . corfu-mode))
+    :general (:states 'motion :keymaps 'ruby-ts-mode-map
+                      "gh" 'ruby-beginning-of-block
+                      "gp" 'ruby-beginning-of-block
+                      "gn" 'ruby-end-of-block)
     :config
     (setq ruby-insert-encoding-magic-comment nil))
 #+END_SRC
@@ -2320,7 +2338,9 @@ Enhancements to ruby-mode for RSpec files.
   (use-package minitest
     :straight t
     :hook ruby-ts-mode
+    :general (:keymaps 'minitest-compilation-mode-map "r" 'minitest-rerun)
     :config
+    (inf-ruby-swith-setup)
     (setq minitest-use-rails t))
 #+END_SRC
 **** UNIX_ONLY bundler
@@ -2667,6 +2687,27 @@ width at the moment I want to align them, and not at startup.
   (defun hbournis/copy-filename-to-clipboard ()
     (interactive)
     (hbournis/copy-to-clipboard (format "%s" buffer-file-name)))
+#+end_src
+** Copy file name relative to project
+#+begin_src emacs-lisp
+  (defun hbournis/project-relative-path-to-clipboard (&optional buffer)
+    "Copy current buffer's file path relative to the project root (project.el) to the clipboard.
+  If not in a project, copy the file's absolute path. If BUFFER is non-nil, use that buffer.
+  If the buffer isn't visiting a file, do nothing and return nil."
+    (interactive)
+    (let* ((buf (or buffer (current-buffer)))
+           (file (buffer-file-name buf)))
+      (if (not file)
+          (progn
+            (message "Buffer is not visiting a file")
+            nil)
+        (let* ((proj (project-current))
+               (root (when proj (car (project-roots proj))))
+               (path (if root
+                         (file-relative-name file root)
+                       (expand-file-name file))))
+          (hbournis/copy-to-clipboard path)
+          path))))
 #+end_src
 ** Check if cliboard data is a URL
 Helper function for ~hbournis/insert-url-as-org-link~ and
@@ -3274,48 +3315,6 @@ Just a simple function for when I want the current time stamp inside an org file
       (progn
         (tab-bar-new-tab)
         (tab-bar-rename-tab name))))
-#+end_src
-** magit-hydra
-#+begin_src emacs-lisp
-  (setq hbournis/magit-hydra-keys
-        '("a" "s" "d" "f" "j" "k" "l" "g" "h" "b" "c" "e" "i" "m" "n"
-          "o" "p" "r" "t" "u" "v" "w" "x" "y" "z"))
-
-  (defun hbournis/get-all-git-repos (directory)
-    "Get all git repositories in DIRECTORY."
-    (let ((result '()))
-      (dolist (file (directory-files directory t))
-        (when (and (file-directory-p file)
-                   (not (string-equal "." (file-name-nondirectory file)))
-                   (not (string-equal ".." (file-name-nondirectory file)))
-                   (file-exists-p (concat (file-name-as-directory file) ".git")))
-          (push file result)))
-      result))
-
-  (defun hbournis/generate-magit-hydra (dir-list)
-    "Generate a hydra for launching magit at each directory in DIR-LIST."
-    (let ((hydra-name (make-symbol "magit-hydra"))
-          (docstring "\nMagit Hydra\n")
-          (heads '())
-          (keys hbournis/magit-hydra-keys))
-      (dotimes (index (length dir-list))
-        (let* ((dir (nth index dir-list))
-               (key (pop keys))
-               (func `(magit-status ,dir)))
-          (push `(,key ,func) heads)
-          (setq docstring (concat docstring "[_" key "_]: " (file-name-nondirectory dir) "\n"))))
-      ;; Add "q" key to exit the hydra
-      (push '("q" nil "exit" :color blue) heads)
-      (eval `(defhydra ,hydra-name (:exit t :hint nil)
-               ,docstring
-               ,@heads))))
-
-  (defun hbournis/magit-hydra ()
-    (interactive)
-    "Launch magit hydra by generating it dynamically."
-    (hbournis/generate-magit-hydra
-     (reverse (hbournis/get-all-git-repos hbournis/projects-dir)))
-    (eval '(magit-hydra/body)))
 #+end_src
 * Shortcuts
 global shortcuts

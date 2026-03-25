@@ -133,7 +133,7 @@ Keep the last MAX-LENGTH characters intact."
 
 (defun hbournis/mode-line-format (left right)
   "Format LEFT, RIGHT and space in-between."
-  (format (format "%%s %%%ds" (- (window-total-width) (length left) 2))
+  (format (format "%%s %%%ds" (- (window-total-width) (length left) 5))
           left
           right))
 
