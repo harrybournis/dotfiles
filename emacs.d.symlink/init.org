@@ -2340,7 +2340,7 @@ Enhancements to ruby-mode for RSpec files.
     :hook ruby-ts-mode
     :general (:keymaps 'minitest-compilation-mode-map "r" 'minitest-rerun)
     :config
-    (inf-ruby-swith-setup)
+    (inf-ruby-switch-setup)
     (setq minitest-use-rails t))
 #+END_SRC
 **** UNIX_ONLY bundler
