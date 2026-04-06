@@ -1533,7 +1533,8 @@ Save emacs session
     :straight t
     :hook (yaml-pro-ts-mode . highlight-indentation-current-column-mode)
     :config
-    (set-face-attribute 'highlight-indentation-current-column-mode nil :background "#303030"))
+    (if (eq theme 'dark)
+        (set-face-attribute 'highlight-indentation-current-column-face nil :background "#292e42")))
 #+end_src
 *** which-key
 Display the keys available after pressing C-x for example.
@@ -2553,72 +2554,28 @@ Execute ~(print (font-family-list))~ to get a list of all available fonts and ho
 #+end_src
 ** Themes
 #+begin_src emacs-lisp
+  (use-package tokyo-night
+    :straight '(:type git :host github :repo "bbatsov/tokyo-night-emacs")
+    :demand t
+    :init
+    (add-to-list 'custom-theme-load-path (concat user-emacs-directory "/straight/build/tokyo-night-emacs/")))
+
   (defun hbournis/load-dark-theme ()
     "Load the specified dark theme.  It uses the variables dark-theme-var, dark-theme-modeline-var.
-        Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
-
-    (use-package hasliberg-theme
-      :straight '(:type git :host github :repo "rytswd/hasliberg-theme")
-      :demand t
-      :custom
-      (hasliberg-theme-dark-or-light 'dark)
-      :config
-      (set-face-attribute 'tab-bar-tab-inactive nil
-                          :box nil
-                          :background 'unspecified
-                          :foreground (hasliberg-theme-hex-for 'subtle-200))
-
-    (load-theme 'hasliberg t))
-
-    ;; (use-package spaceink-theme
-    ;;   :straight '(:type git :host github :repo "bcardoso/spaceink-theme")
-    ;;   :demand t
-    ;;   :init
-    ;;   (add-to-list 'custom-theme-load-path (concat user-emacs-directory
-    ;;   "/straight/build/spaceink-theme/")))
-
-    ;; (load-theme 'spaceink t)
-    )
+          Also sets some faces for org-checkbox, strings, org TODO items and evil mode cursors. "
+    (setq tokyo-night-override-colors-alist '(("tokyo-bg" . "#000000")))
+    (load-theme 'tokyo-night t)
+    (set-face-attribute 'mode-line-active nil :box nil)
+    (set-face-attribute 'mode-line-inactive nil :box nil))
 
   (defun hbournis/load-light-theme ()
-    (use-package flatui-theme
-      :straight t)
-
-    (load-theme 'flatui t)
-
-    (set-face-attribute 'tab-bar-tab nil
-                        :box nil
-                        :foreground "#16A085"
-                        :background 'unspecified)
-    (set-face-attribute 'tab-bar-tab-inactive nil
-                        :box nil
-                        :foreground "#BDC3C7"
-                        :background 'unspecified)
-    (set-face-attribute 'font-lock-string-face nil
-                        :background nil
-                        :foreground "#0a74b9")
-    (set-face-attribute 'line-number nil
-                        :background "#ecf0f1")
-    (set-face-attribute 'mode-line nil
-                        :background "#dfe4ea"
-                        :box nil)
-    (set-face-attribute 'mode-line-inactive nil
-                        :box nil
-                        :background "#ecf0f1")
-    (set-face-attribute 'magit-section-highlight nil
-                        :background "#dfe4ea")
-    (set-face-attribute 'magit-section-heading nil
-                        :foreground "#8E44AD")
-    (set-face-attribute 'magit-branch-local nil
-                        :foreground "#2980B9")
-    (set-face-attribute 'magit-branch-remote nil
-                        :foreground "#27AE60")
-    (set-face-attribute 'magit-diff-context nil
-                        :background "grey20"))
+    (load-theme 'tokyo-night-day t))
 #+end_src
 ** Load theme
 #+begin_src emacs-lisp
-  (hbournis/load-dark-theme)
+  (if (eq theme 'dark)
+      (hbournis/load-dark-theme)
+    (hbournis/load-light-theme))
 #+end_src
 * Custom Functions
 ** Call with prefix
