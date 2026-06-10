@@ -153,10 +153,13 @@ Tries projectile first, then falls back to project.el."
                    (t 'hbournis/mode-line-status-grayed-out)))))))
 
 (defun hbournis/mode-line-format (left right)
-  "Format LEFT, RIGHT and space in-between."
-  (format (format "%%s %%%ds" (- (window-total-width) (length left) 5))
-          left
-          right))
+  "Format LEFT, RIGHT and space in-between.
+Aligns RIGHT to the window edge using pixel measurements, so
+segments containing images are sized correctly."
+  (let ((right-width (string-pixel-width right)))
+    (concat left
+            (propertize " " 'display `(space :align-to (- right (,right-width))))
+            right)))
 
 (add-hook 'find-file-hook #'hbournis/mode-line-update-vc-segment)
 (add-hook 'after-save-hook #'hbournis/mode-line-update-vc-segment)
