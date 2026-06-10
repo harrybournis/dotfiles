@@ -18,6 +18,7 @@
       menu-bar-mode nil
       tool-bar-mode nil
       scroll-bar-mode nil
+      frame-resize-pixelwise t
       default-frame-alist '((menu-bar-lines . 0)
                             (tool-bar-lines . 0)
                             (tab-bar-lines . 0)
