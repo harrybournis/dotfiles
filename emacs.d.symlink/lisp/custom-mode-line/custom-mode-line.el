@@ -9,6 +9,10 @@
 (defvar hbournis/mode-line-original-format mode-line-format)
 
 (declare-function projectile-project-name "ext:projectile")
+(declare-function projectile-project-root "ext:projectile")
+(declare-function project-current "project")
+(declare-function project-root "project")
+(declare-function project-name "project")
 
 (defface hbournis/mode-line-read-only-face
   '((t (:foreground "#ff8059")))
@@ -83,18 +87,35 @@ Keep the last MAX-LENGTH characters intact."
               (substring file-name (- (length file-name) max-length)))
     file-name))
 
+(defun hbournis/current-project ()
+  "Return a cons (NAME . ROOT) for the current project, or nil.
+Tries projectile first, then falls back to project.el."
+  (cond
+   ((and (fboundp 'projectile-project-root)
+         (projectile-project-root))
+    (cons (projectile-project-name) (projectile-project-root)))
+   ((and (fboundp 'project-current)
+         (project-current))
+    (let* ((proj (project-current))
+           (root (project-root proj))
+           (name (if (fboundp 'project-name)
+                     (project-name proj)
+                   (file-name-nondirectory (directory-file-name root)))))
+      (cons name root)))
+   (t nil)))
+
 (defun hbournis/mode-line-buffer-name ()
   "Return the buffer or file name with the project for the mode-line."
   (condition-case err
-      (let ((projectile-root (if (fboundp 'projectile-project-root) (projectile-project-root) nil))
+      (let ((project (hbournis/current-project))
             (max-length hbournis/mode-line-buffer-name-length))
-        (if projectile-root
+        (if (and project (buffer-file-name))
             (concat
              "["
-             (projectile-project-name)
+             (car project)
              "] "
              (hbournis/abbreviate-long-file-name
-              (string-remove-prefix projectile-root (buffer-file-name))
+              (file-relative-name (buffer-file-name) (cdr project))
               max-length))
           (hbournis/abbreviate-long-file-name
            (concat (sml/get-directory) (sml/buffer-name))
