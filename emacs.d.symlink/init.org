@@ -1270,7 +1270,7 @@ Spell checking. Needs the aspell program installed.
     :commands (consult-ripgrep consult-buffer consult-buffer-other-window)
     :config
     (setq consult-preview-key nil
-          consult-buffer-sources '(consult--source-buffer consult--source-bookmark))
+          consult-buffer-sources '(consult-source-recent-file consult-source-buffer consult-source-bookmark))
 
     (consult-customize
      consult-buffer :group nil)
